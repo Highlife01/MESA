@@ -23,31 +23,9 @@ export const SUPER_ADMIN_CREDENTIALS = {
   ]
 };
 
-const STORAGE_KEY = 'mesa_auth_session';
-
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        return JSON.parse(saved);
-      }
-    } catch (e) {
-      console.error('Error loading session', e);
-    }
-    return null;
-  });
-
+  const [user, setUser] = useState(null);
   const [loginError, setLoginError] = useState('');
-
-  // Persist session
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  }, [user]);
 
   const login = (email, password) => {
     const cleanEmail = (email || '').trim().toLowerCase();
@@ -80,7 +58,6 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setLoginError('');
-    localStorage.removeItem(STORAGE_KEY);
   };
 
   const isSuperAdmin = user?.role === 'super_admin';

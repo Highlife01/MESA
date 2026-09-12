@@ -4,12 +4,9 @@ import { translations } from '../i18n/translations';
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [lang, setLang] = useState(() => {
-    return localStorage.getItem('mesa_lang') || 'tr';
-  });
+  const [lang, setLang] = useState('tr');
 
   useEffect(() => {
-    localStorage.setItem('mesa_lang', lang);
     document.documentElement.lang = lang;
     if (lang === 'ar') {
       document.documentElement.dir = 'rtl';

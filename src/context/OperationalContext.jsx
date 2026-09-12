@@ -4,12 +4,7 @@ const OperationalContext = createContext();
 
 export const OperationalProvider = ({ children }) => {
   // Live Active Jobs Queue (Synchronized across site, wizard, tracker, technician and ERP)
-  const [liveJobs, setLiveJobs] = useState(() => {
-    const saved = localStorage.getItem('mesa_live_jobs');
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
-    }
-    return [
+  const [liveJobs, setLiveJobs] = useState([
       {
         id: 'MS-8294',
         code: 'MS-8294',
@@ -70,58 +65,33 @@ export const OperationalProvider = ({ children }) => {
         supervisorSignature: 'data:image/png;base64,completed',
         technicianSignature: 'data:image/png;base64,completed'
       }
-    ];
-  });
+  ]);
 
   // Cart for B2B Spare Parts
-  const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem('mesa_cart');
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
-    }
-    return [];
-  });
+  const [cart, setCart] = useState([]);
 
   // B2B Parts Orders (completed orders)
-  const [partsOrders, setPartsOrders] = useState(() => {
-    const saved = localStorage.getItem('mesa_parts_orders');
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+  const [partsOrders, setPartsOrders] = useState([
+    {
+      orderCode: 'SP-4201',
+      customerName: 'Ahmet Yılmaz',
+      companyName: 'Kaya Hafriyat & Madencilik',
+      phone: '0533 444 5566',
+      taxNo: '1234567890',
+      items: [
+        { id: 'p1', name: 'CAT Hidrolik Basınç Filtresi', quantity: 3, price: 2450 },
+        { id: 'p2', name: 'Pilot Valf O-Ring Kiti', quantity: 2, price: 850 }
+      ],
+      total: 9050,
+      address: 'Ceyhan Taş Ocağı Şantiyesi, Adana',
+      notes: 'Acil kargo talep edildi',
+      status: 'Hazırlanıyor',
+      createdAt: new Date().toISOString()
     }
-    return [
-      {
-        orderCode: 'SP-4201',
-        customerName: 'Ahmet Yılmaz',
-        companyName: 'Kaya Hafriyat & Madencilik',
-        phone: '0533 444 5566',
-        taxNo: '1234567890',
-        items: [
-          { id: 'p1', name: 'CAT Hidrolik Basınç Filtresi', quantity: 3, price: 2450 },
-          { id: 'p2', name: 'Pilot Valf O-Ring Kiti', quantity: 2, price: 850 }
-        ],
-        total: 9050,
-        address: 'Ceyhan Taş Ocağı Şantiyesi, Adana',
-        notes: 'Acil kargo talep edildi',
-        status: 'Hazırlanıyor',
-        createdAt: new Date().toISOString()
-      }
-    ];
-  });
+  ]);
 
   // Live Toast Notifications
   const [activeToast, setActiveToast] = useState(null);
-
-  useEffect(() => {
-    localStorage.setItem('mesa_live_jobs', JSON.stringify(liveJobs));
-  }, [liveJobs]);
-
-  useEffect(() => {
-    localStorage.setItem('mesa_cart', JSON.stringify(cart));
-  }, [cart]);
-
-  useEffect(() => {
-    localStorage.setItem('mesa_parts_orders', JSON.stringify(partsOrders));
-  }, [partsOrders]);
 
   // ============ ALIASES for Dashboard compatibility ============
   // Dashboard expects `activeOrders` — alias to liveJobs
