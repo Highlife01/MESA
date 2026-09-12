@@ -1,21 +1,32 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from '../router/Router';
-import { Phone, Wrench, Shield, Clock, ChevronDown, Menu, X, ArrowRight, BookOpen, Truck, Building } from 'lucide-react';
+import { Phone, Wrench, ChevronDown, Menu, X, ArrowRight, Globe } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Navbar = () => {
   const { pathname } = useLocation();
+  const { lang, setLang, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+
+  const languages = [
+    { code: 'tr', label: 'Türkçe', flag: '🇹🇷' },
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'ar', label: 'العربية', flag: '🇸🇦' }
+  ];
+
+  const currentLang = languages.find(l => l.code === lang) || languages[0];
 
   const navLinks = [
-    { name: 'Ana Sayfa', href: '/' },
-    { name: 'Hizmetlerimiz', href: '/hizmetler', isDropdown: true },
-    { name: 'Markalar', href: '/markalar' },
-    { name: 'Gezici Filo', href: '/filo' },
-    { name: 'Teknik Rehberler', href: '/rehberler' },
-    { name: 'Kurumsal', href: '/hakkimizda' },
-    { name: 'İletişim', href: '/iletisim' },
+    { name: t('home'), href: '/' },
+    { name: t('services'), href: '/hizmetler', isDropdown: true },
+    { name: t('brands'), href: '/markalar' },
+    { name: t('fleet'), href: '/filo' },
+    { name: t('guides'), href: '/rehberler' },
+    { name: t('about'), href: '/hakkimizda' },
+    { name: t('contact'), href: '/iletisim' },
   ];
 
   return (
@@ -28,8 +39,8 @@ export const Navbar = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-950 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-950"></span>
             </span>
-            <span className="tracking-wide uppercase">7/24 Mobil Acil Servis:</span>
-            <span className="font-medium hidden sm:inline">Adana, Mersin, Hatay, Osmaniye, Ceyhan ve Çukurova Şantiyelerine 45 Dk Ortalama Varış</span>
+            <span className="tracking-wide uppercase">{t('tickerAlert')}</span>
+            <span className="font-medium hidden sm:inline">{t('tickerText')}</span>
           </div>
           <a
             href="tel:05335293674"
@@ -100,7 +111,7 @@ export const Navbar = () => {
                       ))}
                       <div className="col-span-2 pt-2 border-t border-slate-800 mt-1 flex justify-between items-center text-xs">
                         <Link to="/hizmetler" className="text-amber-400 hover:underline font-bold flex items-center gap-1">
-                          Tüm 11 Hizmeti İncele <ArrowRight className="w-3.5 h-3.5" />
+                          {t('allServices')} (11) <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                         <span className="text-slate-500">12 Ay / 2.000 Saat Garanti</span>
                       </div>
@@ -123,30 +134,70 @@ export const Navbar = () => {
             ))}
           </nav>
 
-          {/* Desktop Right CTAs */}
+          {/* Desktop Right CTAs + Language Selector */}
           <div className="hidden lg:flex items-center gap-3">
+            
+            {/* Language Dropdown Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-bold text-slate-200 transition-colors"
+                title="Dil Seçimi / Change Language"
+              >
+                <span>{currentLang.flag}</span>
+                <span>{currentLang.code.toUpperCase()}</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
+
+              {langDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-36 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  {languages.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => { setLang(l.code); setLangDropdownOpen(false); }}
+                      className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                        lang === l.code ? 'bg-amber-500/20 text-amber-400 font-bold' : 'text-slate-300 hover:bg-slate-800'
+                      }`}
+                    >
+                      <span className="text-sm">{l.flag}</span>
+                      <span>{l.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Link
               to="/servis-takip"
-              className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all"
+              className="px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all"
             >
-              Servis Takip
+              {t('serviceTracking')}
             </Link>
             <Link
               to="/ariza-bildir"
-              className="px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/20 transition-all flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/20 transition-all flex items-center gap-1.5"
             >
               <Wrench className="w-3.5 h-3.5" />
-              <span>Acil Servis Çağır</span>
+              <span>{t('emergencyCall')}</span>
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button + Quick Lang Switch */}
           <div className="xl:hidden flex items-center gap-2">
+            <button
+              onClick={() => {
+                const nextLang = lang === 'tr' ? 'en' : lang === 'en' ? 'ar' : 'tr';
+                setLang(nextLang);
+              }}
+              className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-bold text-amber-400"
+            >
+              {currentLang.flag} {currentLang.code.toUpperCase()}
+            </button>
             <Link
               to="/ariza-bildir"
               className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950"
             >
-              Acil Çağır
+              {t('emergencyCall')}
             </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -178,25 +229,40 @@ export const Navbar = () => {
             </Link>
           ))}
           <div className="pt-4 border-t border-slate-800 space-y-2">
+            <div className="flex items-center justify-around py-2 bg-slate-900 rounded-xl border border-slate-800 mb-2">
+              {languages.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => setLang(l.code)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 ${
+                    lang === l.code ? 'bg-amber-500 text-slate-950' : 'text-slate-400'
+                  }`}
+                >
+                  <span>{l.flag}</span>
+                  <span>{l.label}</span>
+                </button>
+              ))}
+            </div>
+
             <Link
               to="/servis-takip"
               onClick={() => setMobileMenuOpen(false)}
               className="block w-full text-center py-3 rounded-xl bg-slate-900 text-slate-300 text-sm font-semibold border border-slate-800"
             >
-              Canlı Servis Takibi
+              {t('serviceTracking')}
             </Link>
             <Link
               to="/musteri-portali"
               onClick={() => setMobileMenuOpen(false)}
               className="block w-full text-center py-3 rounded-xl bg-slate-900 text-slate-300 text-sm font-semibold border border-slate-800"
             >
-              Müşteri B2B Portalı
+              {t('portal')}
             </Link>
             <a
               href="tel:05335293674"
               className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm"
             >
-              <Phone className="w-4 h-4" /> 0533 529 36 74 Ara
+              <Phone className="w-4 h-4" /> {t('callNow')}
             </a>
           </div>
         </div>

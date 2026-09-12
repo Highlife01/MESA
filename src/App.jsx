@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router, Routes, Route } from './router/Router';
+import { LanguageProvider } from './context/LanguageContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { FloatingEmergencyButton } from './components/FloatingEmergencyButton';
@@ -22,32 +23,34 @@ import { DashboardPage } from './pages/DashboardPage';
 
 export function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
-        <Navbar />
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/hizmetler" element={<ServicesPage />} />
-            <Route path="/hizmetler/:slug" element={<ServiceDetailPage />} />
-            <Route path="/markalar" element={<BrandsPage />} />
-            <Route path="/filo" element={<FleetPage />} />
-            <Route path="/rehberler" element={<GuidesPage />} />
-            <Route path="/rehberler/:slug" element={<GuideDetailPage />} />
-            <Route path="/hakkimizda" element={<AboutPage />} />
-            <Route path="/iletisim" element={<ContactPage />} />
-            <Route path="/ariza-bildir" element={<EmergencyWizardPage />} />
-            <Route path="/servis-takip" element={<ServiceTrackingPage />} />
-            <Route path="/musteri-portali" element={<CustomerPortalPage />} />
-            <Route path="/teknisyen" element={<TechnicianPage />} />
-            <Route path="/panel" element={<DashboardPage />} />
-            <Route path="*" element={<HomePage />} />
-          </Routes>
-        </main>
-        <Footer />
-        <FloatingEmergencyButton />
-      </div>
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+          <Navbar />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/hizmetler" element={<ServicesPage />} />
+              <Route path="/hizmetler/:slug" element={<ServiceDetailPage />} />
+              <Route path="/markalar" element={<BrandsPage />} />
+              <Route path="/filo" element={<FleetPage />} />
+              <Route path="/rehberler" element={<GuidesPage />} />
+              <Route path="/rehberler/:slug" element={<GuideDetailPage />} />
+              <Route path="/hakkimizda" element={<AboutPage />} />
+              <Route path="/iletisim" element={<ContactPage />} />
+              <Route path="/ariza-bildir" element={<EmergencyWizardPage />} />
+              <Route path="/servis-takip" element={<ServiceTrackingPage />} />
+              <Route path="/musteri-portali" element={<CustomerPortalPage />} />
+              <Route path="/teknisyen" element={<TechnicianPage />} />
+              <Route path="/panel" element={<DashboardPage />} />
+              <Route path="*" element={<HomePage />} />
+            </Routes>
+          </main>
+          <Footer />
+          <FloatingEmergencyButton />
+        </div>
+      </Router>
+    </LanguageProvider>
   );
 }
 
