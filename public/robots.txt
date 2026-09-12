@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /panel
+Disallow: /yonetim
+Disallow: /teknisyen
+
+Sitemap: https://mesaismak.web.app/sitemap.xml
