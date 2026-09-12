@@ -53,7 +53,7 @@ export function HomePage() {
       'longitude': 35.3213
     },
     'url': 'https://mesaismak.web.app',
-    'telephone': '+905325550128',
+    'telephone': '+905335293674',
     'priceRange': '₺₺',
     'openingHoursSpecification': [
       {
@@ -111,11 +111,11 @@ export function HomePage() {
                 </Link>
 
                 <a 
-                  href="tel:05325550128"
+                  href="tel:05335293674"
                   className="w-full sm:w-auto px-7 py-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-white font-bold text-sm flex items-center justify-center space-x-2 transition backdrop-blur"
                 >
                   <Phone className="w-4 h-4 text-amber-400" />
-                  <span>0532 555 01 28 Usta Çağır</span>
+                  <span>0533 529 36 74 Usta Çağır</span>
                 </a>
 
                 <Link
@@ -208,11 +208,11 @@ export function HomePage() {
                 {/* Direct Emergency Call Button */}
                 <div className="mt-6 pt-5 border-t border-slate-800/80">
                   <a 
-                    href="tel:05325550128" 
+                    href="tel:05335293674" 
                     className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs flex items-center justify-center space-x-2 transition shadow-lg shadow-amber-500/20"
                   >
                     <Phone className="w-4 h-4" />
-                    <span>Hemen En Yakın Mobil Servisi Çağır (0532 555 01 28)</span>
+                    <span>Hemen En Yakın Mobil Servisi Çağır (0533 529 36 74)</span>
                   </a>
                 </div>
               </div>
@@ -614,11 +614,11 @@ export function HomePage() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <a 
-              href="tel:05325550128" 
+              href="tel:05335293674" 
               className="px-7 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-lg transition flex items-center space-x-2"
             >
               <Phone className="w-4 h-4" />
-              <span>0532 555 01 28 Hemen Ara</span>
+              <span>0533 529 36 74 Hemen Ara</span>
             </a>
             <Link 
               to="/ariza-bildir"

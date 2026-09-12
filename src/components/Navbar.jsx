@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from '../router/Router';
-import { Phone, Wrench, ChevronDown, Menu, X, ArrowRight, Globe, ShoppingCart, Cpu, PackageCheck } from 'lucide-react';
+import { Phone, Wrench, ChevronDown, Menu, X, ArrowRight, Globe, ShoppingCart, Cpu, PackageCheck, Crown, Lock, LogOut } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
 import { useLanguage } from '../context/LanguageContext';
 import { useOperational } from '../context/OperationalContext';
+import { useAuth } from '../context/AuthContext';
 
 export const Navbar = () => {
   const { pathname } = useLocation();
   const { lang, setLang, t } = useLanguage();
   const { cart } = useOperational();
+  const { user, isSuperAdmin, logout } = useAuth();
   
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
@@ -49,13 +51,33 @@ export const Navbar = () => {
             <span className="tracking-wide uppercase">{t('tickerAlert')}</span>
             <span className="font-medium hidden sm:inline">{t('tickerText')}</span>
           </div>
-          <a
-            href="tel:05335293674"
-            className="flex items-center gap-1.5 bg-slate-950 text-amber-400 px-3 py-0.5 rounded-full hover:bg-slate-900 transition-colors shadow-sm ml-2 shrink-0"
-          >
-            <Phone className="w-3 h-3" />
-            <span>0533 529 36 74</span>
-          </a>
+          <div className="flex items-center gap-2">
+            {isSuperAdmin ? (
+              <Link
+                to="/panel"
+                className="hidden sm:flex items-center gap-1.5 bg-slate-950 text-amber-400 px-3 py-0.5 rounded-full hover:bg-slate-900 border border-amber-500/40 text-[11px] font-black shrink-0"
+              >
+                <Crown className="w-3 h-3 text-amber-400" />
+                <span>Süper Admin: {user.name}</span>
+              </Link>
+            ) : (
+              <Link
+                to="/admin"
+                className="hidden sm:flex items-center gap-1 text-slate-950 hover:underline text-[11px] font-bold shrink-0 mr-1"
+                title="Süper Admin Girişi (cebrailkara@gmail.com)"
+              >
+                <Lock className="w-2.5 h-2.5" />
+                <span>Yönetici</span>
+              </Link>
+            )}
+            <a
+              href="tel:05335293674"
+              className="flex items-center gap-1.5 bg-slate-950 text-amber-400 px-3 py-0.5 rounded-full hover:bg-slate-900 transition-colors shadow-sm ml-1 shrink-0"
+            >
+              <Phone className="w-3 h-3" />
+              <span>0533 529 36 74</span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -190,6 +212,35 @@ export const Navbar = () => {
               )}
             </div>
 
+            {isSuperAdmin ? (
+              <div className="flex items-center gap-1.5">
+                <Link
+                  to="/panel"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-black text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 shadow-md shadow-amber-500/20 transition-transform active:scale-95"
+                  title="Süper Admin ERP Yönetim Paneli"
+                >
+                  <Crown className="w-3.5 h-3.5" />
+                  <span>Süper Admin</span>
+                </Link>
+                <button
+                  onClick={logout}
+                  title="Oturumu Kapat"
+                  className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-red-500/40 text-slate-400 hover:text-red-400 transition"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/admin"
+                className="px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-amber-400 bg-slate-900 border border-slate-800 hover:border-amber-500/30 transition-all flex items-center gap-1"
+                title="Süper Admin Girişi (cebrailkara@gmail.com)"
+              >
+                <Lock className="w-3 h-3 text-slate-500" />
+                <span className="hidden xl:inline">Admin</span>
+              </Link>
+            )}
+
             <Link
               to="/servis-takip"
               className="px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all"
@@ -257,6 +308,35 @@ export const Navbar = () => {
             </Link>
           ))}
           <div className="pt-3 border-t border-slate-800 space-y-2">
+            {isSuperAdmin ? (
+              <div className="space-y-2">
+                <Link
+                  to="/panel"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-xs font-black shadow-md"
+                >
+                  <Crown className="w-4 h-4" />
+                  <span>Süper Admin Paneli ({user.name})</span>
+                </Link>
+                <button
+                  onClick={() => { logout(); setMobileMenuOpen(false); }}
+                  className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-slate-900 text-red-400 hover:text-red-300 text-xs font-bold border border-slate-800"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Süper Admin Oturumunu Kapat</span>
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-900 text-slate-300 hover:text-amber-400 text-xs font-semibold border border-slate-800"
+              >
+                <Lock className="w-3.5 h-3.5 text-slate-500" />
+                <span>Süper Admin Girişi</span>
+              </Link>
+            )}
+
             <Link
               to="/servis-takip"
               onClick={() => setMobileMenuOpen(false)}

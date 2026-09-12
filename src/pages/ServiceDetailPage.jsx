@@ -200,18 +200,18 @@ export function ServiceDetailPage() {
               {/* Action Buttons */}
               <div className="space-y-2.5 pt-2">
                 <a 
-                  href="tel:05325550128"
-                  className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 flex items-center justify-center space-x-2 transition"
+                  href="tel:05335293674"
+                  className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center space-x-2 transition shadow-lg shadow-amber-500/20"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>0532 555 01 28 Hemen Ara</span>
+                  <span>0533 529 36 74 Hemen Ara</span>
                 </a>
 
                 <a 
-                  href={`https://wa.me/905325550128?text=Merhaba,%20${encodeURIComponent(service.title)}%20hakkinda%20bilgi%20ve%20servis%20talep%20etmek%20istiyorum.`}
+                  href={`https://wa.me/905344075585?text=Merhaba,%20${encodeURIComponent(service.title)}%20hakkinda%20bilgi%20ve%20servis%20talep%20etmek%20istiyorum.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center space-x-2 transition"
+                  className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center space-x-2 transition shadow-lg shadow-emerald-600/20"
                 >
                   <MessageSquare className="w-4 h-4" />
                   <span>WhatsApp ile Fiyat & Bilgi Al</span>

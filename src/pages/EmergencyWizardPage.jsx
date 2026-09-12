@@ -65,7 +65,7 @@ export function EmergencyWizardPage() {
   const getWhatsAppDispatchLink = (order) => {
     if (!order) return '';
     const msg = `*MESA 7/24 ACİL İŞ MAKİNASI ÇAĞRISI*%0A%0A*Takip No:* ${order.code}%0A*Firma/Yetkili:* ${order.customer}%0A*Telefon:* ${order.phone}%0A*Makine:* ${order.machine}%0A*Şantiye:* ${order.location}%0A*Arıza:* ${order.issue}%0A%0AAcil seyyar servis aracının yönlendirilmesini talep ediyorum.`;
-    return `https://wa.me/905335293674?text=${msg}`;
+    return `https://wa.me/905344075585?text=${msg}`;
   };
 
   return (

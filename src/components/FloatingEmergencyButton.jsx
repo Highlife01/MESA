@@ -22,7 +22,7 @@ export const FloatingEmergencyButton = () => {
           </Link>
 
           <a
-            href="https://wa.me/905335293674?text=Merhaba%2C%20acil%20servis%20ve%20ar%C4%B1za%20tespiti%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
+            href="https://wa.me/905344075585?text=Merhaba%2C%20acil%20servis%20ve%20ar%C4%B1za%20tespiti%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-2.5 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-2xl shadow-xl font-bold text-xs transition transform hover:-translate-x-1"

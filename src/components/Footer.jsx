@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '../router/Router';
-import { Wrench, Phone, Mail, MapPin, ShieldCheck, Clock, ArrowRight, ExternalLink } from 'lucide-react';
+import { Wrench, Phone, Mail, MapPin, ShieldCheck, Clock, ArrowRight, ExternalLink, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 export const Footer = () => {
@@ -63,13 +63,22 @@ export const Footer = () => {
             <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
               Çukurova bölgesinin lider mobil iş makinası servisi. JCB, Caterpillar, Hidromek, Komatsu ve Volvo ekskavatör, loder ve vinç sistemleri için yerinde tamir ve revizyon.
             </p>
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex flex-wrap items-center gap-2 pt-2">
               <a
                 href="tel:05335293674"
                 className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs flex items-center gap-1.5 transition"
               >
                 <Phone className="w-3.5 h-3.5" />
                 <span>0533 529 36 74</span>
+              </a>
+              <a
+                href="https://wa.me/905344075585?text=Merhaba,%20MESA%20%C4%B0%C5%9F%20Makinalar%C4%B1%20servis%20ve%20destek%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow-sm"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>WP: 0534 407 55 85</span>
               </a>
             </div>
           </div>
@@ -96,6 +105,7 @@ export const Footer = () => {
               <li><Link to="/teknisyen" className="hover:text-amber-400 transition">Teknisyen Mobil Portalı</Link></li>
               <li><Link to="/panel" className="hover:text-amber-400 transition">ERP Telematik Panel</Link></li>
               <li><Link to="/musteri-portali" className="hover:text-amber-400 transition">Müşteri Portalı</Link></li>
+              <li><Link to="/admin" className="text-amber-400/90 hover:text-amber-300 font-bold transition flex items-center gap-1">👑 Süper Admin Girişi</Link></li>
             </ul>
           </div>
 
@@ -110,6 +120,10 @@ export const Footer = () => {
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-amber-400 shrink-0" />
                 <a href="tel:05335293674" className="hover:text-white">0533 529 36 74</a>
+              </li>
+              <li className="flex items-center gap-2">
+                <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                <a href="https://wa.me/905344075585" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 font-medium">WhatsApp: 0534 407 55 85</a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-amber-400 shrink-0" />

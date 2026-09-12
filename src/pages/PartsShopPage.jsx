@@ -83,7 +83,7 @@ export function PartsShopPage() {
     if (!order) return '';
     const itemsText = order.items.map(i => `- ${i.name} (OEM: ${i.oemCode}) x ${i.quantity} = ${(i.price * i.quantity).toLocaleString('tr-TR')} TL`).join('%0A');
     const msg = `*MESA İŞ MAKİNALARI YEDEK PARÇA SİPARİŞİ*%0A%0A*Sipariş No:* ${order.orderCode}%0A*Firma/Müşteri:* ${order.companyName || order.customerName}%0A*Telefon:* ${order.phone}%0A*Teslimat:* ${order.address}%0A%0A*Parçalar:*%0A${itemsText}%0A%0A*Toplam Tutar:* ${order.total.toLocaleString('tr-TR')} TL (KDV Hariç)%0A%0ASiparişi onaylıyorum, kargo/sevkiyat durumunu bildiriniz.`;
-    return `https://wa.me/905335293674?text=${msg}`;
+    return `https://wa.me/905344075585?text=${msg}`;
   };
 
   return (

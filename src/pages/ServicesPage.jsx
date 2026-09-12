@@ -132,11 +132,11 @@ export function ServicesPage() {
 
           <div className="flex flex-wrap items-center gap-3">
             <a 
-              href="tel:05325550128" 
+              href="tel:05335293674" 
               className="px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-lg transition flex items-center space-x-2"
             >
               <Phone className="w-4 h-4" />
-              <span>0532 555 01 28 Usta ile Görüş</span>
+              <span>0533 529 36 74 Usta ile Görüş</span>
             </a>
             <Link 
               to="/iletisim"

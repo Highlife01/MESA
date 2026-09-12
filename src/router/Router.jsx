@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useMemo } from '
 
 const RouterContext = createContext({
   path: '/',
+  search: '',
   params: {},
   navigate: () => {}
 });
@@ -11,10 +12,15 @@ export function Router({ children }) {
     return window.location.pathname || '/';
   });
 
+  const [currentSearch, setCurrentSearch] = useState(() => {
+    return window.location.search || '';
+  });
+
   useEffect(() => {
     const handleLocationChange = () => {
       setCurrentPath(window.location.pathname || '/');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setCurrentSearch(window.location.search || '');
+      window.scrollTo({ top: 0, behavior: 'instant' });
     };
 
     window.addEventListener('popstate', handleLocationChange);
@@ -27,7 +33,7 @@ export function Router({ children }) {
   }, []);
 
   const navigate = (to, { replace = false } = {}) => {
-    if (to === window.location.pathname) {
+    if (to === window.location.pathname + window.location.search) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -40,7 +46,7 @@ export function Router({ children }) {
   };
 
   return (
-    <RouterContext.Provider value={{ path: currentPath, navigate }}>
+    <RouterContext.Provider value={{ path: currentPath, search: currentSearch, navigate }}>
       {children}
     </RouterContext.Provider>
   );
@@ -48,7 +54,7 @@ export function Router({ children }) {
 
 export function useLocation() {
   const context = useContext(RouterContext);
-  return { pathname: context.path };
+  return { pathname: context.path, search: context.search };
 }
 
 export function useNavigate() {

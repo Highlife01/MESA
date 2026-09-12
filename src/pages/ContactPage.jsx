@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SEO } from '../components/SEO';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Building, ShieldCheck, AlertCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Building, ShieldCheck, AlertCircle, MessageCircle } from 'lucide-react';
 
 export const ContactPage = () => {
   const [formState, setFormState] = useState({ name: '', phone: '', company: '', machineType: '', location: '', message: '' });
@@ -176,12 +176,23 @@ export const ContactPage = () => {
               <span className="text-xs font-bold text-amber-400 uppercase tracking-wider block mb-2">Acil Çağrı Merkezi</span>
               <h3 className="text-2xl font-black text-white mb-2">7/24 Kesintisiz Hat</h3>
               <p className="text-slate-300 text-sm mb-6">Maden, taş ocağı ve yol şantiyelerinde acil duruşlar için nöbetçi usta hattımız:</p>
-              <a
-                href="tel:05335293674"
-                className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-lg shadow-lg shadow-amber-500/20 transition-all w-full justify-center"
-              >
-                <Phone className="w-5 h-5" /> 0533 529 36 74
-              </a>
+              <div className="space-y-3">
+                <a
+                  href="tel:05335293674"
+                  className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-lg shadow-lg shadow-amber-500/20 transition-all w-full justify-center"
+                >
+                  <Phone className="w-5 h-5" /> 0533 529 36 74
+                </a>
+
+                <a
+                  href="https://wa.me/905344075585?text=Merhaba,%20MESA%20%C4%B0%C5%9F%20Makinalar%C4%B1%20hakk%C4%B1nda%20bilgi%20ve%20servis%20talebinde%20bulunmak%20istiyorum."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base shadow-lg shadow-emerald-600/20 transition-all w-full justify-center"
+                >
+                  <MessageCircle className="w-5 h-5" /> WhatsApp: 0534 407 55 85
+                </a>
+              </div>
             </div>
 
             <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-8 space-y-6">
