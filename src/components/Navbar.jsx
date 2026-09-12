@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from '../router/Router';
-import { Phone, Wrench, ChevronDown, Menu, X, ArrowRight, Globe } from 'lucide-react';
+import { Phone, Wrench, ChevronDown, Menu, X, ArrowRight, Globe, ShoppingCart, Cpu, PackageCheck } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
 import { useLanguage } from '../context/LanguageContext';
+import { useOperational } from '../context/OperationalContext';
 
 export const Navbar = () => {
   const { pathname } = useLocation();
   const { lang, setLang, t } = useLanguage();
+  const { cart } = useOperational();
+  
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+
+  const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   const languages = [
     { code: 'tr', label: 'Türkçe', flag: '🇹🇷' },
@@ -22,6 +27,8 @@ export const Navbar = () => {
   const navLinks = [
     { name: t('home'), href: '/' },
     { name: t('services'), href: '/hizmetler', isDropdown: true },
+    { name: 'Arıza Çözücü', href: '/ariza-kodu-cozucu', isSpecial: true },
+    { name: 'Yedek Parça', href: '/yedek-parca' },
     { name: t('brands'), href: '/markalar' },
     { name: t('fleet'), href: '/filo' },
     { name: t('guides'), href: '/rehberler' },
@@ -82,7 +89,7 @@ export const Navbar = () => {
                 >
                   <Link
                     to={link.href}
-                    className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
                       pathname.startsWith('/hizmetler')
                         ? 'text-amber-400 font-bold bg-amber-500/10'
                         : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -122,10 +129,12 @@ export const Navbar = () => {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    pathname === link.href
-                      ? 'text-amber-400 font-bold bg-amber-500/10'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    link.isSpecial 
+                      ? 'text-amber-400 font-bold bg-amber-500/10 border border-amber-500/20'
+                      : pathname === link.href
+                        ? 'text-amber-400 font-bold bg-amber-500/10'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                   }`}
                 >
                   {link.name}
@@ -135,13 +144,27 @@ export const Navbar = () => {
           </nav>
 
           {/* Desktop Right CTAs + Language Selector */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2.5">
             
+            {/* Cart Button */}
+            <Link
+              to="/yedek-parca"
+              className="relative p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-200 hover:text-white transition-colors"
+              title="Yedek Parça Sepeti"
+            >
+              <ShoppingCart className="w-4 h-4 text-amber-400" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-black flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
+
             {/* Language Dropdown Selector */}
             <div className="relative">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-bold text-slate-200 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-bold text-slate-200 transition-colors"
                 title="Dil Seçimi / Change Language"
               >
                 <span>{currentLang.flag}</span>
@@ -184,24 +207,29 @@ export const Navbar = () => {
 
           {/* Mobile Menu Button + Quick Lang Switch */}
           <div className="xl:hidden flex items-center gap-2">
+            <Link
+              to="/yedek-parca"
+              className="relative p-2 rounded-lg bg-slate-900 border border-slate-800 text-amber-400"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-slate-950 text-[9px] font-black flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
             <button
               onClick={() => {
                 const nextLang = lang === 'tr' ? 'en' : lang === 'en' ? 'ar' : 'tr';
                 setLang(nextLang);
               }}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-bold text-amber-400"
+              className="px-2 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-bold text-amber-400"
             >
               {currentLang.flag} {currentLang.code.toUpperCase()}
             </button>
-            <Link
-              to="/ariza-bildir"
-              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950"
-            >
-              {t('emergencyCall')}
-            </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2.5 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 focus:outline-none"
+              className="p-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 focus:outline-none"
               aria-label="Menüyü Aç"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -219,7 +247,7 @@ export const Navbar = () => {
               key={link.name}
               to={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className={`block px-4 py-3 rounded-xl text-sm font-medium ${
+              className={`block px-4 py-2.5 rounded-xl text-sm font-medium ${
                 pathname === link.href || (link.isDropdown && pathname.startsWith('/hizmetler'))
                   ? 'bg-amber-500/10 text-amber-400 font-bold border border-amber-500/30'
                   : 'text-slate-300 hover:bg-slate-900'
@@ -228,42 +256,21 @@ export const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          <div className="pt-4 border-t border-slate-800 space-y-2">
-            <div className="flex items-center justify-around py-2 bg-slate-900 rounded-xl border border-slate-800 mb-2">
-              {languages.map((l) => (
-                <button
-                  key={l.code}
-                  onClick={() => setLang(l.code)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 ${
-                    lang === l.code ? 'bg-amber-500 text-slate-950' : 'text-slate-400'
-                  }`}
-                >
-                  <span>{l.flag}</span>
-                  <span>{l.label}</span>
-                </button>
-              ))}
-            </div>
-
+          <div className="pt-3 border-t border-slate-800 space-y-2">
             <Link
               to="/servis-takip"
               onClick={() => setMobileMenuOpen(false)}
-              className="block w-full text-center py-3 rounded-xl bg-slate-900 text-slate-300 text-sm font-semibold border border-slate-800"
+              className="block w-full text-center py-2.5 rounded-xl bg-slate-900 text-slate-300 text-xs font-semibold border border-slate-800"
             >
               {t('serviceTracking')}
             </Link>
             <Link
-              to="/musteri-portali"
+              to="/ariza-bildir"
               onClick={() => setMobileMenuOpen(false)}
-              className="block w-full text-center py-3 rounded-xl bg-slate-900 text-slate-300 text-sm font-semibold border border-slate-800"
+              className="block w-full text-center py-2.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold shadow-lg"
             >
-              {t('portal')}
+              {t('emergencyCall')}
             </Link>
-            <a
-              href="tel:05335293674"
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm"
-            >
-              <Phone className="w-4 h-4" /> {t('callNow')}
-            </a>
           </div>
         </div>
       )}

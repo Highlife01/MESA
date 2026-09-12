@@ -1,0 +1,21 @@
+{
+  "name": "MESA İş Makinaları 7/24 Mobil Servis",
+  "short_name": "MESA Servis",
+  "description": "Adana ve Çukurova 7/24 Mobil İş Makinası ve Hidrolik Teknik Servisi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0F19",
+  "theme_color": "#f59e0b",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

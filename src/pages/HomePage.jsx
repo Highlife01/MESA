@@ -9,6 +9,7 @@ import {
 import { servicesData } from '../data/servicesData';
 import { guidesData } from '../data/guidesData';
 import { brandsData } from '../data/brandsData';
+import { GoogleReviewsWidget } from '../components/GoogleReviewsWidget';
 
 export function HomePage() {
   const [openFaq, setOpenFaq] = useState(null);
@@ -562,7 +563,12 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* Google Reviews Live Widget */}
+        <div className="my-16">
+          <GoogleReviewsWidget />
+        </div>
+
+        {/* FAQ Section */}
       <section className="py-20 px-4 sm:px-6 max-w-4xl mx-auto" id="sss">
         <div className="text-center mb-12">
           <span className="text-xs font-bold text-amber-600 tracking-wider uppercase block">MERAK EDİLENLER</span>

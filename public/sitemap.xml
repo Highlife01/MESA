@@ -7,136 +7,52 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://mesaismak.web.app/ariza-kodu-cozucu</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://mesaismak.web.app/yedek-parca</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://mesaismak.web.app/hizmetler</loc>
     <lastmod>2026-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mesaismak.web.app/hizmetler/is-makinasi-tamiri</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/hidrolik-sistem-tamiri</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/teleskopik-yukleyici-tamiri</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/mobil-saha-servisi</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/hidrolik-hortum-pres</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/sanziman-diferansiyel</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/motor-arizalari</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/periyodik-bakim</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/elektronik-ariza-beyin-tamiri</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/kule-donus-cer-revizyonu</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/borwerk-delik-isleme-ve-kaynak</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/hizmetler/hidrolik-kirici-ve-atasman-bakimi</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://mesaismak.web.app/markalar</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/filo</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/rehberler</loc>
     <lastmod>2026-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://mesaismak.web.app/rehberler/hidrolik-yag-kirliligi-ve-pompa-omru</loc>
+    <loc>https://mesaismak.web.app/filo</loc>
     <lastmod>2026-09-12</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://mesaismak.web.app/rehberler</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mesaismak.web.app/rehberler/agir-is-makinasi-periyodik-bakim-cizelgesi</loc>
+    <loc>https://mesaismak.web.app/ariza-bildir</loc>
     <lastmod>2026-09-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mesaismak.web.app/rehberler/dpf-ve-adblue-arizalarinin-onlenmesi</loc>
+    <loc>https://mesaismak.web.app/servis-takip</loc>
     <lastmod>2026-09-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/rehberler/kule-donus-rulmani-ve-cer-dislisi-asinma-olcum-rehberi</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/rehberler/is-makinasi-150-nokta-ekspertiz-rehberi</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/rehberler/santiyelerde-mevsimsel-yag-secimi-ve-isinma-nedenleri</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://mesaismak.web.app/hakkimizda</loc>
@@ -149,17 +65,5 @@
     <lastmod>2026-09-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/ariza-bildir</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://mesaismak.web.app/servis-takip</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>
