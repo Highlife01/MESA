@@ -69,10 +69,14 @@ export function ServicesPage() {
             >
               <div className="h-48 relative overflow-hidden bg-slate-900">
                 <img 
-                  src={service.heroImage} 
+                  src={service.heroImage || '/images/mesa-workshop.png'} 
                   alt={service.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
                   loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/images/mesa-workshop.png';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
                 <span className="absolute top-3 left-3 px-3 py-1 rounded-md bg-slate-950/80 backdrop-blur text-xs font-bold text-amber-400 border border-slate-800">

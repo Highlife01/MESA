@@ -12,6 +12,7 @@ import { PageTransition } from './components/PageTransition';
 import { MobileStickyCTA } from './components/MobileStickyCTA';
 
 import { ShoppingCart, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // ── Lazy-loaded Pages (code splitting) ──
 const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
@@ -109,52 +110,54 @@ export function App() {
             <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-red-600 selection:text-white">
               <Navbar />
               <main className="flex-1">
-                <Suspense fallback={<PageLoader />}>
-                  <Routes>
-                    <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
-                    <Route path="/index.html" element={<PageTransition><HomePage /></PageTransition>} />
-                    <Route path="/turkiye-is-makinalari-servisi" element={<PageTransition><NationalLandingPage /></PageTransition>} />
-                    <Route path="/hizmet-bolgeleri" element={<PageTransition><RegionalHubPage /></PageTransition>} />
-                    <Route path="/bolgeler" element={<PageTransition><RegionalHubPage /></PageTransition>} />
-                    
-                    {/* Şehir Bazlı SEO ve Bölge Hub Rotaları */}
-                    <Route path="/sehirler" element={<PageTransition><CitiesHubPage /></PageTransition>} />
-                    <Route path="/sehirler/:slug" element={<PageTransition><CityLandingPage /></PageTransition>} />
-                    
-                    {/* Ulusal Hedefli Hizmet Sayfaları */}
-                    <Route path="/is-makinalari-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinalari-servisi" /></PageTransition>} />
-                    <Route path="/is-makinasi-tamiri" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-tamiri" /></PageTransition>} />
-                    <Route path="/mobil-teknik-servis" element={<PageTransition><ServiceDetailPage explicitSlug="mobil-teknik-servis" /></PageTransition>} />
-                    <Route path="/hidrolik-servis" element={<PageTransition><ServiceDetailPage explicitSlug="hidrolik-servis" /></PageTransition>} />
-                    <Route path="/hidrolik-silindir-tamiri" element={<PageTransition><ServiceDetailPage explicitSlug="hidrolik-silindir-tamiri" /></PageTransition>} />
-                    <Route path="/is-makinasi-ariza-tespiti" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-ariza-tespiti" /></PageTransition>} />
-                    <Route path="/is-makinasi-bakim" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-bakim" /></PageTransition>} />
-                    <Route path="/teleskopik-yukleyici-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="teleskopik-yukleyici-servisi" /></PageTransition>} />
-                    <Route path="/forklift-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="forklift-servisi" /></PageTransition>} />
-                    <Route path="/ekskavator-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="ekskavator-servisi" /></PageTransition>} />
-                    <Route path="/kepce-loader-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="kepce-loader-servisi" /></PageTransition>} />
+                <ErrorBoundary>
+                  <Suspense fallback={<PageLoader />}>
+                    <Routes>
+                      <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+                      <Route path="/index.html" element={<PageTransition><HomePage /></PageTransition>} />
+                      <Route path="/turkiye-is-makinalari-servisi" element={<PageTransition><NationalLandingPage /></PageTransition>} />
+                      <Route path="/hizmet-bolgeleri" element={<PageTransition><RegionalHubPage /></PageTransition>} />
+                      <Route path="/bolgeler" element={<PageTransition><RegionalHubPage /></PageTransition>} />
+                      
+                      {/* Şehir Bazlı SEO ve Bölge Hub Rotaları */}
+                      <Route path="/sehirler" element={<PageTransition><CitiesHubPage /></PageTransition>} />
+                      <Route path="/sehirler/:slug" element={<PageTransition><CityLandingPage /></PageTransition>} />
+                      
+                      {/* Ulusal Hedefli Hizmet Sayfaları */}
+                      <Route path="/is-makinalari-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinalari-servisi" /></PageTransition>} />
+                      <Route path="/is-makinasi-tamiri" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-tamiri" /></PageTransition>} />
+                      <Route path="/mobil-teknik-servis" element={<PageTransition><ServiceDetailPage explicitSlug="mobil-teknik-servis" /></PageTransition>} />
+                      <Route path="/hidrolik-servis" element={<PageTransition><ServiceDetailPage explicitSlug="hidrolik-servis" /></PageTransition>} />
+                      <Route path="/hidrolik-silindir-tamiri" element={<PageTransition><ServiceDetailPage explicitSlug="hidrolik-silindir-tamiri" /></PageTransition>} />
+                      <Route path="/is-makinasi-ariza-tespiti" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-ariza-tespiti" /></PageTransition>} />
+                      <Route path="/is-makinasi-bakim" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-bakim" /></PageTransition>} />
+                      <Route path="/teleskopik-yukleyici-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="teleskopik-yukleyici-servisi" /></PageTransition>} />
+                      <Route path="/forklift-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="forklift-servisi" /></PageTransition>} />
+                      <Route path="/ekskavator-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="ekskavator-servisi" /></PageTransition>} />
+                      <Route path="/kepce-loader-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="kepce-loader-servisi" /></PageTransition>} />
 
-                    <Route path="/hizmetler" element={<PageTransition><ServicesPage /></PageTransition>} />
-                    <Route path="/hizmetler/:slug" element={<PageTransition><ServiceDetailPage /></PageTransition>} />
-                    <Route path="/bakim-hesaplayici" element={<PageTransition><MaintenanceCalculatorPage /></PageTransition>} />
-                    <Route path="/ariza-kodu-cozucu" element={<PageTransition><FaultDiagnosticPage /></PageTransition>} />
-                    <Route path="/yedek-parca" element={<PageTransition><PartsShopPage /></PageTransition>} />
-                    <Route path="/markalar" element={<PageTransition><BrandsPage /></PageTransition>} />
-                    <Route path="/filo" element={<PageTransition><FleetPage /></PageTransition>} />
-                    <Route path="/rehberler" element={<PageTransition><GuidesPage /></PageTransition>} />
-                    <Route path="/rehberler/:slug" element={<PageTransition><GuideDetailPage /></PageTransition>} />
-                    <Route path="/hakkimizda" element={<PageTransition><AboutPage /></PageTransition>} />
-                    <Route path="/iletisim" element={<PageTransition><ContactPage /></PageTransition>} />
-                    <Route path="/ariza-bildir" element={<PageTransition><EmergencyWizardPage /></PageTransition>} />
-                    <Route path="/servis-takip" element={<PageTransition><ServiceTrackingPage /></PageTransition>} />
-                    <Route path="/musteri-portali" element={<PageTransition><CustomerPortalPage /></PageTransition>} />
-                    <Route path="/teknisyen" element={<PageTransition><TechnicianPage /></PageTransition>} />
-                    <Route path="/panel" element={<PageTransition><DashboardPage /></PageTransition>} />
-                    <Route path="/admin" element={<PageTransition><AdminLoginPage /></PageTransition>} />
-                    <Route path="/login" element={<PageTransition><AdminLoginPage /></PageTransition>} />
-                    <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
-                  </Routes>
-                </Suspense>
+                      <Route path="/hizmetler" element={<PageTransition><ServicesPage /></PageTransition>} />
+                      <Route path="/hizmetler/:slug" element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+                      <Route path="/bakim-hesaplayici" element={<PageTransition><MaintenanceCalculatorPage /></PageTransition>} />
+                      <Route path="/ariza-kodu-cozucu" element={<PageTransition><FaultDiagnosticPage /></PageTransition>} />
+                      <Route path="/yedek-parca" element={<PageTransition><PartsShopPage /></PageTransition>} />
+                      <Route path="/markalar" element={<PageTransition><BrandsPage /></PageTransition>} />
+                      <Route path="/filo" element={<PageTransition><FleetPage /></PageTransition>} />
+                      <Route path="/rehberler" element={<PageTransition><GuidesPage /></PageTransition>} />
+                      <Route path="/rehberler/:slug" element={<PageTransition><GuideDetailPage /></PageTransition>} />
+                      <Route path="/hakkimizda" element={<PageTransition><AboutPage /></PageTransition>} />
+                      <Route path="/iletisim" element={<PageTransition><ContactPage /></PageTransition>} />
+                      <Route path="/ariza-bildir" element={<PageTransition><EmergencyWizardPage /></PageTransition>} />
+                      <Route path="/servis-takip" element={<PageTransition><ServiceTrackingPage /></PageTransition>} />
+                      <Route path="/musteri-portali" element={<PageTransition><CustomerPortalPage /></PageTransition>} />
+                      <Route path="/teknisyen" element={<PageTransition><TechnicianPage /></PageTransition>} />
+                      <Route path="/panel" element={<PageTransition><DashboardPage /></PageTransition>} />
+                      <Route path="/admin" element={<PageTransition><AdminLoginPage /></PageTransition>} />
+                      <Route path="/login" element={<PageTransition><AdminLoginPage /></PageTransition>} />
+                      <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
+                    </Routes>
+                  </Suspense>
+                </ErrorBoundary>
               </main>
               <Footer />
               <MobileStickyCTA />

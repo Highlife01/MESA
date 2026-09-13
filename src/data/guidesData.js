@@ -8,7 +8,7 @@ export const guidesData = [
     readTime: '6 Dk Okuma',
     publishDate: 'Eylül 2026',
     author: 'Mesa Teknik Mühendislik Kurulu',
-    heroImage: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-hydraulics.jpg',
     tags: ['Hidrolik Pompa', 'ISO 4406', 'Yağ Analizi', 'Kawasaki', 'Rexroth'],
     summary: 'Ağır iş makinelerinde hidrolik pompa, valf ve silindir revizyonlarının ana sebebi mekanik yorulma değil, mikroskobik yağ kirliliğidir. Bu rehberde şantiyelerde uygulanabilir koruyucu adımları sıralıyoruz.',
     content: [
@@ -42,7 +42,7 @@ export const guidesData = [
     readTime: '8 Dk Okuma',
     publishDate: 'Eylül 2026',
     author: 'Mesa Saha Operasyon Birimi',
-    heroImage: 'https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-maintenance.jpg',
     tags: ['Periyodik Bakım', '250 Saat', '500 Saat', 'Filtre Değişimi', 'Gresleme'],
     summary: 'Planlı bakım maliyeti, şantiyede plansız duran bir makinenin yarattığı iş kaybının sadece %5\'i kadardır. İşte uzman teknisyenlerimizin uyguladığı saat kademeli bakım protokolü.',
     content: [
@@ -58,14 +58,13 @@ export const guidesData = [
         ]
       },
       {
-        sectionTitle: '2. 500 Saatlik Orta Seviye Bakım Paketi',
-        text: '500 saatte yakıt ve hidrolik emiş hatları detaylı incelemeye alınır.',
+        sectionTitle: '2. 500 Saatlik Hidrolik ve Güç Aktarım Bakımı',
+        text: 'Bu aşamada hidrolik emiş ve pilot basınç filtreleri kontrol edilir, şanzıman yağı seviyesi ve diferansiyel kilitleri test edilir.',
         checklist: [
-          'Tüm motor yakıt ana ve sekonder filtrelerinin OEM parçalarla yenilenmesi',
-          'Hidrolik pilot hat filtresinin değişimi ve pilot basınç kontrolü',
-          'Aks, diferansiyel ve cer redüktörleri yağ seviyesi ve talaş kontrolü',
-          'V kayışları gerginlik ve aşınma çatlak muayenesi',
-          'Akü voltaj, kutup başı temizliği ve alternatör şarj dinamosu ölçümü'
+          'Hidrolik pilot ve dönüş filtrelerinin değişimi',
+          'Şanzıman ve cer redüktör yağ seviyesi kontrolleri',
+          'Radyatör peteklerinin basınçlı hava ve özel kimyasalla yıkanması',
+          'Akü voltajı ve alternatör şarj dinamosu akım ölçümü'
         ]
       },
       {
@@ -84,7 +83,7 @@ export const guidesData = [
     readTime: '7 Dk Okuma',
     publishDate: 'Eylül 2026',
     author: 'Mesa Elektronik Teşhis Laboratuvarı',
-    heroImage: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-diesel-engine.jpg',
     tags: ['DPF Rejenerasyon', 'AdBlue', 'SCR', 'Stage V', 'Tier 4'],
     summary: 'Yeni nesil iş makinelerinde en sık yaşanan duruşların başında DPF kurum doluluğu ve AdBlue kristalleşmesi gelir. Makine gücünün %40 oranında düşmesini (derate) önleme yöntemleri.',
     content: [

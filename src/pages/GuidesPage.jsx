@@ -84,10 +84,14 @@ export const GuidesPage = () => {
             >
               <div className="relative h-48 overflow-hidden">
                 <img
-                  src={guide.heroImage}
+                  src={guide.heroImage || '/images/mesa-workshop.png'}
                   alt={guide.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/images/mesa-workshop.png';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent" />
                 <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 text-red-600 text-xs font-bold shadow-xs">

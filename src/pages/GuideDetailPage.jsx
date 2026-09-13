@@ -57,9 +57,13 @@ export const GuideDetailPage = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="rounded-3xl overflow-hidden mb-10 border border-slate-200 max-h-96 shadow-md">
           <img
-            src={guide.heroImage}
+            src={guide.heroImage || '/images/mesa-workshop.png'}
             alt={guide.title}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/images/mesa-workshop.png';
+            }}
           />
         </div>
 

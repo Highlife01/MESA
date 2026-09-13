@@ -93,9 +93,13 @@ export function ServiceDetailPage({ explicitSlug }) {
         {/* Hero Banner */}
         <div className="relative rounded-3xl overflow-hidden bg-slate-950 text-white mb-10 shadow-xl">
           <img 
-            src={service.heroImage} 
+            src={service.heroImage || '/images/mesa-workshop.png'} 
             alt={service.title}
             className="w-full h-72 sm:h-96 object-cover opacity-35"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/images/mesa-workshop.png';
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
 
