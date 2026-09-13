@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 
-const SITE_NAME = 'Mesa İş Makinaları';
-const BASE_URL = 'https://mesaismak.web.app';
-const DEFAULT_IMAGE = 'https://mesaismak.web.app/og-image.jpg';
+const SITE_NAME = 'MESA İş Makinaları';
+const BASE_URL = 'https://mesaismakinalari.com.tr';
+const DEFAULT_IMAGE = 'https://mesaismakinalari.com.tr/images/mesa-excavator-hero.png';
 
 export function SEO({
   title,
-  description = 'Adana ve Çukurova genelinde 7/24 mobil iş makinası tamiri, hidrolik sistem, teleskopik yükleyici, şanzıman ve motor revizyon servisi.',
-  keywords = 'adana iş makinası servisi, hidrolik pompa tamiri, jcb servisi, cat tamiri, manitou servisi, mobil saha servisi, hidrolik hortum pres adana',
+  description = 'Türkiye genelinde 7/24 mobil iş makinası tamiri, hidrolik sistem, teleskopik yükleyici, şanzıman ve motor revizyon servisi. Adana merkezli operasyonla tüm Türkiye’ye saha desteği.',
+  keywords = 'Türkiye iş makinası servisi, mobil iş makinası tamiri, hidrolik pompa tamiri, jcb servisi, cat tamiri, manitou servisi, ekskavatör tamiri, telehandler servisi, motor şanzıman revizyonu, 7/24 yerinde servis',
   canonical = '',
   ogType = 'website',
   ogImage = DEFAULT_IMAGE,

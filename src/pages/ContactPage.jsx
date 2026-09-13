@@ -41,10 +41,10 @@ export const ContactPage = () => {
   return (
     <div className="bg-[#0B0F19] text-slate-100 min-h-screen">
       <SEO
-        title="İletişim ve Şantiye Servis Talebi | Mesa İş Makinaları"
-        description="Mesa İş Makinaları Adana merkez atölyesi, Mersin, Hatay ve Osmaniye servis irtibat noktaları. 7/24 Acil Çağrı Hattı: 0533 529 36 74."
+        title="İletişim ve Şantiye Servis Talebi | MESA İş Makinaları"
+        description="MESA İş Makinaları Adana merkezli operasyonu ile Türkiye genelinde mobil servis, saha tamiri ve hidrolik sistem destekleri sunar. 7/24 Acil Çağrı Hattı: 0533 529 36 74."
         canonical="/iletisim"
-        keywords="mesa iş makinaları iletişim, adana iş makinası servisi telefon, şantiye acil servis iletişim, yeşiloba metal sanayi mesa"
+        keywords="iş makinası servisi iletişim, mobil servis iletişim, adana iş makinası tamiri telefon, Türkiye genelinde saha servis, yeşiloba metal sanayi mesa"
       />
 
       {/* Header */}

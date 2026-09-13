@@ -75,6 +75,7 @@ export function App() {
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+                    <Route path="/index.html" element={<PageTransition><HomePage /></PageTransition>} />
                     <Route path="/hizmetler" element={<PageTransition><ServicesPage /></PageTransition>} />
                     <Route path="/hizmetler/:slug" element={<PageTransition><ServiceDetailPage /></PageTransition>} />
                     <Route path="/ariza-kodu-cozucu" element={<PageTransition><FaultDiagnosticPage /></PageTransition>} />

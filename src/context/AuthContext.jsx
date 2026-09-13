@@ -1,15 +1,23 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
+const envEmail = import.meta.env.VITE_SUPER_ADMIN_EMAIL || 'admin@mesaismak.local';
+const envPassword = import.meta.env.VITE_SUPER_ADMIN_PASSWORD || 'change-me';
+const envName = import.meta.env.VITE_SUPER_ADMIN_NAME || 'Yönetici';
+
+export const isAdminLoginConfigured = Boolean(
+  import.meta.env.VITE_SUPER_ADMIN_EMAIL && import.meta.env.VITE_SUPER_ADMIN_PASSWORD
+);
+
 export const SUPER_ADMIN_CREDENTIALS = {
-  email: 'cebrailkara@gmail.com',
-  password: 'Ak010101',
-  name: 'Cebrail Kara',
+  email: envEmail,
+  password: envPassword,
+  name: envName,
   role: 'super_admin',
   roleTitle: 'Süper Admin (Genel Koordinatör)',
-  phone: '0534 407 55 85',
-  avatar: 'CK',
+  phone: '+90 000 000 00 00',
+  avatar: 'AD',
   permissions: [
     'ALL',
     'manage_orders',
@@ -31,6 +39,12 @@ export const AuthProvider = ({ children }) => {
     const cleanEmail = (email || '').trim().toLowerCase();
     const cleanPassword = (password || '').trim();
 
+    if (!isAdminLoginConfigured) {
+      const errorMsg = 'Yönetici girişi için güvenli site ayarları yapılandırılmamış. Lütfen .env dosyasına VITE_SUPER_ADMIN_EMAIL ve VITE_SUPER_ADMIN_PASSWORD değerlerini ekleyin.';
+      setLoginError(errorMsg);
+      return { success: false, error: errorMsg };
+    }
+
     if (
       cleanEmail === SUPER_ADMIN_CREDENTIALS.email.toLowerCase() &&
       cleanPassword === SUPER_ADMIN_CREDENTIALS.password
@@ -48,11 +62,11 @@ export const AuthProvider = ({ children }) => {
       setUser(authUser);
       setLoginError('');
       return { success: true, user: authUser };
-    } else {
-      const errorMsg = 'E-posta veya şifre hatalı. Lütfen süper admin bilgilerinizi kontrol ediniz.';
-      setLoginError(errorMsg);
-      return { success: false, error: errorMsg };
     }
+
+    const errorMsg = 'E-posta veya şifre hatalı. Lütfen güvenli yönetici bilgilerinizi kontrol ediniz.';
+    setLoginError(errorMsg);
+    return { success: false, error: errorMsg };
   };
 
   const logout = () => {
@@ -72,7 +86,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         loginError,
         setLoginError,
-        superAdminEmail: SUPER_ADMIN_CREDENTIALS.email
+        superAdminEmail: SUPER_ADMIN_CREDENTIALS.email,
+        isAdminLoginConfigured
       }}
     >
       {children}

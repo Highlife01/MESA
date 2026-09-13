@@ -19,8 +19,8 @@ export function ServicesPage() {
   return (
     <div className="min-h-screen bg-slate-50 py-12">
       <SEO 
-        title="İş Makinası Tamiri & Hidrolik Servis Hizmetlerimiz"
-        description="Ekskavatör, loder, bekoloder, Manitou telehandler, hidrolik pompa, şanzıman ve motor revizyon hizmetlerimiz. 12 ay garantili orijinal servis."
+        title="Türkiye İş Makinası Tamiri & Hidrolik Servis Hizmetlerimiz"
+        description="Ekskavatör, loder, bekoloder, Manitou telehandler, hidrolik pompa, şanzıman ve motor revizyon hizmetlerimiz. Türkiye genelinde 7/24 mobil servis ve saha müdahalesi."
         canonical="/hizmetler"
       />
 
@@ -39,7 +39,7 @@ export function ServicesPage() {
             İş Makinası & Hidrolik Servis Hizmetleri
           </h1>
           <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
-            Adana ve Çukurova bölgesinde ağır iş makineleri için yerinde arıza tespiti, 450 Bar test standı ile hidrolik pompa revizyonu, teleskopik bom onarımı ve garantili mekanik tamir.
+            Türkiye genelinde ağır iş makineleri için yerinde arıza tespiti, 450 Bar test standı ile hidrolik pompa revizyonu, teleskopik bom onarımı ve garantili mekanik tamir.
           </p>
         </div>
 

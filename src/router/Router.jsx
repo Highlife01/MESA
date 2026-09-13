@@ -7,9 +7,17 @@ const RouterContext = createContext({
   navigate: () => {}
 });
 
+function normalizePath(pathname) {
+  if (!pathname) return '/';
+  let clean = pathname.split('?')[0].split('#')[0];
+  if (clean === '/index.html' || clean === '/index.htm') return '/';
+  if (clean.length > 1 && clean.endsWith('/')) clean = clean.slice(0, -1);
+  return clean || '/';
+}
+
 export function Router({ children }) {
   const [currentPath, setCurrentPath] = useState(() => {
-    return window.location.pathname || '/';
+    return normalizePath(window.location.pathname);
   });
 
   const [currentSearch, setCurrentSearch] = useState(() => {
@@ -18,7 +26,7 @@ export function Router({ children }) {
 
   useEffect(() => {
     const handleLocationChange = () => {
-      setCurrentPath(window.location.pathname || '/');
+      setCurrentPath(normalizePath(window.location.pathname));
       setCurrentSearch(window.location.search || '');
       window.scrollTo({ top: 0, behavior: 'instant' });
     };
@@ -70,8 +78,13 @@ export function useParams() {
 function matchRoute(routePath, currentPath) {
   if (routePath === '*') return { match: true, params: {} };
 
-  const routeParts = routePath.split('/').filter(Boolean);
-  const currentParts = currentPath.split('/').filter(Boolean);
+  const normRoute = normalizePath(routePath);
+  const normCurrent = normalizePath(currentPath);
+
+  if (normRoute === normCurrent) return { match: true, params: {} };
+
+  const routeParts = normRoute.split('/').filter(Boolean);
+  const currentParts = normCurrent.split('/').filter(Boolean);
 
   if (routeParts.length !== currentParts.length) return { match: false, params: {} };
 

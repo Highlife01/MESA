@@ -145,8 +145,8 @@ export function DashboardPage() {
     const backupData = {
       exportTimestamp: new Date().toISOString(),
       superAdmin: {
-        name: user?.name || 'Cebrail Kara',
-        email: user?.email || 'cebrailkara@gmail.com',
+        name: user?.name || 'Yönetici',
+        email: user?.email || 'admin@mesaismak.local',
         role: 'Süper Admin (Root)'
       },
       activeOrders,
@@ -335,14 +335,14 @@ export function DashboardPage() {
               {isSuperAdmin ? (
                 <div className="flex items-center gap-1.5 bg-amber-500/15 border border-amber-500/30 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-black">
                   <Crown className="w-3.5 h-3.5" />
-                  <span className="hidden md:inline">Süper Admin: {user?.name || 'Cebrail Kara'}</span>
+                  <span className="hidden md:inline">Süper Admin: {user?.name || 'Yönetici'}</span>
                   <span className="md:hidden">Admin</span>
                 </div>
               ) : (
                 <Link
                   to="/admin"
                   className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 hover:border-amber-500/40 text-slate-300 hover:text-amber-400 px-3 py-1.5 rounded-xl text-xs font-semibold transition"
-                  title="Süper Admin Girişi (cebrailkara@gmail.com)"
+                  title="Süper Admin Girişi"
                 >
                   <Lock className="w-3 h-3 text-slate-500" />
                   <span>Admin Girişi</span>
@@ -383,7 +383,7 @@ export function DashboardPage() {
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <h2 className="text-lg font-black text-white tracking-tight">
-                      Süper Admin: {user?.name || 'Cebrail Kara'}
+                      Süper Admin: {user?.name || 'Yönetici'}
                     </h2>
                     <span className="px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-sm">
                       ROOT / TAM YETKİ
@@ -393,7 +393,7 @@ export function DashboardPage() {
                     </span>
                   </div>
                   <p className="text-xs text-slate-300 mt-1">
-                    <span className="font-mono text-amber-300 font-bold">{user?.email || 'cebrailkara@gmail.com'}</span> • İş emri silme, yeni teknisyen atama, filo telematik ve ERP sistem yönetimi aktif.
+                    <span className="font-mono text-amber-300 font-bold">{user?.email || 'admin@mesaismak.local'}</span> • İş emri silme, yeni teknisyen atama, filo telematik ve ERP sistem yönetimi aktif.
                   </p>
                 </div>
               </div>
@@ -445,7 +445,7 @@ export function DashboardPage() {
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition shrink-0"
             >
               <Crown className="w-3.5 h-3.5" />
-              <span>Süper Admin Girişi (cebrailkara@gmail.com)</span>
+              <span>Süper Admin Girişi</span>
             </Link>
           </div>
         )}
@@ -1039,10 +1039,10 @@ export function DashboardPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-black text-white truncate">{user?.name || 'Cebrail Kara'}</h3>
+                      <h3 className="text-lg font-black text-white truncate">{user?.name || 'Yönetici'}</h3>
                       <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-black uppercase">ROOT</span>
                     </div>
-                    <p className="text-xs text-amber-300 font-mono mt-0.5">{user?.email || 'cebrailkara@gmail.com'}</p>
+                    <p className="text-xs text-amber-300 font-mono mt-0.5">{user?.email || 'admin@mesaismak.local'}</p>
                     <p className="text-xs text-slate-400 mt-1">Süper Admin & Saha Operasyonları Genel Koordinatörü</p>
                   </div>
                 </div>

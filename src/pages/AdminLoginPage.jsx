@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 
 export function AdminLoginPage() {
-  const { user, isSuperAdmin, login, logout, loginError, setLoginError } = useAuth();
+  const { user, isSuperAdmin, login, logout, loginError, setLoginError, isAdminLoginConfigured } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -35,6 +35,10 @@ export function AdminLoginPage() {
   };
 
   const handleFillSuperAdmin = () => {
+    if (!isAdminLoginConfigured) {
+      setLoginError('Güvenli yönetici bilgileri henüz yapılandırılmadı. Lütfen .env dosyasını kontrol edin.');
+      return;
+    }
     setEmail(SUPER_ADMIN_CREDENTIALS.email);
     setPassword(SUPER_ADMIN_CREDENTIALS.password);
     setLoginError('');
@@ -201,20 +205,25 @@ export function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Quick Demo Fill Button */}
-          <div className="mt-6 pt-6 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={handleFillSuperAdmin}
-              className="w-full py-2.5 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold flex items-center justify-center gap-2 transition"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Süper Admin Bilgilerini Doldur ({SUPER_ADMIN_CREDENTIALS.name})</span>
-            </button>
-            <p className="text-[11px] text-slate-500 text-center mt-2 font-mono">
-              cebrailkara@gmail.com • Ak010101
-            </p>
-          </div>
+          {/* Quick Fill Button */}
+          {isAdminLoginConfigured ? (
+            <div className="mt-6 pt-6 border-t border-slate-800">
+              <button
+                type="button"
+                onClick={handleFillSuperAdmin}
+                className="w-full py-2.5 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold flex items-center justify-center gap-2 transition"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Güvenli Yönetici Bilgilerini Doldur ({SUPER_ADMIN_CREDENTIALS.name})</span>
+              </button>
+            </div>
+          ) : (
+            <div className="mt-6 pt-6 border-t border-slate-800">
+              <p className="text-[11px] text-amber-300 text-center">
+                Yönetici hesabı henüz yapılandırılmadı. Lütfen .env dosyasına güvenli giriş bilgileri ekleyin.
+              </p>
+            </div>
+          )}
 
         </div>
 

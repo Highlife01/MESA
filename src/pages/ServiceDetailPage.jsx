@@ -36,23 +36,23 @@ export function ServiceDetailPage() {
     'serviceType': service.title,
     'provider': {
       '@type': 'LocalBusiness',
-      'name': 'Mesa İş Makinaları Teknik Servis',
-      'telephone': '+905325550128',
+      'name': 'MESA İş Makinaları Teknik Servis',
+      'telephone': '+905335293674',
       'address': {
         '@type': 'PostalAddress',
         'addressLocality': 'Adana',
         'addressCountry': 'TR'
       }
     },
-    'areaServed': ['Adana', 'Mersin', 'Osmaniye', 'Hatay'],
+    'areaServed': ['Türkiye', 'Adana', 'Mersin', 'Osmaniye', 'Hatay', 'İzmir', 'Ankara', 'Gaziantep'],
     'description': service.shortDesc
   };
 
   return (
     <div className="min-h-screen bg-slate-50 py-10">
       <SEO 
-        title={`${service.title} | Adana Servisi`}
-        description={`${service.shortDesc} Adana ve Çukurova genelinde 7/24 yerinde teknik müdahale, ${service.warranty}.`}
+        title={`${service.title} | Türkiye Servisi`}
+        description={`${service.shortDesc} Türkiye genelinde 7/24 yerinde teknik müdahale, ${service.warranty}.`}
         canonical={`/hizmetler/${service.slug}`}
         schema={serviceJsonLd}
       />
