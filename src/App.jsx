@@ -9,6 +9,7 @@ import { FloatingEmergencyButton } from './components/FloatingEmergencyButton';
 import { WhatsAppWidget } from './components/WhatsAppWidget';
 import { ScrollToTop } from './components/ScrollToTop';
 import { PageTransition } from './components/PageTransition';
+import { MobileStickyCTA } from './components/MobileStickyCTA';
 
 import { ShoppingCart, CheckCircle2, AlertTriangle } from 'lucide-react';
 
@@ -30,6 +31,10 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ de
 const FaultDiagnosticPage = lazy(() => import('./pages/FaultDiagnosticPage').then(m => ({ default: m.FaultDiagnosticPage })));
 const PartsShopPage = lazy(() => import('./pages/PartsShopPage').then(m => ({ default: m.PartsShopPage })));
 const MaintenanceCalculatorPage = lazy(() => import('./pages/MaintenanceCalculatorPage').then(m => ({ default: m.MaintenanceCalculatorPage })));
+const NationalLandingPage = lazy(() => import('./pages/NationalLandingPage').then(m => ({ default: m.NationalLandingPage || m.default })));
+const RegionalHubPage = lazy(() => import('./pages/RegionalHubPage').then(m => ({ default: m.RegionalHubPage || m.default })));
+const CitiesHubPage = lazy(() => import('./pages/CitiesHubPage').then(m => ({ default: m.CitiesHubPage || m.default })));
+const CityLandingPage = lazy(() => import('./pages/CityLandingPage').then(m => ({ default: m.CityLandingPage || m.default })));
 const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage').then(m => ({ default: m.AdminLoginPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
@@ -108,6 +113,27 @@ export function App() {
                   <Routes>
                     <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
                     <Route path="/index.html" element={<PageTransition><HomePage /></PageTransition>} />
+                    <Route path="/turkiye-is-makinalari-servisi" element={<PageTransition><NationalLandingPage /></PageTransition>} />
+                    <Route path="/hizmet-bolgeleri" element={<PageTransition><RegionalHubPage /></PageTransition>} />
+                    <Route path="/bolgeler" element={<PageTransition><RegionalHubPage /></PageTransition>} />
+                    
+                    {/* Şehir Bazlı SEO ve Bölge Hub Rotaları */}
+                    <Route path="/sehirler" element={<PageTransition><CitiesHubPage /></PageTransition>} />
+                    <Route path="/sehirler/:slug" element={<PageTransition><CityLandingPage /></PageTransition>} />
+                    
+                    {/* Ulusal Hedefli Hizmet Sayfaları */}
+                    <Route path="/is-makinalari-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinalari-servisi" /></PageTransition>} />
+                    <Route path="/is-makinasi-tamiri" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-tamiri" /></PageTransition>} />
+                    <Route path="/mobil-teknik-servis" element={<PageTransition><ServiceDetailPage explicitSlug="mobil-teknik-servis" /></PageTransition>} />
+                    <Route path="/hidrolik-servis" element={<PageTransition><ServiceDetailPage explicitSlug="hidrolik-servis" /></PageTransition>} />
+                    <Route path="/hidrolik-silindir-tamiri" element={<PageTransition><ServiceDetailPage explicitSlug="hidrolik-silindir-tamiri" /></PageTransition>} />
+                    <Route path="/is-makinasi-ariza-tespiti" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-ariza-tespiti" /></PageTransition>} />
+                    <Route path="/is-makinasi-bakim" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-bakim" /></PageTransition>} />
+                    <Route path="/teleskopik-yukleyici-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="teleskopik-yukleyici-servisi" /></PageTransition>} />
+                    <Route path="/forklift-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="forklift-servisi" /></PageTransition>} />
+                    <Route path="/ekskavator-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="ekskavator-servisi" /></PageTransition>} />
+                    <Route path="/kepce-loader-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="kepce-loader-servisi" /></PageTransition>} />
+
                     <Route path="/hizmetler" element={<PageTransition><ServicesPage /></PageTransition>} />
                     <Route path="/hizmetler/:slug" element={<PageTransition><ServiceDetailPage /></PageTransition>} />
                     <Route path="/bakim-hesaplayici" element={<PageTransition><MaintenanceCalculatorPage /></PageTransition>} />
@@ -131,6 +157,7 @@ export function App() {
                 </Suspense>
               </main>
               <Footer />
+              <MobileStickyCTA />
               <FloatingEmergencyButton />
               <FloatingCartButton />
               <WhatsAppWidget />

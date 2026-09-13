@@ -9,7 +9,7 @@ export const AboutPage = () => {
     { year: '2013', title: 'Mobil Filo Yatırımı', desc: 'Çukurova taş ocakları ve otoyol projelerine yerinde 7/24 hizmet sunmak için ilk 5 tam donanımlı gezici servis aracı hizmete alındı.' },
     { year: '2017', title: '450 Bar Test İstasyonu & Entegre Tesis', desc: 'Kawasaki ve Rexroth hidrolik pompaları fabrika şartlarında yük altında test edebilen 450 bar dinamik test standı devreye girdi.' },
     { year: '2021', title: 'ERP & Dijital Servis Takip Ağı', desc: 'Müşterilerimizin makine servis süreçlerini canlı izleyebildiği ve iş emirlerinin dijitalleştiği bulut ERP altyapısına geçildi.' },
-    { year: '2026', title: '18 Mobil Filo & Çukurova Liderliği', desc: 'Adana, Mersin, Hatay ve Osmaniye genelinde 18 mobil araç, 35 sertifikalı teknisyen ve yıllık 800+ revizyon kapasitesi.' }
+    { year: '2026', title: '5 Mobil Filo & Çukurova Liderliği', desc: 'Adana, Mersin, Hatay ve Osmaniye genelinde 5 mobil araç, 35 sertifikalı teknisyen ve yıllık 800+ revizyon kapasitesi.' }
   ];
 
   const certifications = [
@@ -23,14 +23,14 @@ export const AboutPage = () => {
     { label: 'Entegre Kapalı Alan', value: '2.500 m²', icon: Building },
     { label: 'Tavan Vinci Kapasitesi', value: '10 Ton Gezer Vinç', icon: Layers },
     { label: 'Dinamik Test Tezgahı', value: '450 Bar / 400 L/Dk', icon: Activity },
-    { label: 'Aktif Mobil Servis Aracı', value: '18 Donanımlı Filo', icon: Wrench }
+    { label: 'Aktif Mobil Servis Aracı', value: '5 Donanımlı Filo', icon: Wrench }
   ];
 
   return (
     <div className="bg-slate-50 text-slate-900 min-h-screen">
       <SEO
         title="Kurumsal ve Atölye Altyapımız | Mesa İş Makinaları"
-        description="2008'den bu yana Adana ve Çukurova genelinde 2.500 m² kapalı atölye, 10 ton vinç, 450 bar test standı ve 18 mobil servis aracıyla hizmet veren lider iş makinası revizyon merkezi."
+        description="2008'den bu yana Adana ve Çukurova genelinde 2.500 m² kapalı atölye, 10 ton vinç, 450 bar test standı ve 5 mobil servis aracıyla hizmet veren lider iş makinası revizyon merkezi."
         canonical="/hakkimizda"
         keywords="mesa iş makinaları hakkında, adana iş makinası servisi kurumsal, iş makinası atölyesi adana, hidrolik test standı, mobil servis filosu"
       />

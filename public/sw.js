@@ -1,5 +1,5 @@
 // MESA İş Makinaları Service Worker (PWA)
-const CACHE_NAME = 'mesa-erp-v1';
+const CACHE_NAME = 'mesa-erp-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

@@ -154,7 +154,7 @@ Teleskopik bom uzatma ve toplama zincirlerinin gergi kontrolleri, aşınma takoz
     id: 'mobil-saha-servisi',
     slug: 'mobil-saha-servisi',
     title: '7/24 Acil Şantiye Gezici Mobil Servis Filosu',
-    shortDesc: 'Adana, Mersin, Hatay, Osmaniye, Niğde ve tüm Çukurova bölgesine 45 dakikada ulaşan, atölye donanımlı 18 mobil acil müdahale aracı.',
+    shortDesc: 'Adana, Mersin, Hatay, Osmaniye, Niğde ve tüm Çukurova bölgesine 45 dakikada ulaşan, atölye donanımlı 5 mobil acil müdahale aracı.',
     icon: 'ShieldCheck',
     category: 'Mobil Servis',
     duration: '45 Dk Ortalama Varış',
@@ -164,14 +164,14 @@ Teleskopik bom uzatma ve toplama zincirlerinin gergi kontrolleri, aşınma takoz
 
 Mobil servis araçlarımız sıradan bir arıza aracı değildir; araç içinde Kaeser vidalı dizel kompresör, Finn-Power mobil hidrolik hortum sıkma presi, jeneratörlü inverter gazaltı/ark kaynak makineleri, orijinal teşhis bilgisayarları ve zengin acil sarfiyat stoğu barındıran yürüyen bir atölyedir.`,
     highlights: [
-      '18 adet tam donanımlı 4x4 ve panelvan mobil acil müdahale aracı',
+      '5 adet tam donanımlı 4x4 ve panelvan mobil acil müdahale aracı',
       'Çukurova Bölgesi genelinde (Adana, Mersin, Hatay, Osmaniye) ortalama 45 dakika varış süresi',
       'Şantiye sahasında anında hidrolik hortum imalatı ve presleme imkanı',
       'Elektronik teşhis cihazlarıyla sahada ECU okuma, arıza kodu silme ve sensör kalibrasyonu',
       'Yerinde yağ değişimi, filtre yenileme ve numune alma (SOS Yağ Analizi)'
     ],
     technicalSpecs: [
-      { label: 'Filo Büyüklüğü', value: '18 Donanımlı Mobil Servis Aracı' },
+      { label: 'Filo Büyüklüğü', value: '5 Donanımlı Mobil Servis Aracı' },
       { label: 'Hizmet Saatleri', value: '7 Gün 24 Saat Kesintisiz Vardiya' },
       { label: 'Hortum İmalat Çapı', value: '1/4" ila 2" 4 Telli R12/R15 Spiral Hortum' },
       { label: 'Mobil Güç Ünitesi', value: '15 kVA Entegre Dizel Jeneratör & Kompresör' }
@@ -588,6 +588,464 @@ Kırıcı ana gövde bağlantı saplamaları (tie-rod), piston ve silindir vurun
       {
         q: 'Kama boşluğu neden silindire zarar verir?',
         a: 'Aşınan kama sağa-sola yalpalar. Bu yalpalama, yukarıdan inen ana pistonun kamaya düz değil açılı vurmasına neden olur; bu da dakikalar içinde silindir gömleğini ve pistonu çizer.'
+      }
+    ]
+  },
+  {
+    id: 'is-makinalari-servisi',
+    slug: 'is-makinalari-servisi',
+    title: 'İş Makinaları Teknik Servisi',
+    shortDesc: 'Türkiye genelinde ekskavatör, loder, bekoloder ve ağır şantiye iş makinaları için 7/24 yerinde mobil teknik servis ve mekanik onarım.',
+    icon: 'Wrench',
+    category: 'Ulusal Teknik Servis',
+    duration: 'Aynı Gün / 24 Saat',
+    warranty: '12 Ay / 2.000 Saat Garanti',
+    heroImage: '/images/mesa-excavator-hero.png',
+    content: `MESA İş Makinaları, Türkiye genelinde inşaat, madencilik, altyapı ve taş ocağı şantiyelerinde çalışan tüm ağır iş makinelerine 7/24 mobil teknik servis desteği sunar. Tam donanımlı gezici servis araçlarımız, arıza tespiti ve acil müdahale donanımlarıyla şantiyenize doğrudan intikal eder.
+
+Mekanik aşınmalar, motor ve aktarma organları revizyonu, yürüyüş takımları (cer dişlisi, palet gergi, istikamet tekeri) onarımı ve periyodik ağır hizmet bakımları OEM standartlarında gerçekleştirilir.`,
+    highlights: [
+      'Türkiye geneli şantiyede yerinde arıza tespiti ve acil mekanik onarım',
+      'Ekskavatör, loder, bekoloder ve dozer güç aktarım organları revizyonu',
+      'Seyyar borwerk delik işleme tezgahı ile sahada pim ve burç honlama',
+      'Cer dişlisi, kule dönüş redüktörü ve şanzıman revizyonu',
+      '12 ay resmi MESA servis garantisi ve detaylı ekspertiz raporu'
+    ],
+    technicalSpecs: [
+      { label: 'Mobil İntikal Süresi', value: 'Bölgeye Göre 30 Dakika - 3 Saat' },
+      { label: 'Uyumlu Tonaj', value: '1.5 Ton - 90 Ton Ağır Hizmet Makinaları' },
+      { label: 'Teşhis Teknolojisi', value: 'OEM Lisanslı Elektronik Diagnostik' },
+      { label: 'Garanti Kapsamı', value: '12 Ay / 2.000 Çalışma Saati' }
+    ],
+    processSteps: [
+      { step: '01', title: 'Acil Çağrı & Şantiye Konumu', desc: 'Telefon veya WhatsApp üzerinden arıza belirtileri ve GPS konumu alınır.' },
+      { step: '02', title: 'Mobil Ekip Sevkiyatı', desc: 'En yakın mobil servis aracı gerekli yedek parça ve takımlarla şantiyeye sevk edilir.' },
+      { step: '03', title: 'Sahada Teşhis & Onarım', desc: 'Arıza tespit cihazı ve basınç manometreleriyle sorun belirlenip yerinde giderilir.' },
+      { step: '04', title: 'Yük Testi & Teslimat', desc: 'Makine çalışma şartlarında test edilip resmi servis formu ile operatöre teslim edilir.' }
+    ],
+    commonIssues: [
+      'Yük altında makinenin bayılması ve hidrolik basınç düşüklüğü',
+      'Yürüyüş motorlarında çekiş düşüklüğü veya palet kilitlenmesi',
+      'Dönüş kulesinde boşluk, vuruntu veya frenleme kaçırması',
+      'Aşırı motor harareti, yağ yakma veya siyah duman atma'
+    ],
+    faqs: [
+      {
+        q: 'Türkiye geneli şantiyelere servis aracınız geliyor mu?',
+        a: 'Evet, MESA İş Makinaları mobil teknik servis araçları ile Türkiye genelindeki inşaat, maden ve baraj şantiyelerine yerinde servis hizmeti sağlamaktadır.'
+      },
+      {
+        q: 'Hangi marka iş makinelerine servis veriyorsunuz?',
+        a: 'Caterpillar, Komatsu, JCB, Hidromek, Volvo, Hitachi, Liebherr, Doosan ve Hyundai başta olmak üzere tüm lider markalara teknik servis hizmeti veriyoruz.'
+      }
+    ]
+  },
+  {
+    id: 'mobil-teknik-servis',
+    slug: 'mobil-teknik-servis',
+    title: '7/24 Mobil Teknik Servis & Yerinde Müdahale',
+    shortDesc: 'Tam donanımlı mobil servis araçları, seyyar hidrolik hortum presi ve arıza tespit cihazlarıyla şantiyede yerinde acil tamir.',
+    icon: 'Truck',
+    category: 'Mobil Servis',
+    duration: 'Acil Çağrı / 30-90 Dk',
+    warranty: '12 Ay Servis Güvencesi',
+    heroImage: '/images/mesa-workshop.png',
+    content: `İş makinası arızalandığında makineyi atölyeye taşımak yüksek nakliye maliyeti ve ciddi iş kaybı demektir. MESA Mobil Teknik Servis birimi; jeneratör, kompresör, seyyar kaynak makinesi, hidrolik hortum presi ve arıza tespit cihazlarıyla donatılmış araçlarıyla tam bir seyyar atölye gibi şantiyenize gelir.
+
+Hidrolik patlak hortum değişimi, kumanda valfi kaçakları, marş ve şarj dinamosu arızaları, enjektör problemleri ve yürüyüş takımı onarımları sahada anında çözülür.`,
+    highlights: [
+      'Şantiye sahasına doğrudan sevk edilen tam teşekküllü mobil atölye araçları',
+      'Yerinde 1/4" - 2" 4 telli yüksek basınç hidrolik hortum presleme imkanı',
+      'Seyyar gazaltı kaynak ve şasi çatlak onarım donanımı',
+      'Dijital arıza tespit cihazı ile yerinde hata kodu okuma ve silme',
+      '7 gün 24 saat kesintisiz acil şantiye nöbetçi teknisyen hattı'
+    ],
+    technicalSpecs: [
+      { label: 'Araç Donanımı', value: 'Dizel Jeneratör + Kompresör + Kaynak + Pres' },
+      { label: 'Hortum Pres Basıncı', value: '500 Bar Tepe Sıkma Kapasitesi' },
+      { label: 'Hizmet Kapsamı', value: 'Şantiye, Taş Ocağı, Maden ve Yol Projeleri' },
+      { label: 'Çalışma Saatleri', value: '7 Gün 24 Saat Kesintisiz Acil Müdahale' }
+    ],
+    processSteps: [
+      { step: '01', title: 'Bildirim & GPS Paylaşımı', desc: 'Operatör veya şantiye şefi konumu WhatsApp veya çağrı merkezimize iletir.' },
+      { step: '02', title: 'Hazırlık & Parça Temini', desc: 'Arıza tipine uygun OEM filtre, conta, hortum ve takımlar araca yüklenir.' },
+      { step: '03', title: 'Yerinde Hızlı Müdahale', desc: 'Teknisyenlerimiz şantiye güvenliğini alarak arızayı yerinde onarır.' },
+      { step: '04', title: 'Saha Testi ve Tutanak', desc: 'Makine operatör gözetiminde denenir ve servis raporu düzenlenir.' }
+    ],
+    commonIssues: [
+      'Basınç altında patlayan hidrolik hortumlar nedeniyle işin durması',
+      'Marş basmama veya elektriksel sigorta atması kaynaklı kilitlenmeler',
+      'Mazot filtresi tıkanması ve common rail yakıt hattı basınç düşüklüğü',
+      'Bom ve arm pimlerinin sıkışması veya yağsızlıktan sarma yapması'
+    ],
+    faqs: [
+      {
+        q: 'Mobil servis şantiyede hangi işlemleri yapabilir?',
+        a: 'Hidrolik hortum presleme, valf ve silindir sızdırmazlık onarımı, arıza tespit ve elektriksel onarımlar, filtre ve yağ değişimleri, cer motoru mekanik kontrolleri sahada yapılabilir.'
+      },
+      {
+        q: 'Mobil servis çağırmak için ne yapmalıyım?',
+        a: '0533 529 36 74 numaralı acil hattımızı arayabilir veya sitemiz üzerinden WhatsApp ile şantiye GPS konumunuzu gönderebilirsiniz.'
+      }
+    ]
+  },
+  {
+    id: 'hidrolik-servis',
+    slug: 'hidrolik-servis',
+    title: 'İş Makinası Hidrolik Servisi & Sistem Onarımı',
+    shortDesc: '450 Bar dinamik test tezgahı ile ana hidrolik pompa, kumanda valfi, hidromotor ve kule dönüş hidrolik sistem revizyonu.',
+    icon: 'Activity',
+    category: 'Hidrolik Sistemler',
+    duration: '1 - 2 Gün',
+    warranty: '12 Ay Resmi Test Garantisi',
+    heroImage: '/images/mesa-workshop.png',
+    content: `Ağır iş makinelerinde gücün kaynağı hidrolik sistemlerdir. MESA Hidrolik Servis Merkezi, Kawasaki, Bosch Rexroth, Parker, Sauer Danfoss, Eaton ve Komatsu marka eğik plakalı pistonlu pompaların komple revizyonunu gerçekleştirir.
+
+Rotary grup, piston pabucu, dağıtıcı plaka ve şaft yenilemeleri sonrası pompalar 450 Bar dinamik test standımızda yük altında test edilir. İç drenaj kaçakları, debi kararlılığı ve basınç tepkileri bilgisayar çıktısıyla belgelenir.`,
+    highlights: [
+      '450 Bar tepe basınç kapasiteli bilgisayarlı hidrolik test standı',
+      'Kawasaki K3V/K5V, Bosch Rexroth A8VO/A10VO ana pompa revizyonu',
+      'Oransal kumanda valf blokları honlama ve spool taşlama',
+      'Kule dönüş ve yürüyüş hidromotorları tork ve basınç kalibrasyonu',
+      'Lazer partikül sayacı ile hidrolik yağ kirlilik analizi (ISO 4406)'
+    ],
+    technicalSpecs: [
+      { label: 'Test Basıncı Kapasitesi', value: '450 Bar Tepe / 380 Bar Sürekli Yük' },
+      { label: 'Debi Ölçüm Aralığı', value: '0 - 550 Litre / Dakika Dijital Flowmetre' },
+      { label: 'Tolerans Hassasiyeti', value: '±0.002 mm Mikron Yüzey Pürüzlülüğü' },
+      { label: 'Raporlama', value: 'Bilgisayarlı Basınç & Akış Grafik Sertifikası' }
+    ],
+    processSteps: [
+      { step: '01', title: 'Basınç Düşüşü Ölçümü', desc: 'Makinadaki pilot, ana pompa ve sinyal basınçları dijital manometre ile ölçülür.' },
+      { step: '02', title: 'Hassas Demontaj & İnceleme', desc: 'Pompa parçalanarak kavitasyon, çizik ve aşınmalar mikrometreyle tespit edilir.' },
+      { step: '03', title: 'Rotary Grup & Plaka Değişimi', desc: 'Orijinal OEM toleranslı pistonlar, yaylar ve plaka takımları monte edilir.' },
+      { step: '04', title: 'Dinamik Tezgah Testi', desc: '450 Bar basınçta sıcak yağ altında debi verimi test edilip onaylanır.' }
+    ],
+    commonIssues: [
+      'Yağ ısındıkça makinenin yavaşlaması ve kova kaldırma gücünün düşmesi',
+      'Hidrolik pompadan gelen uğultu, vuruntu ve kavitasyon sesleri',
+      'Kumanda kolları bırakıldığında bomun kendi kendine aşağı süzülmesi',
+      'Hidrolik filtrenin bronz veya çelik talaş parçalarıyla dolması'
+    ],
+    faqs: [
+      {
+        q: 'Hidrolik pompa revizyonu sonrası test raporu veriliyor mu?',
+        a: 'Evet, atölyemizde revize edilen tüm hidrolik pompalar 450 bar dinamik test standında test edilir ve basınç-debi değerlerini gösteren onaylı test sertifikası ile teslim edilir.'
+      }
+    ]
+  },
+  {
+    id: 'hidrolik-silindir-tamiri',
+    slug: 'hidrolik-silindir-tamiri',
+    title: 'Hidrolik Silindir Tamiri & Honlama Servisi',
+    shortDesc: 'Bom, arm, kova, teleskopik uzatma ve direksiyon silindirleri için rod taşlama, boğaz keçesi yenileme ve honlama onarımı.',
+    icon: 'Layers',
+    category: 'Hidrolik Sistemler',
+    duration: 'Aynı Gün / 24 Saat',
+    warranty: '12 Ay Sızdırmazlık Garantisi',
+    heroImage: '/images/mesa-workshop.png',
+    content: `Ekskavatör bom silindirleri, loder kova pistonları ve teleskopik yükleyici bom pistonları şantiye ortamında darbe, taş çarpması ve toz nedeniyle rod çizilmeleri ve keçe aşınmalarına maruz kalır.
+
+MESA Hidrolik Silindir Servisimizde, 4 metre boya kadar silindir boruları seyyar ve sabit honlama tezgahlarımızda işlenir. Eğrilmiş kromlu miller doğrultulur veya sert krom kaplı yeni millerle değiştirilir. Ağır hizmet poliüretan ve PTFE keçe setleri monte edilerek sıfır kaçak garantisi sağlanır.`,
+    highlights: [
+      'Bom, arm, kova, dozer bıçak ve kule kilit silindirleri revizyonu',
+      '4 metreye kadar hidrolik boru içi derin delik honlama işlemi',
+      'Sert krom kaplı indüksiyonlu mil değişimi ve doğrultma presi',
+      'Hallite, Kastas ve Parker yüksek basınç sızdırmazlık keçe takımları',
+      '350 Bar statik basınç altında sızdırmazlık kaçak kontrol testi'
+    ],
+    technicalSpecs: [
+      { label: 'İşleme Çapı', value: 'Ø 40 mm - Ø 450 mm İç Çap Silindirler' },
+      { label: 'Maksimum Silindir Boyu', value: '4.500 mm (4.5 Metre) Tek Parça' },
+      { label: 'Mil Doğrultma Presi', value: '150 Ton Hidrolik Hassas Doğrultma' },
+      { label: 'Statik Test Basıncı', value: '350 Bar Hidrolik Holding Testi' }
+    ],
+    processSteps: [
+      { step: '01', title: 'Demontaj & Çizik Kontrolü', desc: 'Silindir kovanı ve mili sökülerek derin çizik ve ovallik ölçülür.' },
+      { step: '02', title: 'Honlama & Mil Taşlama', desc: 'Kovan içi taşlanıp honlanır, mildeki çapaklar ve eğrilikler giderilir.' },
+      { step: '03', title: 'Boğaz & Piston Keçesi Montajı', desc: 'Sıcaklığa ve yüksek basınca dayanıklı viton/PTFE keçeler takılır.' },
+      { step: '04', title: '350 Bar Basınç Testi', desc: 'Piston her iki yöne hareket ettirilip 350 bar altında sızdırmazlık onaylanır.' }
+    ],
+    commonIssues: [
+      'Silindir boğazından dışarıya yağ fışkırması ve toz keçesinin yırtılması',
+      'Piston içi kaçak nedeniyle bomun yükteyken aşağı kaçırması (drift)',
+      'Taş sekmesi sonucu kromlu mil üzerinde çentik ve vuruk oluşması',
+      'Silindir kovanının aşırı basınç altında şişme yapması'
+    ],
+    faqs: [
+      {
+        q: 'Çizilen silindir mili tamir edilir mi yoksa değişmesi mi gerekir?',
+        a: 'Hafif çizikler polisaj ile giderilebilir. Ancak derin taş yaralarında keçenin tekrar kesilmemesi için mil orijinal indüksiyonlu sert krom mil ile yenilenir.'
+      }
+    ]
+  },
+  {
+    id: 'is-makinasi-ariza-tespiti',
+    slug: 'is-makinasi-ariza-tespiti',
+    title: 'İş Makinası Arıza Tespiti & Diagnostik',
+    shortDesc: 'CAT ET, JCB ServiceMaster, Cummins Insite ve Volvo Tech Tool ile elektronik kontrol ünitesi (ECU) teşhisi ve arıza kodu çözümü.',
+    icon: 'Cpu',
+    category: 'Diagnostik & Beyin',
+    duration: '1 - 3 Saat',
+    warranty: 'Doğru Teşhis Garantisi',
+    heroImage: '/images/mesa-excavator-hero.png',
+    content: `Modern iş makineleri karmaşık CAN-bus elektronik ağları ve dijital kontrol üniteleriyle yönetilir. Gereksiz parça değişimlerini önlemenin tek yolu doğru elektronik diagnostiktir.
+
+MESA uzman teknisyenleri; Caterpillar Electronic Technician (ET), JCB ServiceMaster, Volvo Tech Tool, Hidromek H-Diag ve Cummins Insite orijinal teşhis cihazları ile makinenize bağlanır. Sensör canlı verileri, enjektör dengeleme testleri, DPF/SCR emisyon parametreleri ve hidrolik solenoid basınç kalibrasyonları şantiyede eksiksiz yapılır.`,
+    highlights: [
+      'Caterpillar, Komatsu, Volvo, JCB, Hidromek OEM arıza tespit cihazları',
+      'Motor ECU, hidrolik pompa kontrol ünitesi ve şanzıman beyni teşhisi',
+      'Enjektör kesme, sıkıştırma (kompresyon) ve turbo basınç canlı testleri',
+      'DPF rejenerasyonu, AdBlue/SCR nox sensörü kalibrasyonu',
+      'Geçmiş arıza kodları (DTC) dökümü ve teknik servis raporu teslimi'
+    ],
+    technicalSpecs: [
+      { label: 'Desteklenen Protokoller', value: 'J1939, J1708, CAN 2.0B, ISO 9141' },
+      { label: 'Donanım Portları', value: '9-Pin, 14-Pin, OBD2 ve Özel Üretici Soketleri' },
+      { label: 'Kalibrasyon Yetkisi', value: 'Oransal Valf, Gaz Kelebeği, Basınç Sensörleri' },
+      { label: 'Rapor Çıktısı', value: 'Elektronik PDF Diagnostik Sağlık Raporu' }
+    ],
+    processSteps: [
+      { step: '01', title: 'Diagnostik Soket Bağlantısı', desc: 'Makinenin ana veri yoluna orijinal ara yüz cihazı ile bağlanılır.' },
+      { step: '02', title: 'Hata Kodlarının (DTC) Taranması', desc: 'Aktif ve kayıtlı arıza kodları okunarak kök neden analiz edilir.' },
+      { step: '03', title: 'Canlı Veri & Aktif Testler', desc: 'Motor ve hidrolik sistem yük altındayken sensör voltajları izlenir.' },
+      { step: '04', title: 'Kalibrasyon & Raporlama', desc: 'Sensör kalibrasyonları yapılıp arıza tespit raporu teslim edilir.' }
+    ],
+    commonIssues: [
+      'Ekranda beliren uyarı lambaları ve makinenin koruma moduna (limp mode) geçmesi',
+      'DPF filtresinin dolması ve motorun devir almaması',
+      'Gaz potansiyometresi ve oransal solenoid valf elektriksel iletişim kopuklukları',
+      'CAN-bus hattı kopması sonucu gösterge panelinin yanıt vermemesi'
+    ],
+    faqs: [
+      {
+        q: 'Arıza tespit cihazı şantiyeye getirilebilir mi?',
+        a: 'Evet, tüm mobil servis araçlarımızda endüstriyel dayanıklı diagnostik tabletleri ve üretici kablo soketleri mevcuttur.'
+      }
+    ]
+  },
+  {
+    id: 'is-makinasi-bakim',
+    slug: 'is-makinasi-bakim',
+    title: 'İş Makinası Periyodik Bakım ve Onarım',
+    shortDesc: '250, 500, 1000 ve 2000 saatlik ağır hizmet şantiye bakım paketleri. OEM filtre, onaylı yağlar ve 150 nokta ekspertiz kontrolü.',
+    icon: 'CheckCircle2',
+    category: 'Periyodik Bakım',
+    duration: '3 - 6 Saat',
+    warranty: 'Resmi Servis Kayıtlı',
+    heroImage: '/images/mesa-excavator-hero.png',
+    content: `Ağır iş makinelerinin arızalanmasını önlemenin ve ikinci el değerini korumanın en ekonomik yolu düzenli periyodik bakımdır. MESA İş Makinaları, şantiyenizin çalışma temposunu aksatmadan mesai dışı veya vardiya aralarında periyodik bakım hizmeti sunar.
+
+Motor yağı, hidrolik sistem yağı, şanzıman ve cer dişlisi yağları üretici OEM onaylı viskozitelerle yenilenir. Donaldson, Baldwin ve Mann marka ağır hizmet hava, yakıt, su ayırıcı ve hidrolik filtreleri takılır. 150 nokta kontrol formuyla makinenin tüm aşınmaları önceden raporlanır.`,
+    highlights: [
+      '250, 500, 1000 ve 2000 saatlik OEM üretici bakım protokolleri',
+      'Donaldson, Mann ve Fleetguard orijinal ağır hizmet filtre kitleri',
+      'CAT HYDO, Shell Tellus, Mobil Delvac onaylı ağır şantiye yağları',
+      '150 nokta mekanik, hidrolik ve elektriksel güvenlik kontrol listesi',
+      'Kullanılmış yağ analizi ile aşınma elementi (demir, bakır, krom) tespiti'
+    ],
+    technicalSpecs: [
+      { label: 'Yağ Değişim Ekipmanı', value: 'Havalı Dağıtım & Vakumlu Atık Yağ Emiş Tankı' },
+      { label: 'Filtre Standardı', value: 'OEM Mikron Spesifikasyonlu Ağır Hizmet Filtreleri' },
+      { label: 'Gresleme', value: 'Aşırı Basınç (EP2 / MoS2) Molibden Katkılı Gres' },
+      { label: 'Kayıt Sistemi', value: 'Dijital QR Makina Kimlik Kartı & Servis Karnesi' }
+    ],
+    processSteps: [
+      { step: '01', title: 'Çalışma Saati & Geçmiş Kontrolü', desc: 'Makinenin saati ve son bakım geçmişi incelenerek paket belirlenir.' },
+      { step: '02', title: 'Yağ ve Filtre Değişimi', desc: 'Sıcak yağ vakumla tahliye edilir, OEM filtreler tork anahtarıyla takılır.' },
+      { step: '03', title: '150 Nokta Mekanik Kontrol', desc: 'Pim boşlukları, palet gerginliği, hortum sürtünmeleri ve şasi taranır.' },
+      { step: '04', title: 'Test & Dijital Servis Kaydı', desc: 'Sızıntı kontrolü yapılıp dijital makine kimliğine bakım işlenir.' }
+    ],
+    commonIssues: [
+      'Zamanında değişmeyen mazot filtresi nedeniyle yüksek basınç pompa arızası',
+      'Hava filtresi yırtılması sonucu motorun toz emmesi ve rektifiye gerektirmesi',
+      'Kirli hidrolik yağın ana pompa distribütör aynasını çizmesi',
+      'Yetersiz gresleme nedeniyle kova ve bom burçlarının aşınarak ovallik yapması'
+    ],
+    faqs: [
+      {
+        q: 'Periyodik bakımlar şantiyede mi yapılıyor?',
+        a: 'Evet, mobil servis araçlarımız atık yağ emiş tankları ve havalı yağ dağıtıcıları ile çevreye tek damla atık bırakmadan şantiyenizde bakımı tamamlar.'
+      }
+    ]
+  },
+  {
+    id: 'teleskopik-yukleyici-servisi',
+    slug: 'teleskopik-yukleyici-servisi',
+    title: 'Teleskopik Yükleyici (Telehandler) Servisi',
+    shortDesc: 'Manitou, Merlo, JCB Loadall, Dieci ve Bobcat teleskopik yükleyiciler için bom uzatma zincirleri, moment limitör ve hidrolik revizyon.',
+    icon: 'PenTool',
+    category: 'Teleskopik Yükleyici',
+    duration: '1 - 2 Gün',
+    warranty: '12 Ay Garanti',
+    heroImage: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
+    content: `Şantiyelerin vazgeçilmezi olan teleskopik yükleyiciler (telehandler), yüksek irtifada ağır yük kaldırdıkları için güvenlik sistemleri kusursuz çalışmalıdır. MESA İş Makinaları; Manitou MT/MLT, JCB Loadall 535/540, Merlo Panoramic/Roto ve Dieci makinelerin uzman servis merkezidir.
+
+İç içe geçen bom teleskop kızak pabuçları (aşınma takozları), bom uzatma ve geri çekme zincirleri, oransal joystick kumandaları ve devrilme önleyici moment kontrol (LMI) sensörleri fabrika toleranslarında kalibre edilir.`,
+    highlights: [
+      'Manitou, JCB Loadall, Merlo, Dieci ve Bobcat telehandler uzmanlığı',
+      'Teleskopik bom uzatma ve toplama zincirleri gerdirme ve değişimi',
+      'Bom içi aşınma kızak pabuçları (kayar pad) ayarı ve değişimi',
+      'Yük moment limitörü (LMI) ve aks açısı sensör kalibrasyonu',
+      '4 tekerlek yönlendirme (yengeç yürüyüşü) hidrolik silindir senkronizasyonu'
+    ],
+    technicalSpecs: [
+      { label: 'Ulaşma Yüksekliği', value: '6 Metre - 30 Metre Döner Kuleli Modeller' },
+      { label: 'Kaldırma Kapasitesi', value: '2.5 Ton - 7 Ton Arası Ağır Telehandlerlar' },
+      { label: 'Güvenlik Doğrulaması', value: 'EN 15000 Yük Momenti Güvenlik Standartları' },
+      { label: 'Zincir Testi', value: 'Ultrasonik Çatlak & Uzama Mikrometre Kontrolü' }
+    ],
+    processSteps: [
+      { step: '01', title: 'Bom & Zincir Muayenesi', desc: 'Bom zincir baklalarında uzama, çatlak ve kızak boşlukları incelenir.' },
+      { step: '02', title: 'Aşınma Pabuçları Ayarı', desc: 'Bom bölümleri arasındaki boşluklar ayar şimleri ile sıfırlanır.' },
+      { step: '03', title: 'Hidrolik Kilit Valfi Testi', desc: 'Hortum patlama güvenlik valfleri yük altında test edilir.' },
+      { step: '04', title: 'Ağırlıklı Yük Kalibrasyonu', desc: 'Standart ağırlıklarla moment limitörü emniyet testinden geçirilir.' }
+    ],
+    commonIssues: [
+      'Bom uzatıldığında takılma, titreme veya geri toplarken zorlanma',
+      'Moment limitörünün boş makinede bile arıza verip hidroliği kilitlemesi',
+      'Direksiyon modları (ön, dört teker, yengeç) arasında tekerleklerin hizadan çıkması',
+      'Bom içi hidrolik hortum makarası yayının kırılması sonucu hortum ezilmesi'
+    ],
+    faqs: [
+      {
+        q: 'Telehandler bom zincirleri ne sıklıkla kontrol edilmelidir?',
+        a: 'Şantiye güvenliği açısından bom zincirleri her 250 saatte bir gözle, her 1000 saatte bir mikrometrik uzama kontrolü ile denetlenmeli ve özel zincir spreyi ile yağlanmalıdır.'
+      }
+    ]
+  },
+  {
+    id: 'forklift-servisi',
+    slug: 'forklift-servisi',
+    title: 'Endüstriyel Forklift Servisi & Bakım Onarım',
+    shortDesc: 'Dizel, lpg ve elektrikli akülü forkliftler için asansör zinciri, cer motoru, tork konvertör şanzıman ve hidrolik valf revizyonu.',
+    icon: 'PenTool',
+    category: 'Forklift & Depo',
+    duration: 'Aynı Gün / 24 Saat',
+    warranty: '12 Ay Garanti',
+    heroImage: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
+    content: `Fabrika, antrepo, liman ve lojistik merkezlerin yük taşıma operasyonlarında forkliftlerin durması sevkiyatı felç eder. MESA İş Makinaları; Linde, Toyota, Clark, Komatsu, Hyster, Yale, Jungheinrich ve Heli marka forkliftlerin tüm mekanik, hidrolik ve yürüyüş aksamlarına yerinde servis sağlar.
+
+Dubleks ve tripleks asansör mast rulmanları, asansör kaldırma zincirleri, tilt silindirleri sızdırmazlığı, tork konvertör revizyonu ve dingil bilyaları fabrika toleranslarında yenilenir.`,
+    highlights: [
+      'Dizel, LPG ve Akülü elektrikli forklift mekanik ve hidrolik servisi',
+      'Tripleks/Dubleks asansör mast rulmanları ve kaldırma zinciri değişimi',
+      'Tilt ve kaydırma (side-shift) ataşman hidrolik silindir tamiri',
+      'Otomatik şanzıman, debriyaj plakaları ve diferansiyel revizyonu',
+      'Arka yönlendirme dingili mafsal burçları ve rot başı boşluk giderme'
+    ],
+    technicalSpecs: [
+      { label: 'Kaldırma Kapasitesi', value: '1.5 Ton - 16 Ton Ağır Hizmet Forkliftleri' },
+      { label: 'Asansör Tipleri', value: 'Standart Dubleks, Serbest Kaldırma, Tripleks Mast' },
+      { label: 'Tahrik Sistemleri', value: 'Dizel Motor, LPG Yakıt, AC Elektrik Çekiş Motorları' },
+      { label: 'Fren Sistemi', value: 'Yağ Banyolu Çoklu Disk Fren & Kuru Kampana' }
+    ],
+    processSteps: [
+      { step: '01', title: 'İşletme Yerinde Ekspertiz', desc: 'Mobil aracımız fabrikanıza gelerek asansör, fren ve hidroliği test eder.' },
+      { step: '02', title: 'Sızıntı ve Güvenlik Onarımı', desc: 'Asansör keçeleri, zincir gergisi ve fren pabuçları yerinde yenilenir.' },
+      { step: '03', title: 'Şanzıman ve Tork Ayarı', desc: 'Vites geçişleri, yön kontrol solenoidleri ve yürüyüş torku kalibre edilir.' },
+      { step: '04', title: 'Yük Kaldırma Güvenlik Testi', desc: 'Nominal tonajda yük kaldırılarak basınca ve fren tutuşuna onay verilir.' }
+    ],
+    commonIssues: [
+      'Forkliftin yük altındayken çatalları aşağı kaçırması veya yavaş kaldırması',
+      'İleri-geri vites geçişlerinde vuruntu veya yürüyüşte çekiş düşüklüğü',
+      'Arka tekerleklerin aşırı boşluk yapması ve virajda savurma hissi vermesi',
+      'Asansör rulmanlarının dağılması sonucu mastın kasıntı yaparak inmemesi'
+    ],
+    faqs: [
+      {
+        q: 'Forklift bakımını fabrikamızda yerinde yapıyor musunuz?',
+        a: 'Evet, forkliftlerin periyodik bakımı, filtre/yağ değişimleri ve hafif mekanik onarımları işletmenizin sahasında 2-4 saat içinde tamamlanmaktadır.'
+      }
+    ]
+  },
+  {
+    id: 'ekskavator-servisi',
+    slug: 'ekskavator-servisi',
+    title: 'Ekskavatör Servisi & Ağır Saha Tamiri',
+    shortDesc: 'Paletli ve lastikli ekskavatörler için ana pompa, cer motoru, kule dönüş redüktörü, bom çatlak kaynağı ve seyyar borwerk.',
+    icon: 'Wrench',
+    category: 'Ekskavatör',
+    duration: '1 - 3 Gün',
+    warranty: '12 Ay / 2.000 Saat Garanti',
+    heroImage: '/images/mesa-excavator-hero.png',
+    content: `Şantiyelerin en ağır yükünü taşıyan paletli ve lastikli ekskavatörler, zorlu kaya ve hafriyat şartlarında yüksek dayanıklılık gerektirir. MESA Ekskavatör Servis Departmanı; Caterpillar 320/336, Komatsu PC200/PC390, Hidromek HMK220/HMK300, Volvo EC210/EC380 ve Hitachi Zaxis ekskavatörlerde derin uzmanlığa sahiptir.
+
+Kule dönüş bilyaları, cer redüktör dişlileri, bom-arm çatlaklarının gazaltı kaynakla takviyesi, seyyar borwerk delik işleme tezgahıyla ovalleşen pim yuvalarının honlanması ve ana hidrolik dağıtıcı revizyonu garantili olarak yapılır.`,
+    highlights: [
+      '14 tondan 70 tona kadar paletli ve lastikli ekskavatör tamiri',
+      'Kule dönüş şanzımanı, fren grubu ve cer yürüyüş motoru revizyonu',
+      'Seyyar borwerk tezgahıyla şantiyede kova, bom ve arm delik revizyonu',
+      'Bom ve arm üzerinde oluşan metal yorgunluğu çatlaklarının sertifikalı onarımı',
+      'Kawasaki ve Komatsu ana hidrolik pompa debi ve basınç kalibrasyonu'
+    ],
+    technicalSpecs: [
+      { label: 'Ekskavatör Sınıfları', value: 'Mini (3.5T), Standart (22T-35T), Ağır Maden (50T-90T)' },
+      { label: 'Delik İşleme Kapasitesi', value: 'Ø 45 mm - Ø 250 mm Seyyar Borwerk Barası' },
+      { label: 'Kaynak Prosedürü', value: 'Ön Isıtmalı Gazaltı & Bazik Elektrot Gerilim Giderme' },
+      { label: 'Palet Gergi Sistemi', value: 'Gresli Silindir & Yay Grubu Yenileme' }
+    ],
+    processSteps: [
+      { step: '01', title: 'Sahada Hidrolik & Mekanik Teşhis', desc: 'Basınç manometreleri ve arıza tespit cihazıyla ekskavatör incelenir.' },
+      { step: '02', title: 'Aşınma Ölçümü & Borwerk Hazırlığı', desc: 'Pim ovallikleri ve cer aşınmaları mikrometreyle ölçülür.' },
+      { step: '03', title: 'Parça Revizyonu & Talaşlı İmalat', desc: 'Aşınan delikler seyyar borwerkle işlenip orijinal burçlar preslenir.' },
+      { step: '04', title: 'Kazı Yükü Altında Doğrulama', desc: 'Makine şantiye hafriyatında tam yükte denenerek teslim edilir.' }
+    ],
+    commonIssues: [
+      'Kova bağlantı pimlerinde aşırı boşluk ve kazı esnasında sarsıntı',
+      'Tek taraf cer motorunun çekmemesi veya cer kapağından yağ akıtması',
+      'Kule dönerken takılma, sürtünme sesi veya dururken salınım yapması',
+      'Bom kaldırma ve arm toplama hareketlerinin eş zamanlı çalışmaması'
+    ],
+    faqs: [
+      {
+        q: 'Borwerk delik işleme şantiyede yerinde yapılabiliyor mu?',
+        a: 'Evet, seyyar borwerk delik işleme tezgahlarımızı ve jeneratörlerimizi doğrudan şantiyenize getirerek bom, arm ve kova deliklerini yerinde sıfır toleransla işliyoruz.'
+      }
+    ]
+  },
+  {
+    id: 'kepce-loader-servisi',
+    slug: 'kepce-loader-servisi',
+    title: 'Kepçe & Loder (Yükleyici) Servisi',
+    shortDesc: 'Kazıcı yükleyici (bekoloder) ve lastikli loderler için tork konvertör, şanzıman, diferansiyel, bel kırma mafsalı ve fren revizyonu.',
+    icon: 'PenTool',
+    category: 'Yükleyici & Loder',
+    duration: '1 - 2 Gün',
+    warranty: '12 Ay Garanti',
+    heroImage: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
+    content: `İnşaatların belkemiği kazıcı yükleyiciler (bekoloder - JCB 3CX/4CX, Hidromek 102B/102S, CAT 428/432) ve taş ocaklarının lastikli loderleri (CAT 950/966, Komatsu WA380/WA470, Volvo L120/L220) ağır çekiş ve tork altında çalışır.
+
+MESA Kepçe ve Loder Servisi; ZF ve Carraro powershift şanzıman revizyonu, aks ve diferansiyel ayna-mahruti ayarları, bel kırma orta mafsal rulman boşlukları, ıslak fren diskleri ve hidrostatik direksiyon sistemlerini orijinal toleranslarda yeniler.`,
+    highlights: [
+      'JCB 3CX/4CX, Hidromek 102B, CAT 428/432 bekoloder uzmanlığı',
+      'CAT 950/966/980, Komatsu WA serisi ağır lastikli loder servisi',
+      'ZF, Carraro, Turner powershift şanzıman ve tork konvertör revizyonu',
+      'Loder bel kırma (artikülasyon) orta mafsal pim ve burç yenileme',
+      'Yağ banyolu ıslak fren balataları ve diferansiyel kilit tamiri'
+    ],
+    technicalSpecs: [
+      { label: 'Şanzıman Tipleri', value: 'Powershift, Autoshift ve Hidrostatik Şanzımanlar' },
+      { label: 'Aks Markaları', value: 'Carraro, ZF, Dana Spicer ve Üretici Orijinal Akslar' },
+      { label: 'Fren Testi', value: 'Hidrolik Basınç & Eğimde Kaydırmazlık Testi' },
+      { label: 'Bel Kırma Boşluğu', value: 'Lazer Doğrultma & Seyyar Borwerk Revizyonu' }
+    ],
+    processSteps: [
+      { step: '01', title: 'Sürüş & Çekiş Testi', desc: 'Vites geçişleri, tork bayılması ve fren tutuşu test edilir.' },
+      { step: '02', title: 'Şanzıman Basınç Ölçümü', desc: 'Kavrama ve konvertör çalışma basınçları manometreyle ölçülür.' },
+      { step: '03', title: 'Mekanik & Hidrolik Yenileme', desc: 'Aşınan diskler, keçeler ve mafsal rulmanları değiştirilir.' },
+      { step: '04', title: 'Yükleme & Eğim Denemesi', desc: 'Kova tam doldurularak tork gücü ve vites geçişleri sahada onaylanır.' }
+    ],
+    commonIssues: [
+      'Gaza basıldığında loderin yığılması ve tork konvertörünün kaçırması',
+      'Bekoloder ileri-geri vitese geçerken sert vuruntu yapması',
+      'Bel kırma mafsalının boşluk yapması sonucu direksiyon hakimiyetinin kaybolması',
+      'Fren pedalının boşa düşmesi veya fren basıldığında tekerleklerin kilitlenip kalması'
+    ],
+    faqs: [
+      {
+        q: 'Bekoloder şanzıman revizyonu ne kadar sürer?',
+        a: 'Powershift şanzıman sökümü, parça değişimi ve test standı denemeleri merkez atölyemizde ortalama 2-3 iş gününde tamamlanır.'
       }
     ]
   }

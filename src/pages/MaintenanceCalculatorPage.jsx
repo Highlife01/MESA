@@ -747,7 +747,7 @@ export const MaintenanceCalculatorPage = () => {
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-[11px] text-amber-800 flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                 <span>
-                  Tüm bakım paketlerimiz Adana, Mersin, Hatay, Osmaniye geneline 18 mobil atölye aracımızla yerinde şantiyenizde uygulanmaktadır.
+                  Tüm bakım paketlerimiz Adana, Mersin, Hatay, Osmaniye geneline 5 mobil atölye aracımızla yerinde şantiyenizde uygulanmaktadır.
                 </span>
               </div>
 

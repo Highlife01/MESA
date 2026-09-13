@@ -1,20 +1,21 @@
 import { useEffect } from 'react';
-
-const SITE_NAME = 'MESA İş Makinaları';
-const BASE_URL = 'https://www.mesaismakinalari.com.tr';
-const DEFAULT_IMAGE = 'https://www.mesaismakinalari.com.tr/images/mesa-excavator-hero.png';
+import { SITE_CONFIG } from '../config/siteConfig';
 
 export function SEO({
   title,
-  description = 'Türkiye genelinde 7/24 mobil iş makinası tamiri, hidrolik sistem, teleskopik yükleyici, şanzıman ve motor revizyon servisi. Adana merkezli operasyonla tüm Türkiye’ye saha desteği.',
-  keywords = 'Türkiye iş makinası servisi, mobil iş makinası tamiri, hidrolik pompa tamiri, jcb servisi, cat tamiri, manitou servisi, ekskavatör tamiri, telehandler servisi, motor şanzıman revizyonu, 7/24 yerinde servis',
+  description = SITE_CONFIG.defaultMeta.description,
+  keywords = SITE_CONFIG.defaultMeta.keywords,
   canonical = '',
   ogType = 'website',
-  ogImage = DEFAULT_IMAGE,
-  schema = null
+  ogImage = SITE_CONFIG.ogImage,
+  schema = null,
+  breadcrumbs = null
 }) {
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | 7/24 Mobil Teknik Servis & ERP`;
+    const fullTitle = title 
+      ? ((title.includes('MESA') || title.includes(SITE_CONFIG.siteName)) ? title : `${title} | ${SITE_CONFIG.siteName}`)
+      : SITE_CONFIG.defaultMeta.title;
+
     document.title = fullTitle;
 
     const setMeta = (name, content, isProperty = false) => {
@@ -30,18 +31,21 @@ export function SEO({
 
     setMeta('description', description);
     setMeta('keywords', keywords);
-    setMeta('author', 'Mesa İş Makinaları San. ve Tic. Ltd. Şti.');
+    setMeta('author', SITE_CONFIG.legalName);
     setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
 
     // Open Graph
     setMeta('og:title', fullTitle, true);
     setMeta('og:description', description, true);
     setMeta('og:type', ogType, true);
-    setMeta('og:site_name', SITE_NAME, true);
+    setMeta('og:site_name', SITE_CONFIG.siteName, true);
     setMeta('og:locale', 'tr_TR', true);
     setMeta('og:image', ogImage, true);
 
-    const fullUrl = canonical ? `${BASE_URL}${canonical.startsWith('/') ? canonical : `/${canonical}`}` : window.location.href;
+    const fullUrl = canonical 
+      ? `${SITE_CONFIG.siteUrl}${canonical.startsWith('/') ? canonical : `/${canonical}`}` 
+      : (typeof window !== 'undefined' ? window.location.href : SITE_CONFIG.siteUrl);
+      
     setMeta('og:url', fullUrl, true);
 
     // Twitter Card
@@ -61,18 +65,88 @@ export function SEO({
 
     // Structured Data JSON-LD
     let scriptEl = document.getElementById('page-structured-data');
-    if (schema) {
-      if (!scriptEl) {
-        scriptEl = document.createElement('script');
-        scriptEl.id = 'page-structured-data';
-        scriptEl.type = 'application/ld+json';
-        document.head.appendChild(scriptEl);
-      }
-      scriptEl.textContent = JSON.stringify(schema);
-    } else if (scriptEl) {
-      scriptEl.remove();
+    
+    // Build combined graph schema
+    const graph = [];
+    
+    // Organization / LocalBusiness Schema (Always include HQ & Turkey areaServed)
+    graph.push({
+      '@type': ['LocalBusiness', 'HomeAndConstructionBusiness'],
+      '@id': `${SITE_CONFIG.siteUrl}/#organization`,
+      'name': SITE_CONFIG.legalName,
+      'alternateName': SITE_CONFIG.siteName,
+      'url': SITE_CONFIG.siteUrl,
+      'logo': SITE_CONFIG.logo,
+      'image': SITE_CONFIG.ogImage,
+      'telephone': SITE_CONFIG.phoneRaw,
+      'email': SITE_CONFIG.email,
+      'address': {
+        '@type': 'PostalAddress',
+        'streetAddress': SITE_CONFIG.headquarters.street,
+        'addressLocality': SITE_CONFIG.headquarters.district,
+        'addressRegion': SITE_CONFIG.headquarters.city,
+        'postalCode': SITE_CONFIG.headquarters.postalCode,
+        'addressCountry': 'TR'
+      },
+      'geo': {
+        '@type': 'GeoCoordinates',
+        'latitude': SITE_CONFIG.headquarters.latitude,
+        'longitude': SITE_CONFIG.headquarters.longitude
+      },
+      'openingHoursSpecification': [
+        {
+          '@type': 'OpeningHoursSpecification',
+          'dayOfWeek': [
+            'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+          ],
+          'opens': '00:00',
+          'closes': '23:59'
+        }
+      ],
+      'areaServed': [
+        {
+          '@type': 'Country',
+          'name': 'Turkey'
+        }
+      ],
+      'priceRange': '₺₺'
+    });
+
+    // Add breadcrumb list schema if provided
+    if (breadcrumbs && Array.isArray(breadcrumbs) && breadcrumbs.length > 0) {
+      graph.push({
+        '@type': 'BreadcrumbList',
+        'itemListElement': breadcrumbs.map((b, index) => ({
+          '@type': 'ListItem',
+          'position': index + 1,
+          'name': b.name,
+          'item': b.url ? `${SITE_CONFIG.siteUrl}${b.url.startsWith('/') ? b.url : `/${b.url}`}` : undefined
+        }))
+      });
     }
-  }, [title, description, keywords, canonical, ogType, ogImage, schema]);
+
+    // Add page specific schema if provided
+    if (schema) {
+      if (Array.isArray(schema)) {
+        graph.push(...schema);
+      } else {
+        graph.push(schema);
+      }
+    }
+
+    if (!scriptEl) {
+      scriptEl = document.createElement('script');
+      scriptEl.id = 'page-structured-data';
+      scriptEl.type = 'application/ld+json';
+      document.head.appendChild(scriptEl);
+    }
+    
+    scriptEl.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': graph
+    });
+
+  }, [title, description, keywords, canonical, ogType, ogImage, schema, breadcrumbs]);
 
   return null;
 }

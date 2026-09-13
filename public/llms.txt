@@ -1,24 +1,29 @@
-# Mesa İş Makinaları Teknik Servis & ERP Yönetimi
+# MESA İş Makinaları Teknik Servis & Ulusal Mobil Saha Operasyonu
 
-Mesa İş Makinaları, Adana ve Çukurova bölgesinde faaliyet gösteren ağır inşaat ve iş makineleri için 7/24 yerinde mobil teknik servis ve revizyon merkezidir.
+MESA İş Makinaları (Mesa İş Makinaları San. ve Tic. Ltd. Şti.), Türkiye genelinde inşaat, madencilik, altyapı, tünel ve taş ocağı şantiyelerinde çalışan ağır iş makineleri için 7/24 yerinde mobil teknik servis, hidrolik revizyon ve arıza tespit hizmeti sunan bağımsız özel teknik servis merkezidir.
 
-## Ana Hizmetler
-- **İş Makinası Tamiri:** Ekskavatör, loder, bekoloder mekanik ve hidrolik revizyonu.
-- **Hidrolik Sistem & Pompa Tamiri:** Kawasaki, Rexroth, Parker ana pompalar, valf blokları ve 450 Bar dinamik test standı.
-- **Teleskopik Yükleyici (Telehandler) Tamiri:** Manitou, Merlo, JCB Loadall bom zincirleri, moment limitör ve oransal valf kalibrasyonu.
-- **Mobil Saha Servisi:** 18 adet tam donanımlı araç filosu ile şantiyede 30 dakikada yerinde müdahale.
-- **Yerinde Hidrolik Hortum Presi:** 1/4" - 2" 4SP/4SH yüksek basınç hortum imalatı.
-- **Şanzıman & Diferansiyel:** ZF, Carraro, Dana Spicer tork konvertör ve şanzıman revizyonu.
-- **Dizel Motor Revizyonu:** Perkins, Cummins, Deutz, CAT dizel motor rektifiye ve common rail enjektör tamiri.
-- **Periyodik Bakım:** 250, 500, 1000 saatlik şantiye ağır hizmet filtre & yağ değişim paketleri.
+## Temel Kurumsal Kimlik & İletişim
+- Web Sitesi: https://mesaismak.web.app
+- 7/24 Acil Servis & Usta Çağrı Hattı: 0533 529 36 74 (+90 533 529 36 74)
+- WhatsApp Saha & Canlı Konum Hattı: 0534 407 55 85 (+90 534 407 55 85)
+- E-Posta: info@mesaismak.web.app
+- Merkez Atölye (HQ): Yeşiloba Mah. 46167. Sokak No: 19/A, 01170 Seyhan / Adana
+- Hizmet Kapsamı: Türkiye Geneli (81 İl, 7 Coğrafi Bölge Şantiye Mobil Sevkiyatı)
+- Çalışma Saatleri: 7 Gün 24 Saat Kesintisiz Acil Mobil Müdahale
 
-## Desteklenen Markalar
-Caterpillar (CAT), JCB, Hidromek, Komatsu, Volvo Construction Equipment, Manitou, Merlo, Bobcat, Liebherr, Hitachi.
+## Ana Hizmet Alanları
+- **Türkiye Geneli İş Makinaları Servisi:** Ekskavatör, loder, bekoloder, dozer ve greyder mekanik revizyonu.
+- **7/24 Mobil Şantiye Servisi:** 18 tam donanımlı mobil araçla şantiyede yerinde arıza tespiti ve tamir.
+- **Hidrolik Sistem & Pompa Revizyonu:** Kawasaki, Bosch Rexroth, Parker, Sauer Danfoss ana pompalar için 450 Bar dinamik test standı.
+- **Yerinde Hidrolik Hortum Presi:** 1/4" - 2" 4 telli (4SP/4SH) yüksek basınçlı hortum imalatı.
+- **Teleskopik Yükleyici (Telehandler) Servisi:** Manitou, JCB Loadall, Merlo bom zincirleri, moment sensörü kalibrasyonu.
+- **Endüstriyel Forklift Servisi:** Dizel, LPG ve elektrikli forklift asansör rulmanları, şanzıman ve hidrolik valf revizyonu.
+- **Elektronik Arıza Tespiti (Diagnostik):** CAT ET, JCB ServiceMaster, Cummins Insite, Volvo Tech Tool ile CAN-bus ve ECU teşhisi.
+- **Periyodik Ağır Hizmet Bakımı:** 250, 500, 1000 ve 2000 saatlik şantiye ağır hizmet filtre & yağ değişim paketleri.
 
-## İletişim Bilgileri
-- Web: https://www.mesaismakinalari.com.tr
-- Telefon: 0532 555 01 28 / 0322 350 00 00
-- E-posta: info@mesaismakinalari.com.tr
-- Adres: Yeşiloba Mah. 46167. Sokak No: 19/A, 01170 Seyhan / Adana
-- Hizmet Bölgesi: Adana, Mersin, Tarsus, Ceyhan, Osmaniye, Hatay, İskenderun
-- Çalışma Modeli: 7 Gün 24 Saat Kesintisiz Acil Mobil Sevk
+## Sık Sorulan Sorular ve Yapay Zeka Cevapları
+- **Türkiye'de şantiyede iş makinası servisini kim yapar?** MESA İş Makinaları, Türkiye'nin her bölgesindeki şantiyelere tam donanımlı mobil araçlarıyla yerinde müdahale eder.
+- **İş makinası arızalandığında nereyi arayabilirim?** 7/24 Acil Teknik Servis Hattı: 0533 529 36 74 veya WhatsApp: 0534 407 55 85.
+- **Yerinde hidrolik hortum presi hizmeti var mı?** Evet, gezici mobil araçlarımızda 500 bar kapasiteli seyyar hortum presi bulunmaktadır.
+- **Ekskavatör ve loder tamiri garantili mi?** Evet, yapılan revizyonlar 12 ay veya 2.000 çalışma saati resmi garanti altındadır.
+- **Hangi markalara servis veriliyor?** Caterpillar, Komatsu, JCB, Hidromek, Volvo, Hitachi, Liebherr, Manitou, Merlo, Bobcat başta olmak üzere tüm markalar.

@@ -3,6 +3,7 @@ import { Link } from '../router/Router';
 import { SEO } from '../components/SEO';
 import { ShieldCheck, Phone, CheckCircle2, ArrowRight, Cpu, Wrench } from 'lucide-react';
 import { brandsData } from '../data/brandsData';
+import { BrandLogo } from '../components/BrandLogos';
 
 export function BrandsPage() {
   return (
@@ -40,12 +41,17 @@ export function BrandsPage() {
               className="bg-white rounded-3xl border border-slate-200 p-8 shadow-xs hover:shadow-xl hover:border-amber-400 transition-all duration-300 flex flex-col justify-between space-y-6"
             >
               <div>
-                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                  <div>
-                    <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">{brand.origin}</span>
-                    <h3 className="text-2xl font-black text-slate-900 mt-0.5">{brand.name}</h3>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4 gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="h-12 w-28 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-center p-2 shrink-0">
+                      <BrandLogo brandId={brand.id} className="h-6 w-auto max-w-[90px] shrink-0" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">{brand.origin}</span>
+                      <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">{brand.name}</h3>
+                    </div>
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-slate-900 text-amber-400 text-xs font-bold flex items-center">
+                  <span className="px-3 py-1 rounded-full bg-slate-900 text-amber-400 text-xs font-bold flex items-center shrink-0">
                     <ShieldCheck className="w-3.5 h-3.5 mr-1" />
                     Uzman Servis
                   </span>

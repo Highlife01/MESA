@@ -7,11 +7,13 @@ import {
 } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
 
-export function ServiceDetailPage() {
-  const { slug } = useParams();
+export function ServiceDetailPage({ explicitSlug }) {
+  const { slug: paramSlug } = useParams();
   const [openFaq, setOpenFaq] = useState(null);
 
-  const service = servicesData.find(s => s.slug === slug);
+  const rawPath = typeof window !== 'undefined' ? window.location.pathname.replace(/^\//, '').split('/')[0] : '';
+  const effectiveSlug = explicitSlug || paramSlug || rawPath;
+  const service = servicesData.find(s => s.slug === effectiveSlug || s.id === effectiveSlug);
 
   if (!service) {
     return (
@@ -30,31 +32,52 @@ export function ServiceDetailPage() {
 
   const otherServices = servicesData.filter(s => s.slug !== slug).slice(0, 4);
 
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : `/hizmetler/${service.slug}`;
+  const canonicalUrl = currentPath.startsWith('/hizmetler/') ? currentPath : (currentPath.length > 1 ? currentPath : `/hizmetler/${service.slug}`);
+
   const serviceJsonLd = {
-    '@context': 'https://schema.org',
     '@type': 'Service',
-    'serviceType': service.title,
+    'name': service.title,
+    'serviceType': service.category,
     'provider': {
       '@type': 'LocalBusiness',
-      'name': 'MESA İş Makinaları Teknik Servis',
-      'telephone': '+905335293674',
-      'address': {
-        '@type': 'PostalAddress',
-        'addressLocality': 'Adana',
-        'addressCountry': 'TR'
-      }
+      'name': 'MESA İş Makinaları',
+      'telephone': '+905335293674'
     },
-    'areaServed': ['Türkiye', 'Adana', 'Mersin', 'Osmaniye', 'Hatay', 'İzmir', 'Ankara', 'Gaziantep'],
+    'areaServed': {
+      '@type': 'Country',
+      'name': 'Turkey'
+    },
     'description': service.shortDesc
   };
+
+  // Add FAQ Schema if available
+  const faqSchema = service.faqs && service.faqs.length > 0 ? {
+    '@type': 'FAQPage',
+    'mainEntity': service.faqs.map(f => ({
+      '@type': 'Question',
+      'name': f.q,
+      'acceptedAnswer': {
+        '@type': 'Answer',
+        'text': f.a
+      }
+    }))
+  } : null;
+
+  const breadcrumbsList = [
+    { name: 'Ana Sayfa', url: '/' },
+    { name: 'Hizmetlerimiz', url: '/hizmetler' },
+    { name: service.title, url: canonicalUrl }
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 py-10">
       <SEO 
-        title={`${service.title} | Türkiye Servisi`}
-        description={`${service.shortDesc} Türkiye genelinde 7/24 yerinde teknik müdahale, ${service.warranty}.`}
-        canonical={`/hizmetler/${service.slug}`}
-        schema={serviceJsonLd}
+        title={`${service.title} | Türkiye MESA Servisi`}
+        description={`${service.shortDesc} Türkiye genelinde 7/24 yerinde teknik müdahale, ${service.warranty}. 0533 529 36 74.`}
+        canonical={canonicalUrl}
+        schema={faqSchema ? [serviceJsonLd, faqSchema] : serviceJsonLd}
+        breadcrumbs={breadcrumbsList}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">

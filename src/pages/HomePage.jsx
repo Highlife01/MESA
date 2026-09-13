@@ -9,6 +9,7 @@ import {
 import { servicesData } from '../data/servicesData';
 import { guidesData } from '../data/guidesData';
 import { brandsData } from '../data/brandsData';
+import { activeCitiesData } from '../data/citiesData';
 import { GoogleReviewsWidget } from '../components/GoogleReviewsWidget';
 import BrandMarquee from '../components/BrandMarquee';
 
@@ -39,7 +40,7 @@ export function HomePage() {
     '@type': 'AutoRepair',
     'name': 'Mesa İş Makinaları Teknik Servis',
     'image': 'https://mesaismak.web.app/images/mesa-logo.png',
-    'description': 'Adana ve Çukurova genelinde 18 mobil araçla 7/24 yerinde iş makinası tamiri, hidrolik pompa, teleskopik yükleyici, şanzıman ve motor revizyon servisi.',
+    'description': 'Adana ve Çukurova genelinde 5 mobil araçla 7/24 yerinde iş makinası tamiri, hidrolik pompa, teleskopik yükleyici, şanzıman ve motor revizyon servisi.',
     'address': {
       '@type': 'PostalAddress',
       'streetAddress': 'Seyhan OSB, Şantiyeler Yolu No: 48',
@@ -79,8 +80,9 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-red-600 selection:text-white">
       <SEO 
-        title="7/24 Mobil İş Makinası & Hidrolik Servisi | MESA İş Makinaları"
-        description="Adana ve Çukurova genelinde 18 mobil araçla 7/24 yerinde iş makinası tamiri. JCB, CAT, Hidromek, Manitou hidrolik pompa, hortum pres, şanzıman ve motor revizyonu."
+        title="MESA İş Makinaları | Türkiye Geneli Teknik Servis & Hidrolik"
+        description="Türkiye genelinde şantiyede 7/24 yerinde mobil iş makinası tamiri, hidrolik sistem revizyonu, ekskavatör, forklift ve teleskopik yükleyici teknik servisi. 7/24 Acil Çağrı: 0533 529 36 74."
+        keywords="iş makinaları servisi, türkiye geneli iş makinası tamiri, mobil iş makinası servisi, hidrolik servis, hidrolik sistem tamiri, iş makinası bakım onarım, ekskavatör servisi, forklift servisi, teleskopik yükleyici servisi"
         canonical="/"
         schema={jsonLdSchema}
       />
@@ -112,21 +114,21 @@ export function HomePage() {
               {/* Emergency Radar Pill */}
               <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-bold tracking-wider uppercase shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
-                <span>TÜRKİYE GENELİ 7/24 MOBİL SERVİS AĞI</span>
+                <span>TÜRKİYE GENELİ 7/24 MOBİL TEKNİK SERVİS & HİDROLİK</span>
               </div>
 
-              {/* Dominant Headline */}
+              {/* Dominant Headline with H1 */}
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-slate-900">
-                <span>ŞANTİYENİZ DURMASIN</span>
+                <span>Türkiye Geneli</span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-rose-600 to-red-500">
-                  GÜCÜNÜZ SAHADA KALSIN.
+                  İş Makinaları Teknik Servis
                 </span>
               </h1>
 
               {/* Value Proposition */}
               <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                Ekskavatör, loder, bekoloder ve teleskopik yükleyiciler için <strong className="text-slate-900 font-bold">18 tam donanımlı mobil araçla</strong> yerinde müdahale, 500 Bar hidrolik hortum presi ve <strong className="text-red-600 font-bold">12 ay resmi servis garantisi</strong>.
+                Ekskavatör, loder, bekoloder ve teleskopik yükleyiciler için <strong className="text-slate-900 font-bold">5 tam donanımlı mobil araçla</strong> yerinde müdahale, 500 Bar hidrolik hortum presi ve <strong className="text-red-600 font-bold">12 ay resmi servis garantisi</strong>.
               </p>
 
               {/* Action Buttons: Red Primary & Steel Secondary */}
@@ -204,7 +206,7 @@ export function HomePage() {
                     <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest block">CANLI SAHA TELEMETRİ</span>
                     <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
                       <span>Nöbetçi Mobil Ekipler</span>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">18/18 Aktif</span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">5/5 Aktif</span>
                     </h3>
                   </div>
                   <span className="flex h-2.5 w-2.5 relative">
@@ -332,7 +334,7 @@ export function HomePage() {
               </div>
               <h3 className="font-black text-base text-slate-900 mb-2">En Yakın Mobil Ekip Yolda</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                GPS rotalama ile bölgedeki 18 donanımlı servis aracımızdan en yakını ortalama 30 dakikada şantiyenize ulaşır.
+                GPS rotalama ile bölgedeki 5 donanımlı servis aracımızdan en yakını ortalama 30 dakikada şantiyenize ulaşır.
               </p>
             </div>
 
@@ -489,7 +491,7 @@ export function HomePage() {
                   className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs inline-flex items-center gap-2 transition shadow-lg shadow-red-900/30"
                 >
                   <Truck className="w-4 h-4" />
-                  <span>18 Mobil Servis Aracını İncele</span>
+                  <span>5 Mobil Servis Aracını İncele</span>
                 </Link>
                 <Link
                   to="/hakkimizda"
@@ -558,6 +560,69 @@ export function HomePage() {
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────
+          6.5 TÜRKİYE GENELİ HİZMET BÖLGELERİ & 12 ŞEHİR KART GRİDİ
+      ───────────────────────────────────────────────────────────── */}
+      <section className="py-20 bg-slate-900 text-white relative overflow-hidden border-t border-slate-800">
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:16px_16px]" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-600/20 text-red-400 border border-red-500/30 text-xs font-bold uppercase tracking-wider mb-3">
+                <Truck className="w-3.5 h-3.5" /> 81 İl Mobil Saha Ağı
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+                Türkiye Geneli Hizmet Bölgeleri
+              </h2>
+              <p className="text-sm text-slate-300 mt-2 max-w-2xl">
+                İstanbul'dan Diyarbakır'a; limanlar, organize sanayi havzaları ve mega altyapı şantiyelerine seyyar hidrolik pres donanımlı mobil araçlarımızla yerinde teknik servis sağlıyoruz.
+              </p>
+            </div>
+
+            <Link
+              to="/sehirler"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs shadow-lg shadow-red-600/25 transition-all active:scale-95 shrink-0 self-start md:self-end"
+            >
+              <span>Tüm Hizmet Bölgeleri</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {activeCitiesData.map((city) => (
+              <Link
+                key={city.id}
+                to={`/sehirler/${city.slug}`}
+                className="p-5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-red-500/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between text-[11px] mb-2">
+                    <span className="font-mono font-bold px-2 py-0.5 rounded bg-red-600/30 text-red-300 border border-red-500/30">
+                      {city.plate}
+                    </span>
+                    <span className="text-slate-400 font-medium">
+                      {city.regionName}
+                    </span>
+                  </div>
+                  <h3 className="text-base font-black text-white group-hover:text-red-400 transition-colors">
+                    {city.name} Servisi
+                  </h3>
+                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                    {city.industryContext}
+                  </p>
+                </div>
+
+                <div className="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-red-400 group-hover:text-red-300">
+                  <span>Saha Detayları</span>
+                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
             ))}
           </div>
         </div>

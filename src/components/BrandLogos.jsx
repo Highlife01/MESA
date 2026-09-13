@@ -1,12 +1,23 @@
 import React from 'react';
 
 // Authentic, high-precision SVG brand logos for heavy construction equipment
-export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
-  switch (brandId) {
+// Explicit width/height attributes and style prevent iOS WebKit / Safari PWA SVG collapsing bug
+export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
+  const normalizedId = (brandId || '').toLowerCase().trim();
+  const commonStyle = { maxHeight: '100%', maxWidth: '100%', height: '32px', width: 'auto', display: 'block' };
+
+  switch (normalizedId) {
     case 'caterpillar':
     case 'cat':
       return (
-        <svg viewBox="0 0 140 46" className={className} fill="currentColor" aria-label="Caterpillar CAT">
+        <svg 
+          viewBox="0 0 140 46" 
+          width="140" 
+          height="46" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Caterpillar CAT"
+        >
           {/* CAT Black Typography with Golden Yellow Triangle in A */}
           <text x="2" y="36" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="42" fill="#111111" letterSpacing="-1">
             C
@@ -27,7 +38,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'jcb':
       return (
-        <svg viewBox="0 0 120 46" className={className} aria-label="JCB">
+        <svg 
+          viewBox="0 0 120 46" 
+          width="120" 
+          height="46" 
+          className={className} 
+          style={commonStyle}
+          aria-label="JCB"
+        >
           {/* Iconic JCB Yellow Rounded Badge */}
           <rect x="2" y="4" width="116" height="38" rx="8" fill="#F8B800" stroke="#E5A800" strokeWidth="2" />
           <text x="60" y="33" textAnchor="middle" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="28" fill="#111111" letterSpacing="2">
@@ -38,7 +56,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'komatsu':
       return (
-        <svg viewBox="0 0 170 38" className={className} aria-label="Komatsu">
+        <svg 
+          viewBox="0 0 170 38" 
+          width="170" 
+          height="38" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Komatsu"
+        >
           {/* Bold Industrial Komatsu Blue */}
           <text x="0" y="30" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="30" fill="#005BAB" letterSpacing="0.5">
             KOMATSU
@@ -48,7 +73,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'hidromek':
       return (
-        <svg viewBox="0 0 180 40" className={className} aria-label="Hidromek">
+        <svg 
+          viewBox="0 0 180 40" 
+          width="180" 
+          height="40" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Hidromek"
+        >
           {/* HMK Red/White Emblem + Typography */}
           <g transform="translate(0, 4)">
             <rect x="0" y="0" width="32" height="32" rx="6" fill="#E30613" />
@@ -64,7 +96,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'volvo':
       return (
-        <svg viewBox="0 0 150 44" className={className} aria-label="Volvo Construction Equipment">
+        <svg 
+          viewBox="0 0 150 44" 
+          width="150" 
+          height="44" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Volvo Construction Equipment"
+        >
           {/* Volvo Iron Mark Circle & Arrow */}
           <circle cx="20" cy="22" r="15" fill="none" stroke="#64748B" strokeWidth="3.5" />
           <line x1="28" y1="14" x2="35" y2="7" stroke="#64748B" strokeWidth="3.5" strokeLinecap="round" />
@@ -79,7 +118,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'manitou':
       return (
-        <svg viewBox="0 0 160 38" className={className} aria-label="Manitou">
+        <svg 
+          viewBox="0 0 160 38" 
+          width="160" 
+          height="38" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Manitou"
+        >
           {/* Red curved bracket and bold Manitou */}
           <path d="M4 8 Q18 2 32 8 Q24 24 16 32 Q4 22 4 8" fill="#E30613" />
           <text x="40" y="28" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="24" fill="#1E293B" letterSpacing="1">
@@ -90,7 +136,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'hitachi':
       return (
-        <svg viewBox="0 0 160 38" className={className} aria-label="Hitachi">
+        <svg 
+          viewBox="0 0 160 38" 
+          width="160" 
+          height="38" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Hitachi"
+        >
           <text x="0" y="27" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="25" fill="#E60012" letterSpacing="0.5">
             HITACHI
           </text>
@@ -99,7 +152,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'bobcat':
       return (
-        <svg viewBox="0 0 150 42" className={className} aria-label="Bobcat">
+        <svg 
+          viewBox="0 0 150 42" 
+          width="150" 
+          height="42" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Bobcat"
+        >
           {/* Bobcat Lynx Icon + Text */}
           <g transform="translate(0, 3)">
             <rect x="0" y="0" width="36" height="34" rx="8" fill="#E31837" />
@@ -115,7 +175,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'liebherr':
       return (
-        <svg viewBox="0 0 160 36" className={className} aria-label="Liebherr">
+        <svg 
+          viewBox="0 0 160 36" 
+          width="160" 
+          height="36" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Liebherr"
+        >
           {/* Iconic Bold Liebherr font */}
           <text x="0" y="26" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="24" fill="#1E293B" letterSpacing="1.5">
             LIEBHERR
@@ -125,7 +192,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'merlo':
       return (
-        <svg viewBox="0 0 140 38" className={className} aria-label="Merlo">
+        <svg 
+          viewBox="0 0 140 38" 
+          width="140" 
+          height="38" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Merlo"
+        >
           <g transform="translate(0, 5)">
             <rect x="0" y="0" width="28" height="28" rx="6" fill="#008D46" />
             <text x="14" y="20" textAnchor="middle" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="16" fill="#FFFFFF">
@@ -140,7 +214,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'hyundai':
       return (
-        <svg viewBox="0 0 160 38" className={className} aria-label="Hyundai Construction Equipment">
+        <svg 
+          viewBox="0 0 160 38" 
+          width="160" 
+          height="38" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Hyundai Construction Equipment"
+        >
           {/* Tilted oval H and Hyundai */}
           <ellipse cx="18" cy="19" rx="14" ry="12" fill="none" stroke="#002C5F" strokeWidth="3" transform="rotate(-15 18 19)" />
           <path d="M12 14 L12 24 M24 14 L24 24 M12 19 L24 19" stroke="#002C5F" strokeWidth="3" strokeLinecap="round" transform="rotate(-15 18 19)" />
@@ -152,7 +233,14 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     case 'case':
       return (
-        <svg viewBox="0 0 130 38" className={className} aria-label="Case Construction Equipment">
+        <svg 
+          viewBox="0 0 130 38" 
+          width="130" 
+          height="38" 
+          className={className} 
+          style={commonStyle}
+          aria-label="Case Construction Equipment"
+        >
           {/* Red oval with bold CASE */}
           <rect x="0" y="3" width="124" height="32" rx="16" fill="#C41230" />
           <text x="62" y="25" textAnchor="middle" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="20" fill="#FFFFFF" letterSpacing="1.5">
@@ -163,8 +251,8 @@ export function BrandLogo({ brandId, className = 'h-7 w-auto' }) {
 
     default:
       return (
-        <span className="font-black font-mono text-sm tracking-wider text-white">
-          {brandId.toUpperCase()}
+        <span className="font-black font-mono text-xs tracking-wider text-slate-800 bg-slate-200/80 px-2.5 py-1 rounded border border-slate-300">
+          {brandId ? brandId.toUpperCase() : 'MARKA'}
         </span>
       );
   }

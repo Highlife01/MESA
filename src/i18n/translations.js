@@ -28,10 +28,10 @@ export const translations = {
     heroBadge: '7/24 Gezici Acil Saha Servisi',
     heroTitle1: 'Ağır İş Makinaları',
     heroTitle2: 'Teknik Servis & Revizyon',
-    heroDesc: 'Ekskavatör, bekoloder, telehandler ve loderler için Adana ve tüm Çukurova genelinde 18 tam donanımlı mobil servis aracı, 500 bar test istasyonu ve 12 ay garantili revizyon desteği.',
+    heroDesc: 'Ekskavatör, bekoloder, telehandler ve loderler için Adana ve tüm Çukurova genelinde 5 tam donanımlı mobil servis aracı, 500 bar test istasyonu ve 12 ay garantili revizyon desteği.',
     heroCta1: 'Acil Servis Çağır (30 Dk)',
     heroCta2: 'Hizmetlerimizi İncele',
-    activeDutyVehicles: '18 Nöbetçi Mobil Araç Sahada',
+    activeDutyVehicles: '5 Nöbetçi Mobil Araç Sahada',
     avgArrival: '30 Dk Ortalama İntikal',
     warrantyStat: '12 Ay / 2.000 Saat Garanti',
     satisfactionStat: '%99.4 Çözüm Oranı',
@@ -57,7 +57,7 @@ export const translations = {
 
     // CTA
     ctaTitle: 'Şantiyeniz Durmasın, Hemen Arayın',
-    ctaDesc: '18 mobil servis aracımız ve deneyimli ustalarımızla 7 gün 24 saat Adana ve Çukurova genelinde sahadayız.',
+    ctaDesc: '5 mobil servis aracımız ve deneyimli ustalarımızla 7 gün 24 saat Adana ve Çukurova genelinde sahadayız.',
     emergencyHotline: '7/24 Acil Çağrı Merkezi'
   },
   en: {
@@ -87,10 +87,10 @@ export const translations = {
     heroBadge: '24/7 Heavy Equipment Mobile On-Site Service',
     heroTitle1: 'Heavy Machinery',
     heroTitle2: 'Technical Repair & Overhaul',
-    heroDesc: 'Serving excavators, backhoe loaders, and telehandlers across Adana and Southern Turkey with 18 fully-equipped mobile service trucks, 500-bar mobile hose press, and 12-month written warranty.',
+    heroDesc: 'Serving excavators, backhoe loaders, and telehandlers across Adana and Southern Turkey with 5 fully-equipped mobile service trucks, 500-bar mobile hose press, and 12-month written warranty.',
     heroCta1: 'Emergency Dispatch (30 Mins)',
     heroCta2: 'Explore Services',
-    activeDutyVehicles: '18 Active Duty Field Trucks',
+    activeDutyVehicles: '5 Active Duty Field Trucks',
     avgArrival: '30 Mins Avg Response',
     warrantyStat: '12 Months / 2,000 Hrs Warranty',
     satisfactionStat: '99.4% First-Time Fix Rate',
@@ -112,7 +112,7 @@ export const translations = {
     brandsDesc: 'Full factory-level diagnostic software and OEM parts inventory.',
 
     ctaTitle: 'Prevent Costly Downtime, Call Now',
-    ctaDesc: '18 fully equipped mobile workshops and master technicians ready 24/7.',
+    ctaDesc: '5 fully equipped mobile workshops and master technicians ready 24/7.',
     emergencyHotline: '24/7 Emergency Line'
   },
   ar: {
@@ -142,10 +142,10 @@ export const translations = {
     heroBadge: 'خدمة ميدانية متنقلة للآليات الثقيلة 24/7',
     heroTitle1: 'صيانة الآليات الثقيلة',
     heroTitle2: 'إصلاح هيدروليك ومحركات',
-    heroDesc: 'صيانة الحفارات والرافعات الشوكية والتلسكوبية في أضنة ومنطقة جوكوروفا مع 18 ورشة متنقلة متكاملة ومكبس خراطيم 500 بار وضمان رسمي لمدة 12 شهرًا.',
+    heroDesc: 'صيانة الحفارات والرافعات الشوكية والتلسكوبية في أضنة ومنطقة جوكوروفا مع 5 ورش متنقلة متكاملة ومكبس خراطيم 500 بار وضمان رسمي لمدة 12 شهرًا.',
     heroCta1: 'طلب طوارئ فوري (30 دقيقة)',
     heroCta2: 'استكشف الخدمات',
-    activeDutyVehicles: '18 ورشة متنقلة في الخدمة',
+    activeDutyVehicles: '5 ورش متنقلة في الخدمة',
     avgArrival: 'متوسط الوصول 30 دقيقة',
     warrantyStat: 'ضمان 12 شهراً / 2,000 ساعة',
     satisfactionStat: '%99.4 نسبة نجاح الإصلاح',
@@ -167,7 +167,7 @@ export const translations = {
     brandsDesc: 'برامج تشخيص المصنع الأصلية وسلاسل توريد سريعة لقطع الغيار.',
 
     ctaTitle: 'لا تدع مشروعك يتوقف، اتصل الآن',
-    ctaDesc: '18 ورشة متنقلة مجهزة على مدار الساعة في خدمتكم.',
+    ctaDesc: '5 ورش متنقلة مجهزة على مدار الساعة في خدمتكم.',
     emergencyHotline: 'مركز الطوارئ 24/7'
   }
 };

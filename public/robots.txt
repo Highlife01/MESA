@@ -3,5 +3,12 @@ Allow: /
 Disallow: /panel
 Disallow: /yonetim
 Disallow: /teknisyen
+Disallow: /admin
+Disallow: /login
 
-Sitemap: https://www.mesaismakinalari.com.tr/sitemap.xml
+Sitemap: https://mesaismak.web.app/sitemap.xml
+Sitemap: https://mesaismak.web.app/sitemap-pages.xml
+Sitemap: https://mesaismak.web.app/sitemap-services.xml
+Sitemap: https://mesaismak.web.app/sitemap-cities.xml
+Sitemap: https://mesaismak.web.app/sitemap-regions.xml
+Sitemap: https://mesaismak.web.app/sitemap-guides.xml

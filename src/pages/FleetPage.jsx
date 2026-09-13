@@ -92,7 +92,7 @@ export const FleetPage = () => {
   const vehicleClasses = [
     {
       type: 'Ağır Şantiye 4x4 Acil Müdahale Araçları',
-      count: '6 Araç',
+      count: '2 Araç',
       chassis: 'Isuzu D-Max & Ford Ranger 4x4 Yükseltilmiş Süspansiyon',
       mission: 'Zorlu taş ocakları, maden sahaları ve çamurlu baraj projelerine doğrudan şantiye içi intikal.',
       equipment: [
@@ -105,7 +105,7 @@ export const FleetPage = () => {
     },
     {
       type: 'Yüksek Tavanlı Entegre Mobil Atölye Panelvanları',
-      count: '8 Araç',
+      count: '2 Araç',
       chassis: 'Ford Transit & Iveco Daily Yüksek Tavan Ağır Hizmet',
       mission: 'Otoyol şantiyeleri, metro/tünel hatları ve OSB sanayi tesislerinde kapsamlı yerinde revizyon.',
       equipment: [
@@ -118,7 +118,7 @@ export const FleetPage = () => {
     },
     {
       type: 'Ağır Parça & Ataşman Nakil Kurtarıcıları',
-      count: '4 Araç',
+      count: '1 Araç',
       chassis: 'Isuzu NPR & Mitsubishi Fuso Hidrolik Vinçli Kamyonet',
       mission: 'Ağır hidrolik pompaların, kule dönüş dişlilerinin, kova ve kırıcı ataşmanlarının şantiyeden atölyeye güvenli transferi.',
       equipment: [
@@ -142,8 +142,8 @@ export const FleetPage = () => {
   return (
     <div className="bg-slate-50 text-slate-900 min-h-screen">
       <SEO
-        title="18 Araçlık Mobil Servis Filosu | Mesa İş Makinaları"
-        description="Adana, Mersin, Hatay, Osmaniye ve tüm Çukurova'ya 45 dakikada ulaşan 18 tam donanımlı mobil servis aracı, araç içi hortum presi ve arıza tespit teknolojisi."
+        title="5 Araçlık Mobil Servis Filosu | Mesa İş Makinaları"
+        description="Adana, Mersin, Hatay, Osmaniye ve tüm Çukurova'ya 45 dakikada ulaşan 5 tam donanımlı mobil servis aracı, araç içi hortum presi ve arıza tespit teknolojisi."
         canonical="/filo"
         keywords="mobil servis aracı iş makinası, gezici servis adana, yerinde hortum presi, şantiye acil servis, mersin iş makinası servisi"
       />
@@ -156,10 +156,10 @@ export const FleetPage = () => {
               <Truck className="w-4 h-4" /> 7/24 Kesintisiz Saha Gücü
             </div>
             <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-6">
-              18 Tam Donanımlı <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-600">Gezici Mobil Filo</span>
+              5 Tam Donanımlı <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-600">Gezici Mobil Filo</span>
             </h1>
             <p className="text-lg text-slate-600 leading-relaxed">
-              Arızalanan iş makinasını şantiyeden sanayiye taşımak büyük vinç, çekici masrafı ve günlerce iş kaybı demektir. Mesa İş Makinaları olarak 18 araçlık modern filomuzla fabrikayı şantiyenize taşıyoruz.
+              Arızalanan iş makinasını şantiyeden sanayiye taşımak büyük vinç, çekici masrafı ve günlerce iş kaybı demektir. Mesa İş Makinaları olarak 5 araçlık modern filomuzla fabrikayı şantiyenize taşıyoruz.
             </p>
           </div>
         </div>
@@ -174,7 +174,7 @@ export const FleetPage = () => {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200 mb-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span>Canlı Telematik Radarı • 18 Araç Aktif</span>
+                <span>Canlı Telematik Radarı • 5 Araç Aktif</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                 Şantiyenize En Yakın Nöbetçi Mobil Servisi Bulun
@@ -184,19 +184,19 @@ export const FleetPage = () => {
               </p>
             </div>
 
-            {/* 18 Fleet Live Counter Bar */}
+            {/* 5 Fleet Live Counter Bar */}
             <div className="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 text-xs shrink-0">
               <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs">
                 <span className="text-slate-400 block text-[10px] font-bold">SAHADA</span>
-                <span className="text-red-600 font-mono font-black text-sm">8 Araç</span>
+                <span className="text-red-600 font-mono font-black text-sm">2 Araç</span>
               </div>
               <div className="px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 shadow-xs">
                 <span className="text-emerald-600 block text-[10px] font-bold">NÖBETÇİ HAZIR</span>
-                <span className="text-emerald-700 font-mono font-black text-sm">7 Araç</span>
+                <span className="text-emerald-700 font-mono font-black text-sm">2 Araç</span>
               </div>
               <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs">
                 <span className="text-slate-400 block text-[10px] font-bold">İKMAL / ATÖLYE</span>
-                <span className="text-slate-700 font-mono font-black text-sm">3 Araç</span>
+                <span className="text-slate-700 font-mono font-black text-sm">1 Araç</span>
               </div>
             </div>
           </div>

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate, useLocation } from '../router/Router';
 import { SEO } from '../components/SEO';
 import { useOperational } from '../context/OperationalContext';
+import { LocationShareButton } from '../components/LocationShareButton';
+import { activeCitiesData } from '../data/citiesData';
 import { 
   ShieldAlert, Wrench, MapPin, Camera, Mic, 
-  CheckCircle2, ArrowRight, ArrowLeft, Phone, Clock, Truck, Send
+  CheckCircle2, ArrowRight, ArrowLeft, Phone, Clock, Truck, Send, Search, Sparkles
 } from 'lucide-react';
 
 export function EmergencyWizardPage() {
@@ -22,7 +24,11 @@ export function EmergencyWizardPage() {
     modelYear: '2021',
     issueCategory: 'Hidrolik Basınç Düşüklüğü / Pompa',
     priority: 'Acil (Şantiye Durdu)',
-    location: 'Seyhan OSB, Adana',
+    city: 'Adana',
+    district: 'Seyhan OSB',
+    location: 'Yeşiloba Sanayi Bölgesi',
+    gpsLink: '',
+    photoName: '',
     customerName: '',
     phone: '',
     notes: ''
@@ -35,10 +41,12 @@ export function EmergencyWizardPage() {
       const queryBrand = params.get('brand');
       const queryCode = params.get('code');
       const queryDesc = params.get('desc');
+      const queryCity = params.get('city');
 
       setFormData(prev => ({
         ...prev,
         brand: queryBrand || prev.brand,
+        city: queryCity ? decodeURIComponent(queryCity) : prev.city,
         issueCategory: queryCode ? `${queryCode} - ${queryDesc || 'DTC Arızası'}` : prev.issueCategory,
         notes: queryCode ? `DTC Arıza Kodu: ${queryCode}` : prev.notes
       }));
@@ -53,12 +61,15 @@ export function EmergencyWizardPage() {
       return;
     }
 
+    const fullLocation = `${formData.city} / ${formData.district} - ${formData.location}${formData.gpsLink ? ` (GPS: ${formData.gpsLink})` : ''}`;
+    const fullIssue = `${formData.issueCategory} (${formData.priority})${formData.photoName ? ` [Fotoğraf: ${formData.photoName}]` : ''} - ${formData.notes || ''}`;
+
     const newOrder = addEmergencyOrder({
       customer: formData.customerName,
       phone: formData.phone,
-      machine: `${formData.brand} ${formData.machineType}`,
-      location: formData.location,
-      issue: `${formData.issueCategory} (${formData.priority}) - ${formData.notes || ''}`
+      machine: `${formData.brand} ${formData.machineType} (${formData.modelYear})`,
+      location: fullLocation,
+      issue: fullIssue
     });
 
     setSuccessOrder(newOrder);
@@ -67,7 +78,7 @@ export function EmergencyWizardPage() {
   const getWhatsAppDispatchLink = (order) => {
     if (!order) return '';
     const msg = `*MESA 7/24 ACİL İŞ MAKİNASI ÇAĞRISI*%0A%0A*Takip No:* ${order.code}%0A*Firma/Yetkili:* ${order.customer}%0A*Telefon:* ${order.phone}%0A*Makine:* ${order.machine}%0A*Şantiye:* ${order.location}%0A*Arıza:* ${order.issue}%0A%0AAcil seyyar servis aracının yönlendirilmesini talep ediyorum.`;
-    return `https://wa.me/905344075585?text=${msg}`;
+    return `https://wa.me/905335293674?text=${msg}`;
   };
 
   return (
@@ -198,6 +209,29 @@ export function EmergencyWizardPage() {
                       <option>Normal (Periyodik Bakım / Filtre Değişimi)</option>
                     </select>
                   </div>
+
+                  <div>
+                    <label className="font-bold text-slate-700 block mb-1">Arıza Fotoğrafı / Etiket Görseli (Opsiyonel)</label>
+                    <div className="flex items-center gap-2">
+                      <label className="cursor-pointer px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 text-xs font-bold flex items-center gap-2 transition">
+                        <Camera className="w-4 h-4 text-red-600" />
+                        <span>Fotoğraf Seç / Çek</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) {
+                              setFormData({ ...formData, photoName: e.target.files[0].name });
+                            }
+                          }}
+                        />
+                      </label>
+                      {formData.photoName && (
+                        <span className="text-xs text-emerald-700 font-medium">✓ {formData.photoName} eklendi</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex justify-between pt-4">
@@ -221,22 +255,138 @@ export function EmergencyWizardPage() {
             {/* Step 3: Konum */}
             {step === 3 && (
               <div className="space-y-4 animate-in fade-in duration-150">
-                <h3 className="text-base font-black text-slate-900">3. Şantiye Lokasyonu</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-black text-slate-900">3. Şantiye Lokasyonu (81 İl Kapsamı)</h3>
+                  <span className="text-[11px] font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full">
+                    7/24 Mobil İntikal
+                  </span>
+                </div>
                 
-                <div className="space-y-3 text-xs">
+                <div className="space-y-3.5 text-xs">
+                  {/* City Select from 81 Cities */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="font-bold text-slate-700 block mb-1">
+                        Şehir Seçiniz (81 İl) *
+                      </label>
+                      <select
+                        value={formData.city}
+                        onChange={(e) => {
+                          const newCity = e.target.value;
+                          setFormData(prev => ({
+                            ...prev, 
+                            city: newCity,
+                            district: '' // reset district on city change
+                          }));
+                        }}
+                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-bold focus:bg-white focus:border-red-500 transition cursor-pointer"
+                      >
+                        {activeCitiesData.map(c => (
+                          <option key={c.id} value={c.name}>
+                            [{c.plate}] {c.name} - {c.regionName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="font-bold text-slate-700 block mb-1">İlçe / Sanayi Bölgesi *</label>
+                      <input
+                        type="text"
+                        value={formData.district}
+                        onChange={(e) => setFormData({...formData, district: e.target.value})}
+                        placeholder="Örn: Seyhan OSB, OSTİM, Aliağa..."
+                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:border-red-500 font-semibold"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Estimated Response Time Badge & Quick OSB Chips */}
+                  <div className="p-3.5 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200/70 rounded-2xl space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-red-600 shrink-0" />
+                        <span className="font-bold text-slate-900 text-xs">
+                          {formData.city} Tahmini İntikal Süresi:
+                        </span>
+                        <span className="font-black text-red-700 bg-white px-2 py-0.5 rounded-md border border-red-200 font-mono">
+                          {(() => {
+                            const c = activeCitiesData.find(x => x.name.toLowerCase() === formData.city.toLowerCase());
+                            if (!c) return '30 - 60 Dakika';
+                            if (c.regionId === 'akdeniz') return '30 - 45 Dakika';
+                            if (c.regionId === 'marmara') return '1 - 2 Saat';
+                            if (c.regionId === 'ic-anadolu') return '1,5 - 2,5 Saat';
+                            if (c.regionId === 'ege') return '2 - 3 Saat';
+                            return '2 - 4 Saat';
+                          })()}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-semibold">
+                        Gezici Mobil Servis Filosu
+                      </span>
+                    </div>
+
+                    {/* Quick District Suggestions */}
+                    <div>
+                      <span className="text-[11px] font-bold text-slate-600 block mb-1.5">
+                        Önerilen Sanayi / Şantiye Bölgeleri (Tıkla ve Doldur):
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {(() => {
+                          const norm = (formData.city || '').toLowerCase();
+                          let suggestions = ['1. OSB', 'Merkez Sanayi', 'Taş Ocağı / Şantiye Sahası'];
+                          if (norm.includes('adana')) suggestions = ['Seyhan OSB', 'Yeşiloba Sanayi', 'Ceyhan Enerji Sahası', 'Yüreğir Sanayi'];
+                          else if (norm.includes('istanbul')) suggestions = ['İkitelli OSB', 'Tuzla Tersaneler', 'Dudullu OSB', 'Hadımköy Sanayi'];
+                          else if (norm.includes('ankara')) suggestions = ['OSTİM Sanayi', 'İvedik OSB', 'Sincan OSB', 'Kazan Ağır Sanayi'];
+                          else if (norm.includes('izmir')) suggestions = ['Aliağa Sanayi & Liman', 'Bornova Sanayi', 'Çiğli OSB', 'Torbalı Sanayi'];
+                          else if (norm.includes('bursa')) suggestions = ['Demirtaş OSB (DOSAB)', 'Nilüfer NOSAB', 'İnegöl OSB'];
+                          else if (norm.includes('kocaeli')) suggestions = ['Gebze OSB', 'Dilovası İMES', 'Körfez Sanayi', 'Gölcük Tersane'];
+                          else if (norm.includes('mersin')) suggestions = ['Mersin Serbest Bölge', 'Tarsus OSB', 'Akdeniz Sanayi'];
+                          else if (norm.includes('gaziantep')) suggestions = ['1.-5. Organize Sanayi', 'Küsget Sanayi'];
+                          else if (norm.includes('konya')) suggestions = ['Büsan Özel OSB', 'Karatay Sanayi', '1.-4. OSB'];
+
+                          return suggestions.map((s, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => setFormData(prev => ({ ...prev, district: s }))}
+                              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition border ${
+                                formData.district === s 
+                                  ? 'bg-red-600 text-white border-red-600 shadow-xs' 
+                                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                              }`}
+                            >
+                              + {s}
+                            </button>
+                          ));
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
-                    <label className="font-bold text-slate-700 block mb-1">Şantiye / İlçe Adresi *</label>
+                    <label className="font-bold text-slate-700 block mb-1">Şantiye Detay Adresi / Yol Tarifi *</label>
                     <input
                       type="text"
                       value={formData.location}
                       onChange={(e) => setFormData({...formData, location: e.target.value})}
-                      placeholder="Örn: Seyhan OSB 12. Cadde veya Ceyhan Enerji Bölgesi..."
+                      placeholder="Örn: Taş Ocağı Ana Girişi, 12. Parsel veya Şantiye Kamp Alanı..."
                       className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:border-red-500"
                     />
                   </div>
 
-                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 text-[11px]">
-                    💡 Mobil servis araçlarımız Adana (Seyhan, Yüreğir, Çukurova, Sarıçam, Ceyhan, Kozan) ve Mersin, Tarsus, Osmaniye, Hatay şantiyelerine kesintisiz çıkış yapmaktadır.
+                  <div className="pt-2">
+                    <label className="font-bold text-slate-700 block mb-1.5">Şantiye GPS Konumu (Tek Tıkla Canlı Koordinat)</label>
+                    <LocationShareButton 
+                      onLocationAcquired={({ mapsLink }) => {
+                        setFormData(prev => ({ ...prev, gpsLink: mapsLink }));
+                      }}
+                    />
+                    {formData.gpsLink && (
+                      <span className="text-[11px] text-emerald-700 font-mono block mt-1">
+                        ✓ GPS Konumu Eklendi: {formData.gpsLink}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -251,7 +401,7 @@ export function EmergencyWizardPage() {
                     onClick={() => setStep(4)}
                     className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs rounded-xl flex items-center gap-1.5 shadow-lg shadow-red-600/20"
                   >
-                    <span>İlerle: İletişim</span>
+                    <span>İlerle: İletişim & Gönderim</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>

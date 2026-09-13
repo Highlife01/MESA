@@ -124,8 +124,11 @@ function BrandCard({ brand }) {
       </div>
 
       {/* Brand Logo Container */}
-      <div className="h-14 flex items-center justify-center py-1 px-3 bg-slate-50/90 rounded-lg border border-slate-200/60 group-hover:border-slate-300 transition-colors my-1">
-        <BrandLogo brandId={brand.id} className="max-h-8 max-w-[170px] w-auto transition-transform duration-300 group-hover:scale-105" />
+      <div className="h-14 w-full flex items-center justify-center py-1 px-3 bg-slate-50/90 rounded-lg border border-slate-200/60 group-hover:border-slate-300 transition-colors my-1 overflow-hidden">
+        <BrandLogo 
+          brandId={brand.id} 
+          className="h-8 w-auto max-w-[170px] shrink-0 object-contain transition-transform duration-300 group-hover:scale-105" 
+        />
       </div>
 
       {/* Details footer */}

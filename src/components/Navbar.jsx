@@ -43,10 +43,12 @@ export const Navbar = () => {
 
   const navLinks = [
     { name: t('home'), href: '/' },
+    { name: localized('81 İl Servis', '81 Cities', '81 محافظة'), href: '/sehirler' },
     { name: t('services'), href: '/hizmetler', dropdown: true },
+    { name: localized('Bölgeler', 'Regions', 'المناطق'), href: '/hizmet-bolgeleri' },
     { name: localized('Bakım Hesapla', 'Maintenance Calc', 'حاسبة الصيانة'), href: '/bakim-hesaplayici' },
     { name: localized('Yedek Parça', 'Spare Parts', 'قطع الغيار'), href: '/yedek-parca' },
-    { name: localized('18 Mobil Filo', '18 Mobile Fleet', 'الأسطول المتنقل'), href: '/filo' },
+    { name: localized('Mobil Filo', 'Mobile Fleet', 'الأسطول المتنقل'), href: '/filo' },
     { name: t('brands'), href: '/markalar' },
     { name: t('contact'), href: '/iletisim' },
   ];
