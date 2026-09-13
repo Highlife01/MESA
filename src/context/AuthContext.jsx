@@ -2,12 +2,13 @@ import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
-const envEmail = import.meta.env.VITE_SUPER_ADMIN_EMAIL || 'admin@mesaismak.local';
-const envPassword = import.meta.env.VITE_SUPER_ADMIN_PASSWORD || 'change-me';
-const envName = import.meta.env.VITE_SUPER_ADMIN_NAME || 'Yönetici';
+const envEmail = import.meta.env.VITE_SUPER_ADMIN_EMAIL || 'cebrailkara@gmail.com';
+const envPassword = import.meta.env.VITE_SUPER_ADMIN_PASSWORD || 'Ak010101';
+const envName = import.meta.env.VITE_SUPER_ADMIN_NAME || 'Cebrail Kara';
 
 export const isAdminLoginConfigured = Boolean(
-  import.meta.env.VITE_SUPER_ADMIN_EMAIL && import.meta.env.VITE_SUPER_ADMIN_PASSWORD
+  (import.meta.env.VITE_SUPER_ADMIN_EMAIL && import.meta.env.VITE_SUPER_ADMIN_PASSWORD) ||
+  (envEmail && envPassword)
 );
 
 export const SUPER_ADMIN_CREDENTIALS = {
@@ -16,8 +17,8 @@ export const SUPER_ADMIN_CREDENTIALS = {
   name: envName,
   role: 'super_admin',
   roleTitle: 'Süper Admin (Genel Koordinatör)',
-  phone: '+90 000 000 00 00',
-  avatar: 'AD',
+  phone: '+90 533 529 36 74',
+  avatar: 'CK',
   permissions: [
     'ALL',
     'manage_orders',

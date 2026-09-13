@@ -139,7 +139,7 @@ export function Route({ path, element }) {
 
 export function Link({ to, children, className = '', activeClassName = '', onClick, ...props }) {
   const { path, navigate } = useContext(RouterContext);
-  const isActive = path === to || (to !== '/' && path.startsWith(to));
+  const isActive = path === to || (to !== '/' && (path === to || path.startsWith(to + '/')));
 
   const handleClick = (e) => {
     if (onClick) onClick(e);

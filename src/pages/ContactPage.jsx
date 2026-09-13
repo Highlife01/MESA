@@ -9,7 +9,7 @@ export const ContactPage = () => {
   const branches = [
     {
       city: 'Adana Merkez Atölye (HQ)',
-      address: 'Yeşiloba Mah. Metal Sanayi Sitesi 46023 Sok. No: 18/A, Seyhan / ADANA',
+      address: 'Yeşiloba Mah. 46167. Sokak No: 19/A, 01170 Seyhan / ADANA',
       phone: '0533 529 36 74',
       type: '2.500 m² Ana Revizyon Tesisi & 450 Bar Test İstasyonu'
     },
@@ -39,7 +39,7 @@ export const ContactPage = () => {
   };
 
   return (
-    <div className="bg-[#0B0F19] text-slate-100 min-h-screen">
+    <div className="bg-slate-50 text-slate-900 min-h-screen">
       <SEO
         title="İletişim ve Şantiye Servis Talebi | MESA İş Makinaları"
         description="MESA İş Makinaları Adana merkezli operasyonu ile Türkiye genelinde mobil servis, saha tamiri ve hidrolik sistem destekleri sunar. 7/24 Acil Çağrı Hattı: 0533 529 36 74."
@@ -48,15 +48,15 @@ export const ContactPage = () => {
       />
 
       {/* Header */}
-      <section className="py-20 bg-gradient-to-b from-slate-900 via-[#0B0F19] to-[#0B0F19] border-b border-slate-800">
+      <section className="py-20 bg-gradient-to-b from-white via-slate-50 to-slate-100 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-600 text-xs font-bold uppercase tracking-wider mb-4">
             <Phone className="w-4 h-4" /> 7/24 Kesintisiz İletişim & Randevu
           </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-            Bize Ulaşın, <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Hemen Çözelim</span>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+            Bize Ulaşın, <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-600">Hemen Çözelim</span>
           </h1>
-          <p className="text-lg text-slate-400 leading-relaxed">
+          <p className="text-lg text-slate-600 leading-relaxed">
             İster şantiyenize acil mobil servis çağırın, ister atölye revizyonu için teknik teklif alın. Ekiplerimiz 7/24 hizmetinizdedir.
           </p>
         </div>
@@ -66,20 +66,20 @@ export const ContactPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* Form Side */}
-          <div className="lg:col-span-7 bg-slate-900/60 border border-slate-800 rounded-3xl p-8 sm:p-10">
-            <h2 className="text-2xl font-bold text-white mb-2">Servis & Teklif Talep Formu</h2>
-            <p className="text-sm text-slate-400 mb-8">Bilgilerinizi bırakın, servis koordinatörümüz 10 dakika içinde sizi arasın.</p>
+          <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 shadow-sm">
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Servis & Teklif Talep Formu</h2>
+            <p className="text-sm text-slate-500 mb-8">Bilgilerinizi bırakın, servis koordinatörümüz 10 dakika içinde sizi arasın.</p>
 
             {submitted ? (
-              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 text-center">
-                <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-                <h3 className="text-xl font-bold text-white mb-2">Talebiniz Alındı!</h3>
-                <p className="text-sm text-slate-300 max-w-md mx-auto mb-6">
+              <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-8 text-center">
+                <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Talebiniz Alındı!</h3>
+                <p className="text-sm text-slate-600 max-w-md mx-auto mb-6">
                   Teknik koordinatörümüz makinenizin durumu ve konumunuz için en geç 10 dakika içinde sizinle iletişime geçecektir.
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
-                  className="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold"
+                  className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold"
                 >
                   Yeni Form Doldur
                 </button>
@@ -88,80 +88,80 @@ export const ContactPage = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Yetkili Adı Soyadı *</label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">Yetkili Adı Soyadı *</label>
                     <input
                       type="text"
                       required
                       placeholder="Örn: Ahmet Yılmaz"
                       value={formState.name}
                       onChange={(e) => setFormState({...formState, name: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-red-500 focus:bg-white transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Telefon Numarası *</label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">Telefon Numarası *</label>
                     <input
                       type="tel"
                       required
                       placeholder="05XX XXX XX XX"
                       value={formState.phone}
                       onChange={(e) => setFormState({...formState, phone: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-red-500 focus:bg-white transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Firma / Şantiye Adı</label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">Firma / Şantiye Adı</label>
                     <input
                       type="text"
                       placeholder="Örn: Özdemir Madencilik A.Ş."
                       value={formState.company}
                       onChange={(e) => setFormState({...formState, company: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-red-500 focus:bg-white transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Makine Modeli & Tipi *</label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">Makine Modeli & Tipi *</label>
                     <input
                       type="text"
                       required
                       placeholder="Örn: CAT 320D / JCB 3CX / HMK 220"
                       value={formState.machineType}
                       onChange={(e) => setFormState({...formState, machineType: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-red-500 focus:bg-white transition-colors"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1.5">Şantiye Lokasyonu (İl / İlçe) *</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">Şantiye Lokasyonu (İl / İlçe) *</label>
                   <input
                     type="text"
                     required
                     placeholder="Örn: Adana / Ceyhan Enerji İhtisas Bölgesi"
                     value={formState.location}
                     onChange={(e) => setFormState({...formState, location: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-red-500 focus:bg-white transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1.5">Arıza Tanımı veya Talep Detayı *</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">Arıza Tanımı veya Talep Detayı *</label>
                   <textarea
                     rows={4}
                     required
                     placeholder="Makinenin arıza belirtilerini, verdiği hata kodunu veya istenen revizyonu belirtiniz..."
                     value={formState.message}
                     onChange={(e) => setFormState({...formState, message: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-red-500 focus:bg-white transition-colors resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-xl shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-sm shadow-xl shadow-red-600/20 transition-all flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
                   <span>Teknik Servis Talebini Gönder</span>
@@ -172,16 +172,16 @@ export const ContactPage = () => {
 
           {/* Contact Details & Quick Links */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-amber-500/10 border border-amber-500/30 rounded-3xl p-8">
-              <span className="text-xs font-bold text-amber-400 uppercase tracking-wider block mb-2">Acil Çağrı Merkezi</span>
+            <div className="bg-gradient-to-br from-red-600 via-rose-600 to-red-700 text-white rounded-3xl p-8 shadow-xl shadow-red-600/20">
+              <span className="text-xs font-bold text-red-100 uppercase tracking-wider block mb-2">Acil Çağrı Merkezi</span>
               <h3 className="text-2xl font-black text-white mb-2">7/24 Kesintisiz Hat</h3>
-              <p className="text-slate-300 text-sm mb-6">Maden, taş ocağı ve yol şantiyelerinde acil duruşlar için nöbetçi usta hattımız:</p>
+              <p className="text-red-100 text-sm mb-6">Maden, taş ocağı ve yol şantiyelerinde acil duruşlar için nöbetçi usta hattımız:</p>
               <div className="space-y-3">
                 <a
                   href="tel:05335293674"
-                  className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-lg shadow-lg shadow-amber-500/20 transition-all w-full justify-center"
+                  className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-lg shadow-lg transition-all w-full justify-center"
                 >
-                  <Phone className="w-5 h-5" /> 0533 529 36 74
+                  <Phone className="w-5 h-5 text-red-600" /> 0533 529 36 74
                 </a>
 
                 <a
@@ -195,36 +195,36 @@ export const ContactPage = () => {
               </div>
             </div>
 
-            <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-8 space-y-6">
-              <h3 className="text-lg font-bold text-white mb-4">Genel İletişim</h3>
+            <div className="bg-white border border-slate-200 rounded-3xl p-8 space-y-6 shadow-sm">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Genel İletişim</h3>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-amber-400 shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-red-600 shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Merkez Atölye</div>
-                  <div className="text-sm font-semibold text-white">Yeşiloba Mah. Metal Sanayi Sitesi, Seyhan / ADANA</div>
+                  <div className="text-xs text-slate-500">Merkez Atölye</div>
+                  <div className="text-sm font-semibold text-slate-900">Yeşiloba Mah. 46167. Sokak No: 19/A, 01170 Seyhan / ADANA</div>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-amber-400 shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-red-600 shrink-0">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">E-Posta Adresleri</div>
-                  <div className="text-sm font-semibold text-white">servis@mesais.com / info@mesais.com</div>
+                  <div className="text-xs text-slate-500">E-Posta Adresleri</div>
+                  <div className="text-sm font-semibold text-slate-900">info@mesaismakinalari.com.tr</div>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-amber-400 shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-red-600 shrink-0">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Çalışma Saatleri</div>
-                  <div className="text-sm font-semibold text-white">Atölye: 08:00 - 19:00 | Mobil Servis: 7/24 Kesintisiz</div>
+                  <div className="text-xs text-slate-500">Çalışma Saatleri</div>
+                  <div className="text-sm font-semibold text-slate-900">Atölye: 08:00 - 19:00 | Mobil Servis: 7/24 Kesintisiz</div>
                 </div>
               </div>
             </div>
@@ -234,16 +234,16 @@ export const ContactPage = () => {
 
         {/* Regional Branches */}
         <div className="mt-16">
-          <h2 className="text-2xl font-bold text-white mb-8">Bölgesel Hizmet & İrtibat Ağımız</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-8">Bölgesel Hizmet & İrtibat Ağımız</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {branches.map((b, idx) => (
-              <div key={idx} className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-3">
+              <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-600 mb-3">
                   <Building className="w-5 h-5" />
                 </div>
-                <h4 className="text-white font-bold text-sm mb-1">{b.city}</h4>
-                <p className="text-xs text-slate-400 mb-3">{b.address}</p>
-                <div className="text-[11px] text-amber-400/90 font-medium bg-slate-950 p-2 rounded-lg border border-slate-800">
+                <h4 className="text-slate-900 font-bold text-sm mb-1">{b.city}</h4>
+                <p className="text-xs text-slate-500 mb-3">{b.address}</p>
+                <div className="text-[11px] text-red-700 font-medium bg-red-50/70 p-2 rounded-lg border border-red-100">
                   {b.type}
                 </div>
               </div>

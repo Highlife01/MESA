@@ -1,21 +1,26 @@
 {
-  "name": "MESA İş Makinaları 7/24 Mobil Servis",
-  "short_name": "MESA Servis",
-  "description": "Adana ve Çukurova 7/24 Mobil İş Makinası ve Hidrolik Teknik Servisi",
+  "name": "MESA İş Makinaları ERP & Mobil Servis",
+  "short_name": "MESA ERP",
+  "description": "Adana ve Çukurova 7/24 Mobil İş Makinası, Hidrolik Revizyon ve ERP Yönetim Merkezi",
   "start_url": "/",
+  "id": "/",
   "display": "standalone",
-  "background_color": "#0B0F19",
-  "theme_color": "#f59e0b",
+  "orientation": "any",
+  "background_color": "#0a0d14",
+  "theme_color": "#dc2626",
+  "categories": ["business", "productivity", "utilities"],
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/images/mesa-logo.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/images/mesa-logo.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

@@ -47,30 +47,30 @@ export function AdminLoginPage() {
   // If already logged in
   if (user && isSuperAdmin) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4 py-16 bg-[#0B0F19]">
+      <div className="min-h-[80vh] flex items-center justify-center px-4 py-16 bg-slate-50">
         <SEO 
           title="Süper Admin Oturumu Açık | MESA ERP"
           description="Mesa İş Makinaları Süper Admin yönetim paneli."
         />
-        <div className="max-w-md w-full bg-slate-900/90 border border-amber-500/40 rounded-3xl p-8 text-center shadow-2xl shadow-amber-500/10 backdrop-blur-xl animate-fadeIn">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-amber-500/20">
+        <div className="max-w-md w-full bg-white border border-slate-200 rounded-3xl p-8 text-center shadow-xl backdrop-blur-xl animate-fadeIn">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-red-600 to-red-700 text-white flex items-center justify-center mx-auto mb-6 shadow-xl shadow-red-600/25 border border-red-400/30">
             <Crown className="w-10 h-10" />
           </div>
 
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-black uppercase tracking-wider border border-amber-500/30 mb-3">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-600 text-xs font-black uppercase tracking-wider border border-red-200 mb-3">
             <ShieldCheck className="w-3.5 h-3.5" /> Süper Admin Oturumu Aktif
           </span>
 
-          <h2 className="text-2xl font-black text-white">{user.name}</h2>
-          <p className="text-sm text-slate-400 mt-1">{user.email}</p>
-          <p className="text-xs text-amber-400/90 font-mono mt-2 bg-slate-950/60 py-1 px-3 rounded-lg inline-block border border-slate-800">
+          <h2 className="text-2xl font-black text-slate-900">{user.name}</h2>
+          <p className="text-sm text-slate-500 mt-1">{user.email}</p>
+          <p className="text-xs text-slate-600 font-mono mt-2 bg-slate-100 py-1 px-3 rounded-lg inline-block border border-slate-200">
             Tam Yetkili Sistem Yöneticisi
           </p>
 
           <div className="mt-8 space-y-3">
             <Link
               to="/panel"
-              className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-transform active:scale-98"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 transition-transform active:scale-98"
             >
               <span>ERP Yönetim Paneline Git</span>
               <ArrowRight className="w-4 h-4" />
@@ -78,9 +78,9 @@ export function AdminLoginPage() {
 
             <button
               onClick={logout}
-              className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+              className="w-full py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-2 transition border border-slate-200"
             >
-              <LogOut className="w-3.5 h-3.5 text-red-400" />
+              <LogOut className="w-3.5 h-3.5 text-red-600" />
               <span>Oturumu Kapat</span>
             </button>
           </div>
@@ -90,14 +90,14 @@ export function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-4 py-16 bg-[#0B0F19] relative overflow-hidden">
+    <div className="min-h-[85vh] flex items-center justify-center px-4 py-16 bg-slate-50 relative overflow-hidden">
       <SEO 
         title="Süper Admin Girişi | MESA İş Makinaları ERP"
         description="MESA İş Makinaları telematik ve ERP yönetim sistemi süper admin güvenli giriş ekranı."
       />
 
       {/* Decorative Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-md w-full relative z-10">
         
@@ -105,31 +105,31 @@ export function AdminLoginPage() {
         <div className="mb-6 flex items-center justify-between">
           <Link
             to="/"
-            className="text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1.5 transition"
+            className="text-xs font-semibold text-slate-500 hover:text-slate-900 flex items-center gap-1.5 transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Ana Sayfaya Dön</span>
           </Link>
-          <span className="text-xs font-mono text-slate-500">v2.6 Secure ERP</span>
+          <span className="text-xs font-mono text-slate-400">v2.6 Secure ERP</span>
         </div>
 
         {/* Login Card */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl backdrop-blur-xl relative">
+        <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-xl relative">
           
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 text-slate-950 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-amber-500/20">
-              <Crown className="w-8 h-8" />
+            <div className="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-white border border-slate-200 shadow-sm mb-4">
+              <img src="/images/mesa-logo.png" alt="MESA İş Makinaları" className="h-7 w-auto object-contain" />
             </div>
-            <h1 className="text-2xl font-black text-white tracking-tight">Süper Admin Girişi</h1>
-            <p className="text-xs text-slate-400 mt-1.5">
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Süper Admin Girişi</h1>
+            <p className="text-xs text-slate-500 mt-1.5">
               MESA Telematik, Saha Filosu & ERP Yönetim Portalı
             </p>
           </div>
 
           {/* Success Banner */}
           {successToast && (
-            <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-2.5 animate-fadeIn">
+            <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2.5 animate-fadeIn">
               <CheckCircle2 className="w-5 h-5 shrink-0" />
               <span>Giriş başarılı! Yönetim paneline yönlendiriliyorsunuz...</span>
             </div>
@@ -137,7 +137,7 @@ export function AdminLoginPage() {
 
           {/* Error Banner */}
           {loginError && (
-            <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center gap-2.5 animate-shake">
+            <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold flex items-center gap-2.5 animate-shake">
               <AlertCircle className="w-5 h-5 shrink-0" />
               <span>{loginError}</span>
             </div>
@@ -146,25 +146,25 @@ export function AdminLoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Yönetici E-Posta Adresi
               </label>
               <div className="relative">
                 <input
                   type="email"
                   required
-                  placeholder="ornek@mesaisk.com"
+                  placeholder="cebrailkara@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-red-500 focus:bg-white focus:ring-1 focus:ring-red-500 transition"
                 />
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold text-slate-300">
+                <label className="block text-xs font-semibold text-slate-700">
                   Şifre
                 </label>
               </div>
@@ -175,13 +175,13 @@ export function AdminLoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-10 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition font-mono"
+                  className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-red-500 focus:bg-white focus:ring-1 focus:ring-red-500 transition font-mono"
                 />
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-3.5 text-slate-500 hover:text-slate-300 transition"
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 transition"
                   aria-label={showPassword ? 'Şifreyi Gizle' : 'Şifreyi Göster'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -192,10 +192,10 @@ export function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-amber-500/20 transition-all duration-200 active:scale-98 disabled:opacity-50"
+              className="w-full mt-2 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-red-600/25 transition-all duration-200 active:scale-98 disabled:opacity-50"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
                   <ShieldCheck className="w-4 h-4" />
@@ -207,19 +207,19 @@ export function AdminLoginPage() {
 
           {/* Quick Fill Button */}
           {isAdminLoginConfigured ? (
-            <div className="mt-6 pt-6 border-t border-slate-800">
+            <div className="mt-6 pt-6 border-t border-slate-100">
               <button
                 type="button"
                 onClick={handleFillSuperAdmin}
-                className="w-full py-2.5 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold flex items-center justify-center gap-2 transition"
+                className="w-full py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-2 transition"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <Sparkles className="w-3.5 h-3.5 text-red-600" />
                 <span>Güvenli Yönetici Bilgilerini Doldur ({SUPER_ADMIN_CREDENTIALS.name})</span>
               </button>
             </div>
           ) : (
-            <div className="mt-6 pt-6 border-t border-slate-800">
-              <p className="text-[11px] text-amber-300 text-center">
+            <div className="mt-6 pt-6 border-t border-slate-100">
+              <p className="text-[11px] text-red-600 text-center">
                 Yönetici hesabı henüz yapılandırılmadı. Lütfen .env dosyasına güvenli giriş bilgileri ekleyin.
               </p>
             </div>
@@ -229,7 +229,7 @@ export function AdminLoginPage() {
 
         {/* Security Info */}
         <div className="mt-6 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-500" />
+          <ShieldCheck className="w-4 h-4 text-emerald-600" />
           <span>256-Bit SSL Uçtan Uca Şifreli ERP İletişimi</span>
         </div>
 

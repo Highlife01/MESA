@@ -152,7 +152,7 @@ export const OperationalProvider = ({ children }) => {
   // Alias for Dashboard compatibility
   const updateOrderStatus = updateJobStatus;
 
-  // Sign Job Order Digitally
+  // Sign Job Order Digitally (both supervisor and technician signatures)
   const signJobOrder = (id, supSig, techSig) => {
     setLiveJobs(prev => prev.map(job => {
       if (job.id === id || job.code === id) {
@@ -164,8 +164,28 @@ export const OperationalProvider = ({ children }) => {
           stepIndex: 5
         };
       }
+      return job;
     }));
     showToast(`${id} nolu iş emri dijital olarak imzalandı ve kapatıldı!`);
+  };
+
+  // Record customer/site-authority signature captured on the Technician terminal
+  const recordSignature = (idOrCode, sigData) => {
+    setLiveJobs(prev => prev.map(job => {
+      if (job.id === idOrCode || job.code === idOrCode) {
+        return {
+          ...job,
+          supervisorSignature: sigData?.signatureDataUrl || job.supervisorSignature,
+          signerName: sigData?.signerName || job.signerName,
+          signerRole: sigData?.signerRole || job.signerRole,
+          technicianNotes: sigData?.technicianNotes || job.technicianNotes,
+          status: 'Tamamlandı',
+          stepIndex: 5
+        };
+      }
+      return job;
+    }));
+    showToast(`${idOrCode} nolu iş emri dijital olarak imzalandı ve kapatıldı!`);
   };
 
   // Delete Job Order (Super Admin only)
@@ -178,6 +198,17 @@ export const OperationalProvider = ({ children }) => {
   const deletePartsOrder = (orderCode) => {
     setPartsOrders(prev => prev.filter(o => o.orderCode !== orderCode));
     showToast(`${orderCode} nolu yedek parça siparişi silindi.`);
+  };
+
+  // Update Parts Order Status (Super Admin)
+  const updatePartsOrderStatus = (orderCode, newStatus) => {
+    setPartsOrders(prev => prev.map(o => {
+      if (o.orderCode === orderCode) {
+        return { ...o, status: newStatus };
+      }
+      return o;
+    }));
+    showToast(`${orderCode} nolu sipariş durumu güncellendi: ${newStatus}`);
   };
 
   // ============ CART FUNCTIONS ============
@@ -226,6 +257,7 @@ export const OperationalProvider = ({ children }) => {
       items: cart.map(item => ({
         id: item.id,
         name: item.name,
+        oem: item.oem || '',
         quantity: item.quantity || item.qty || 1,
         price: item.price || 0
       })),
@@ -261,6 +293,7 @@ export const OperationalProvider = ({ children }) => {
       deleteJob,
       deletePartsOrder,
       signJobOrder,
+      recordSignature,
       unreadAlertsCount,
       // Cart
       cart,
@@ -272,6 +305,7 @@ export const OperationalProvider = ({ children }) => {
       // B2B Parts Orders
       partsOrders,
       createPartsOrder,
+      updatePartsOrderStatus,
       // Toast
       showToast
     }}>

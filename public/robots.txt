@@ -4,4 +4,4 @@ Disallow: /panel
 Disallow: /yonetim
 Disallow: /teknisyen
 
-Sitemap: https://mesaismakinalari.com.tr/sitemap.xml
+Sitemap: https://www.mesaismakinalari.com.tr/sitemap.xml

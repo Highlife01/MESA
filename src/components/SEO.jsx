@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
 const SITE_NAME = 'MESA İş Makinaları';
-const BASE_URL = 'https://mesaismakinalari.com.tr';
-const DEFAULT_IMAGE = 'https://mesaismakinalari.com.tr/images/mesa-excavator-hero.png';
+const BASE_URL = 'https://www.mesaismakinalari.com.tr';
+const DEFAULT_IMAGE = 'https://www.mesaismakinalari.com.tr/images/mesa-excavator-hero.png';
 
 export function SEO({
   title,

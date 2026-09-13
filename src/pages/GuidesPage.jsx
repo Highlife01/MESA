@@ -19,7 +19,7 @@ export const GuidesPage = () => {
   });
 
   return (
-    <div className="bg-[#0B0F19] text-slate-100 min-h-screen">
+    <div className="bg-slate-50 text-slate-900 min-h-screen">
       <SEO
         title="Teknik Rehberler ve Bilgi Bankası | Mesa İş Makinaları"
         description="Ağır iş makinaları için hidrolik sistem bakımı, ISO 4406 yağ analizi, DPF rejenerasyonu, periyodik bakım çizelgeleri ve ekspertiz kılavuzları."
@@ -28,16 +28,16 @@ export const GuidesPage = () => {
       />
 
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-b from-slate-900 via-[#0B0F19] to-[#0B0F19] border-b border-slate-800">
+      <section className="relative py-20 bg-gradient-to-b from-white via-slate-50 to-slate-100 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-600 text-xs font-bold uppercase tracking-wider mb-4">
               <BookOpen className="w-4 h-4" /> Mesa Teknik Bilgi Bankası & Makaleler
             </div>
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-              İş Makinaları <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Teknik Rehberleri</span>
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+              İş Makinaları <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-600">Teknik Rehberleri</span>
             </h1>
-            <p className="text-lg text-slate-400 leading-relaxed mb-8">
+            <p className="text-lg text-slate-600 leading-relaxed mb-8">
               Şantiyelerinizde arıza duruş sürelerini minimize etmek, parça ömrünü uzatmak ve doğru koruyucu bakım stratejilerini uygulamak için mühendislerimiz tarafından hazırlanan kapsamlı kılavuzlar.
             </p>
 
@@ -49,7 +49,7 @@ export const GuidesPage = () => {
                 placeholder="Konu, arıza tipi veya anahtar kelime arayın (Örn: ISO 4406, DPF, Kule)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all text-sm"
+                className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all text-sm shadow-xs"
               />
             </div>
           </div>
@@ -59,15 +59,15 @@ export const GuidesPage = () => {
       {/* Category Pills & Guides Grid */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Categories */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-thin scrollbar-thumb-slate-800">
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-thin scrollbar-thumb-slate-300">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 selectedCategory === cat
-                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 font-bold'
-                  : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800'
+                  ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-md shadow-red-600/20'
+                  : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 shadow-xs'
               }`}
             >
               {cat}
@@ -80,7 +80,7 @@ export const GuidesPage = () => {
           {filteredGuides.map((guide) => (
             <article
               key={guide.id}
-              className="group bg-slate-900/60 border border-slate-800/80 rounded-2xl overflow-hidden hover:border-amber-500/50 transition-all duration-300 flex flex-col hover:shadow-2xl hover:shadow-amber-500/5 hover:-translate-y-1"
+              className="group bg-white border border-slate-200/90 rounded-3xl overflow-hidden hover:border-red-500/50 transition-all duration-300 flex flex-col hover:shadow-xl hover:-translate-y-1 shadow-xs"
             >
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -89,28 +89,28 @@ export const GuidesPage = () => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
-                <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-900/90 backdrop-blur-md border border-slate-700 text-amber-400 text-xs font-semibold">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent" />
+                <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 text-red-600 text-xs font-bold shadow-xs">
                   {guide.category}
                 </span>
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
-                  <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-amber-400" /> {guide.readTime}</span>
-                  <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-slate-400" /> {guide.publishDate}</span>
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white">
+                  <span className="flex items-center gap-1 font-medium"><Clock className="w-3.5 h-3.5 text-amber-400" /> {guide.readTime}</span>
+                  <span className="flex items-center gap-1 font-medium"><Calendar className="w-3.5 h-3.5 text-slate-300" /> {guide.publishDate}</span>
                 </div>
               </div>
 
               <div className="p-6 flex-1 flex flex-col">
-                <h2 className="text-lg font-bold text-white group-hover:text-amber-400 transition-colors line-clamp-2 mb-3 leading-snug">
+                <h2 className="text-lg font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2 mb-3 leading-snug">
                   {guide.title}
                 </h2>
-                <p className="text-sm text-slate-400 line-clamp-3 mb-4 flex-1 leading-relaxed">
+                <p className="text-sm text-slate-600 line-clamp-3 mb-4 flex-1 leading-relaxed">
                   {guide.shortDesc}
                 </p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1.5 mb-6">
                   {guide.tags.slice(0, 3).map((tag, idx) => (
-                    <span key={idx} className="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/50">
+                    <span key={idx} className="text-[11px] px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-600 border border-slate-200/60 font-medium">
                       #{tag}
                     </span>
                   ))}
@@ -118,7 +118,7 @@ export const GuidesPage = () => {
 
                 <Link
                   to={`/rehberler/${guide.slug}`}
-                  className="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 text-amber-400 font-semibold text-xs transition-all border border-slate-700/60"
+                  className="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-gradient-to-r hover:from-red-600 hover:to-red-700 hover:text-white text-slate-800 font-bold text-xs transition-all border border-slate-200 group-hover:border-transparent"
                 >
                   <span>Rehberi İncele</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -129,11 +129,11 @@ export const GuidesPage = () => {
         </div>
 
         {filteredGuides.length === 0 && (
-          <div className="text-center py-16 bg-slate-900/40 rounded-2xl border border-slate-800">
-            <p className="text-slate-400 text-base mb-2">Aramanıza uygun teknik rehber bulunamadı.</p>
+          <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-xs">
+            <p className="text-slate-500 text-base mb-2">Aramanıza uygun teknik rehber bulunamadı.</p>
             <button
               onClick={() => { setSearchTerm(''); setSelectedCategory('Tümü'); }}
-              className="text-amber-400 hover:underline text-sm font-semibold"
+              className="text-red-600 hover:underline text-sm font-semibold"
             >
               Filtreleri Temizle
             </button>
@@ -142,18 +142,18 @@ export const GuidesPage = () => {
       </section>
 
       {/* Support Box */}
-      <section className="py-12 bg-slate-950 border-t border-slate-800">
+      <section className="py-12 bg-white border-t border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 border border-amber-500/30 rounded-2xl p-8 text-center sm:text-left sm:flex sm:items-center sm:justify-between gap-6">
+          <div className="bg-gradient-to-br from-red-600 via-rose-600 to-red-700 text-white rounded-3xl p-8 sm:p-10 shadow-xl shadow-red-600/20 text-center sm:text-left sm:flex sm:items-center sm:justify-between gap-6">
             <div>
               <h3 className="text-xl font-bold text-white mb-2">Şantiyenizde Çözemediğiniz Karmaşık Bir Arıza mı Var?</h3>
-              <p className="text-slate-400 text-sm max-w-2xl">
+              <p className="text-red-100 text-sm max-w-2xl">
                 Rehberlerimizde yer alan konular ve daha fazlası için 7/24 nöbetçi mobil teşhis ekibimiz ve diagnostik mühendislerimizle iletişime geçebilirsiniz.
               </p>
             </div>
             <a
               href="tel:05335293674"
-              className="mt-4 sm:mt-0 inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 transition-all whitespace-nowrap"
+              className="mt-4 sm:mt-0 inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-sm shadow-lg transition-all whitespace-nowrap"
             >
               0533 529 36 74 Ara
             </a>

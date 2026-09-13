@@ -69,7 +69,9 @@ export const Navbar = () => {
 
       <div className="site-chrome-container site-navbar">
         <Link to="/" className="site-brand" aria-label="MESA İş Makinaları — Ana sayfa" onClick={closeMenus}>
-          <img src="/images/mesa-logo.png" alt="MESA İş Makinaları" className="site-brand-img" />
+          <div className="site-brand-badge">
+            <img src="/images/mesa-logo.png" alt="MESA İş Makinaları" className="site-brand-img" />
+          </div>
         </Link>
         <nav className="site-desktop-nav" aria-label="Ana navigasyon">
           {navLinks.map((link) => link.dropdown ? (

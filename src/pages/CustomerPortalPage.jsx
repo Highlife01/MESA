@@ -165,7 +165,7 @@ export function CustomerPortalPage() {
                 Mutabakat ve e-fatura sorgulamaları için doğrudan muhasebe departmanımıza ulaşabilirsiniz:
               </p>
               <div className="text-xs font-bold text-amber-300">
-                0322 350 00 00 • muhasebe@mesais.com.tr
+                0322 350 00 00 • info@mesaismakinalari.com.tr
               </div>
             </div>
           </div>

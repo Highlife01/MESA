@@ -32,12 +32,43 @@ const PartsShopPage = lazy(() => import('./pages/PartsShopPage').then(m => ({ de
 const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage').then(m => ({ default: m.AdminLoginPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
-// ── Loading Fallback ──
+// ── Loading Fallback (Resilient Branded Shell with Emergency Call CTA) ──
 function PageLoader() {
+  const [showRetry, setShowRetry] = React.useState(false);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShowRetry(true), 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
-      <div className="loading-spinner" />
-      <span className="text-xs font-semibold text-slate-500 animate-pulse">Yükleniyor...</span>
+    <div className="min-h-[65vh] flex flex-col items-center justify-center p-6 text-center">
+      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white shadow-xl shadow-red-600/30 border border-red-500/40 mb-4 animate-pulse">
+        <span className="font-black text-xl tracking-tighter">MESA</span>
+      </div>
+      <div className="loading-spinner mb-3" />
+      <span className="text-xs font-bold text-slate-300">MESA İş Makinaları Servis Portalı Yükleniyor...</span>
+      <p className="text-[11px] text-slate-400 mt-1 max-w-xs">
+        7/24 Acil Şantiye Müdahale & Mobil Servis Merkezi
+      </p>
+
+      {showRetry && (
+        <div className="mt-5 pt-4 border-t border-slate-800 flex flex-col items-center gap-2 animate-fadeIn">
+          <span className="text-[11px] text-slate-400">Yükleme geciktiyse doğrudan teknisyen hattımızı arayabilirsiniz:</span>
+          <a
+            href="tel:05344075585"
+            className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-2 transition shadow-lg shadow-red-600/30"
+          >
+            <span>7/24 Acil Çağrı: 0534 407 55 85</span>
+          </a>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-[11px] text-slate-400 hover:text-white underline mt-1"
+          >
+            Sayfayı Yeniden Yükle
+          </button>
+        </div>
+      )}
     </div>
   );
 }

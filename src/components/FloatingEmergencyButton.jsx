@@ -15,9 +15,9 @@ export const FloatingEmergencyButton = () => {
           <Link
             to="/ariza-bildir"
             onClick={() => setOpen(false)}
-            className="flex items-center space-x-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2.5 rounded-2xl shadow-xl font-extrabold text-xs transition transform hover:-translate-x-1"
+            className="flex items-center space-x-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white px-4 py-2.5 rounded-2xl shadow-xl font-bold text-xs transition transform hover:-translate-x-1 border border-red-500/40"
           >
-            <ShieldAlert className="w-4 h-4 text-slate-950" />
+            <ShieldAlert className="w-4 h-4 text-white" />
             <span>{t('emergencyCall')}</span>
           </Link>
 
@@ -33,9 +33,9 @@ export const FloatingEmergencyButton = () => {
 
           <a
             href="tel:05335293674"
-            className="flex items-center space-x-2.5 bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-500/40 px-4 py-2.5 rounded-2xl shadow-xl font-bold text-xs transition transform hover:-translate-x-1"
+            className="flex items-center space-x-2.5 bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 px-4 py-2.5 rounded-2xl shadow-xl font-bold text-xs transition transform hover:-translate-x-1"
           >
-            <Phone className="w-4 h-4 text-amber-400" />
+            <Phone className="w-4 h-4 text-red-600" />
             <span>{t('callNow')}</span>
           </a>
         </div>
@@ -44,7 +44,7 @@ export const FloatingEmergencyButton = () => {
       {/* Main trigger button */}
       <button
         onClick={() => setOpen(!open)}
-        className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 flex items-center justify-center shadow-2xl shadow-amber-500/30 transition transform hover:scale-105 cursor-pointer focus:outline-none border-2 border-amber-300/40"
+        className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white flex items-center justify-center shadow-2xl shadow-red-600/30 transition transform hover:scale-105 cursor-pointer focus:outline-none border-2 border-red-400/40"
         aria-label="Acil Yardım Menüsü"
       >
         {open ? <X className="w-6 h-6" /> : <Wrench className="w-6 h-6" />}

@@ -31,34 +31,34 @@ export function WhatsAppWidget() {
       {/* Chat Preview Bubble */}
       {showBubble && !dismissed && (
         <div className="mb-3 w-72 max-w-[calc(100vw-3rem)] animate-fadeInUp">
-          <div className="bg-slate-900 text-white rounded-2xl rounded-bl-sm shadow-2xl p-4 relative border border-emerald-500/30 backdrop-blur-md">
+          <div className="bg-white text-slate-800 rounded-2xl rounded-bl-sm shadow-2xl p-4 relative border border-emerald-200">
             <button
               onClick={handleDismiss}
-              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-800 border border-slate-700 text-slate-300 flex items-center justify-center hover:bg-slate-700 hover:text-white transition shadow-lg"
+              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-100 border border-slate-200 text-slate-500 flex items-center justify-center hover:bg-slate-200 hover:text-slate-800 transition shadow-sm"
               aria-label="Kapat"
             >
               <X className="w-3.5 h-3.5" />
             </button>
             
-            <div className="flex items-center gap-2.5 mb-2.5 pb-2.5 border-b border-slate-800">
+            <div className="flex items-center gap-2.5 mb-2.5 pb-2.5 border-b border-slate-100">
               <div className="relative">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-white shadow-md">
                   <MessageCircle className="w-5 h-5" />
                 </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-slate-900 animate-pulse"></span>
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white animate-pulse"></span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-white tracking-tight">MESA Destek</span>
-                  <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Çevrimiçi
+                  <span className="text-xs font-black text-slate-900 tracking-tight">MESA Destek</span>
+                  <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Çevrimiçi
                   </span>
                 </div>
-                <span className="text-[11px] text-slate-400 font-mono block">{FORMATTED_PHONE}</span>
+                <span className="text-[11px] text-slate-500 font-mono block">{FORMATTED_PHONE}</span>
               </div>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed mb-3">
+            <p className="text-xs text-slate-600 leading-relaxed mb-3">
               Merhaba! 🚜 İş makinası arıza, mobil usta veya yedek parça desteği için WhatsApp üzerinden anında yazabilirsiniz.
             </p>
 
@@ -66,14 +66,14 @@ export function WhatsAppWidget() {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 transition transform active:scale-95"
+              className="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 transition transform active:scale-95"
             >
               <Send className="w-3.5 h-3.5" />
               <span>WhatsApp'tan Hemen Yazın</span>
             </a>
           </div>
           {/* Tail */}
-          <div className="w-3 h-3 bg-slate-900 rotate-45 -mt-1.5 ml-5 border-b border-r border-emerald-500/30" />
+          <div className="w-3 h-3 bg-white rotate-45 -mt-1.5 ml-5 border-b border-r border-emerald-200" />
         </div>
       )}
 
