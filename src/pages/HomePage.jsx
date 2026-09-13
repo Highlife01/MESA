@@ -69,7 +69,7 @@ export function HomePage() {
 
   const getServicePhoto = (service) => {
     if (service.slug === 'hidrolik-sistem-tamiri' || service.id === 'hidrolik-sistem-tamiri') {
-      return '/images/mesa-workshop.png';
+      return '/images/service-hydraulics.jpg';
     }
     if (service.slug === 'is-makinasi-tamiri' || service.id === 'is-makinasi-tamiri') {
       return '/images/mesa-excavator-hero.png';
@@ -390,6 +390,10 @@ export function HomePage() {
                   alt={service.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/images/mesa-workshop.png';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-80" />
                 <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-white/90 backdrop-blur text-[10px] font-bold text-slate-800 border border-slate-200 shadow-xs">
@@ -443,6 +447,10 @@ export function HomePage() {
                 alt="Mesa İş Makinaları Atölye ve Hidrolik Pompa Revizyonu"
                 className="w-full h-full object-cover"
                 loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/images/mesa-excavator-hero.png';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#10141e] hidden lg:block" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#10141e] via-transparent to-transparent lg:hidden" />
