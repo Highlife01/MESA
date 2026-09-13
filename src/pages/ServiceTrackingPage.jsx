@@ -4,7 +4,8 @@ import { SEO } from '../components/SEO';
 import { useOperational } from '../context/OperationalContext';
 import { 
   Search, Truck, CheckCircle2, Clock, MapPin, 
-  Phone, User, Wrench, ShieldCheck, AlertCircle, FileCheck, AlertTriangle, MessageSquare, ArrowLeft
+  Phone, User, Wrench, ShieldCheck, AlertCircle, FileCheck, AlertTriangle, MessageSquare, ArrowLeft,
+  Navigation, Radio, Gauge, Activity, Zap
 } from 'lucide-react';
 
 export function ServiceTrackingPage() {
@@ -257,6 +258,168 @@ export function ServiceTrackingPage() {
                 })}
               </div>
             </div>
+
+            {/* ── CANLI GPS ROTA & TELEMATİK SİMÜLASYONU (FEATURE 4) ── */}
+            {currentRecord.type === 'servis' && (
+              <div className="bg-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-xl border border-slate-800 space-y-4">
+                
+                {/* Header with live signal */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                  <div className="flex items-center gap-2.5">
+                    <span className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-black text-white tracking-wide uppercase">CANLI GPS ROTA & TELEMATİK RADARI</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold border border-emerald-500/30">
+                          UYDU BAĞLANTISI AKTİF
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        MESA Mobil Servis Aracı telematik kutusundan 2 saniyede bir canlı koordinat akışı
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
+                    <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                    <span>Hassasiyet: <strong>±2.4m</strong></span>
+                  </div>
+                </div>
+
+                {/* Telematics Metrics Bar */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                  <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60">
+                    <span className="text-[10px] text-slate-400 block font-medium">Anlık Seyir Hızı</span>
+                    <div className="flex items-baseline gap-1 mt-1">
+                      <span className="text-lg font-black font-mono text-white">
+                        {currentRecord.status === 'Mobil Ekip Yolda' ? '68' : currentRecord.status === 'Tamamlandı' ? '0' : '0'}
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">km/s</span>
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60">
+                    <span className="text-[10px] text-slate-400 block font-medium">Kalan Şantiye Mesafesi</span>
+                    <div className="flex items-baseline gap-1 mt-1">
+                      <span className="text-lg font-black font-mono text-amber-400">
+                        {currentRecord.status === 'Mobil Ekip Yolda' ? '12.4' : currentRecord.status === 'Tamamlandı' ? '0.0' : '0.0'}
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">km</span>
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60">
+                    <span className="text-[10px] text-slate-400 block font-medium">Tahmini Varış (ETA)</span>
+                    <div className="flex items-baseline gap-1 mt-1">
+                      <span className="text-lg font-black font-mono text-emerald-400">
+                        {currentRecord.eta}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60">
+                    <span className="text-[10px] text-slate-400 block font-medium">Güzergah & Koridor</span>
+                    <div className="flex items-baseline gap-1 mt-1">
+                      <span className="text-xs font-bold text-slate-200 truncate">
+                        D400 Çukurova Koridoru
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Simulated Visual Route Highway Map Graphic */}
+                <div className="relative bg-slate-950/90 border border-slate-800 rounded-2xl p-4 overflow-hidden">
+                  {/* Highway Background Grid */}
+                  <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ef4444 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+
+                  {/* Route Progress Graphic */}
+                  <div className="relative z-10 py-3">
+                    <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 mb-2">
+                      <span className="flex items-center gap-1 text-slate-300">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                        <span>MESA Merkez Garaj (Seyhan)</span>
+                      </span>
+                      <span className="text-red-400 font-mono text-[10px] flex items-center gap-1">
+                        <Activity className="w-3 h-3 animate-spin" /> CAN-Bus Live
+                      </span>
+                      <span className="flex items-center gap-1 text-amber-400">
+                        <MapPin className="w-3.5 h-3.5 text-red-500" />
+                        <span>{currentRecord.location || 'Müşteri Şantiyesi'}</span>
+                      </span>
+                    </div>
+
+                    {/* Progress Track Line with animated vehicle */}
+                    <div className="relative my-4">
+                      {/* Background track */}
+                      <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-red-600 via-amber-500 to-emerald-500 rounded-full transition-all duration-1000"
+                          style={{
+                            width: currentRecord.status === 'Tamamlandı' ? '100%' :
+                                   currentRecord.status === 'Onarımda' || currentRecord.status === 'Teşhiste' || currentRecord.status === 'Şantiyede' ? '92%' : '65%'
+                          }}
+                        />
+                      </div>
+
+                      {/* Moving Vehicle Marker Indicator */}
+                      <div 
+                        className="absolute -top-3 -translate-x-1/2 transition-all duration-1000 flex flex-col items-center group cursor-pointer"
+                        style={{
+                          left: currentRecord.status === 'Tamamlandı' ? '100%' :
+                                currentRecord.status === 'Onarımda' || currentRecord.status === 'Teşhiste' || currentRecord.status === 'Şantiyede' ? '92%' : '65%'
+                        }}
+                      >
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-500 to-red-700 text-white flex items-center justify-center shadow-lg shadow-red-500/50 border border-red-300 animate-bounce">
+                          <Truck className="w-4 h-4" />
+                        </div>
+                        <span className="text-[9px] font-black font-mono text-white bg-slate-900/90 px-1.5 py-0.5 rounded border border-slate-700 mt-1 whitespace-nowrap shadow-sm">
+                          01 MSA 01
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Route Step Details */}
+                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-3">
+                      <span>Çıkış Saati: <strong className="text-slate-200">10:45</strong></span>
+                      <span className="text-center font-medium text-emerald-400">
+                        {currentRecord.status === 'Tamamlandı' ? '✓ Şantiye Teslimi Onaylandı' :
+                         currentRecord.status === 'Onarımda' || currentRecord.status === 'Teşhiste' || currentRecord.status === 'Şantiyede' ? '● Şantiyede Revizyon Sürüyor' : '● Ekip Seyir Halinde - Otoban Bağlantısı Geçildi'}
+                      </span>
+                      <span>Son GPS Koordinatı: <strong className="text-slate-200 font-mono">37.0016° K, 35.3289° D</strong></span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Direct Hotline / Live Support */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs">
+                  <span className="text-slate-400 text-[11px]">
+                    Teknisyenimiz şantiyeye yaklaşırken veya sahaya vardığında yetkili şantiye şefi aranacaktır.
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href="tel:05344075585"
+                      className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-[11px] flex items-center gap-1.5 transition border border-slate-700"
+                    >
+                      <Phone className="w-3 h-3 text-red-400" />
+                      <span>Ekibi Ara</span>
+                    </a>
+                    <a
+                      href={`https://wa.me/905344075585?text=${encodeURIComponent(`Merhaba, ${currentRecord.code} nolu servis aracımızın anlık konumu hakkında bilgi alabilir miyim?`)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] flex items-center gap-1.5 transition shadow-sm"
+                    >
+                      <MessageSquare className="w-3 h-3" />
+                      <span>WhatsApp Konum</span>
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            )}
 
             {/* Field Technician & Vehicle Bar */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-100 text-xs">

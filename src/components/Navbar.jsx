@@ -44,9 +44,10 @@ export const Navbar = () => {
   const navLinks = [
     { name: t('home'), href: '/' },
     { name: t('services'), href: '/hizmetler', dropdown: true },
+    { name: localized('Bakım Hesapla', 'Maintenance Calc', 'حاسبة الصيانة'), href: '/bakim-hesaplayici' },
     { name: localized('Yedek Parça', 'Spare Parts', 'قطع الغيار'), href: '/yedek-parca' },
+    { name: localized('18 Mobil Filo', '18 Mobile Fleet', 'الأسطول المتنقل'), href: '/filo' },
     { name: t('brands'), href: '/markalar' },
-    { name: localized('Kurumsal', 'About Us', 'من نحن'), href: '/hakkimizda' },
     { name: t('contact'), href: '/iletisim' },
   ];
   const isActive = (href) => pathname === href || (href !== '/' && pathname.startsWith(href));

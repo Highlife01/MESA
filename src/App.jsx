@@ -29,6 +29,7 @@ const TechnicianPage = lazy(() => import('./pages/TechnicianPage').then(m => ({ 
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const FaultDiagnosticPage = lazy(() => import('./pages/FaultDiagnosticPage').then(m => ({ default: m.FaultDiagnosticPage })));
 const PartsShopPage = lazy(() => import('./pages/PartsShopPage').then(m => ({ default: m.PartsShopPage })));
+const MaintenanceCalculatorPage = lazy(() => import('./pages/MaintenanceCalculatorPage').then(m => ({ default: m.MaintenanceCalculatorPage })));
 const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage').then(m => ({ default: m.AdminLoginPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
@@ -100,7 +101,7 @@ export function App() {
       <AuthProvider>
         <OperationalProvider>
           <Router>
-            <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+            <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-red-600 selection:text-white">
               <Navbar />
               <main className="flex-1">
                 <Suspense fallback={<PageLoader />}>
@@ -109,6 +110,7 @@ export function App() {
                     <Route path="/index.html" element={<PageTransition><HomePage /></PageTransition>} />
                     <Route path="/hizmetler" element={<PageTransition><ServicesPage /></PageTransition>} />
                     <Route path="/hizmetler/:slug" element={<PageTransition><ServiceDetailPage /></PageTransition>} />
+                    <Route path="/bakim-hesaplayici" element={<PageTransition><MaintenanceCalculatorPage /></PageTransition>} />
                     <Route path="/ariza-kodu-cozucu" element={<PageTransition><FaultDiagnosticPage /></PageTransition>} />
                     <Route path="/yedek-parca" element={<PageTransition><PartsShopPage /></PageTransition>} />
                     <Route path="/markalar" element={<PageTransition><BrandsPage /></PageTransition>} />

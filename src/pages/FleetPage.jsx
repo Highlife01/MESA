@@ -1,9 +1,94 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SEO } from '../components/SEO';
 import { Link } from '../router/Router';
-import { Truck, ShieldCheck, Wrench, Clock, MapPin, CheckCircle2, Zap, Radio, Activity } from 'lucide-react';
+import { Truck, ShieldCheck, Wrench, Clock, MapPin, CheckCircle2, Zap, Radio, Activity, Navigation, Phone, MessageSquare, Gauge, AlertCircle, Sparkles } from 'lucide-react';
 
 export const FleetPage = () => {
+  const [selectedRegion, setSelectedRegion] = useState('ceyhan');
+
+  const regions = {
+    ceyhan: {
+      name: 'Ceyhan & Yumurtalık Enerji Sahası',
+      city: 'Adana',
+      dist: '28 km',
+      eta: '25 - 35 dk',
+      nearestVan: '01 MSA 01 - Ford Transit 4x4 (Mobil Atölye 1)',
+      tech: 'Mehmet Usta (Baş Teknisyen - 18 Yıl Tecrübe)',
+      phone: '05344075585',
+      status: 'Nöbetçi / Çıkışa Hazır',
+      hotline: '0534 407 55 85',
+      equipment: ['Finn-Power P20 Mobil Hortum Presi', 'CAT ET & JCB Diagnostik Laptop', 'Kaeser Vidalı Kompresör', '600 Bar Manometre'],
+      notes: 'BOTAŞ, Toros Tarım ve Ceyhan Petrokimya sahalarına acil servis geçiş kartı mevcut.'
+    },
+    merkez: {
+      name: 'Adana Merkez (Seyhan, Yüreğir, Sarıçam OSB)',
+      city: 'Adana',
+      dist: '9 km',
+      eta: '15 - 20 dk',
+      nearestVan: '01 MSA 02 - Iveco Daily Yüksek Tavan (Mobil Atölye 2)',
+      tech: 'Ahmet Usta (Powershift & Hidrolik Uzmanı)',
+      phone: '05344075585',
+      status: 'Nöbetçi / Çıkışa Hazır',
+      hotline: '0534 407 55 85',
+      equipment: ['Araç İçi Tesviye Tezgahı', 'Tüm Markalar İçin ECU Test Seti', '500 Lt Hidrolik Yağ Tankı', '12 kW Dizel Jeneratör'],
+      notes: 'Hacı Sabancı OSB ve Seyhan Metal Sanayi sahasına 15 dakikada yerinde varış garantisi.'
+    },
+    mersin: {
+      name: 'Mersin Limanı, Serbest Bölge & Tarsus OSB',
+      city: 'Mersin',
+      dist: '42 km',
+      eta: '30 - 45 dk',
+      nearestVan: '01 MSA 03 - Renault Master Ağır Mobil Atölye',
+      tech: 'Can Usta (Liman Ekipmanları & Reach Stacker Uzmanı)',
+      phone: '05344075585',
+      status: 'Nöbetçi / Çıkışa Hazır',
+      hotline: '0534 407 55 85',
+      equipment: ['Liman Vinçleri CAN-Bus Teşhis Kiti', 'Mobil Hortum Presi', 'Termal Kaçak Dedektörü', 'Pnömatik Bijon Tabancaları'],
+      notes: 'MIP Mersin Uluslararası Limanı ve Tarsus Organize Sanayi sahasında kesintisiz 7/24 nöbet.'
+    },
+    kozan: {
+      name: 'Kozan, İmamoğlu & Kadirli Baraj & Taş Ocakları',
+      city: 'Adana / Osmaniye',
+      dist: '55 km',
+      eta: '35 - 50 dk',
+      nearestVan: '01 MSA 06 - MAN TGE 4x4 Ağır Saha Servisi',
+      tech: 'Salih Usta (Paletli Ekskavatör & Ağır Motor Uzmanı)',
+      phone: '05344075585',
+      status: 'Nöbetçi / Çıkışa Hazır',
+      hotline: '0534 407 55 85',
+      equipment: ['Seyyar Borwerk Pim Delik İşleme', 'Lincoln Gazaltı Kaynak Ünitesi', 'Mobil Azot Tüpleri', 'Ağır Hizmet Kilit Beşikleri'],
+      notes: 'Çamurlu maden yolları ve dik taş ocağı rampalarına özel kilitli 4x4 çekiş donanımı.'
+    },
+    hatay: {
+      name: 'İskenderun Demir Çelik, Antakya & Dörtyol',
+      city: 'Hatay',
+      dist: '68 km',
+      eta: '45 - 60 dk',
+      nearestVan: '01 MSA 08 - Ford Ranger 4x4 Hızlı Müdahale',
+      tech: 'Burak Usta (ECU Teşhis & Common Rail Enjektör)',
+      phone: '05344075585',
+      status: 'Nöbetçi / Çıkışa Hazır',
+      hotline: '0534 407 55 85',
+      equipment: ['Mobil Hortum Presi', 'Bosch Common Rail Teşhis Kiti', 'Dijital Debimetre', '24V Hızlı Akü Takviye'],
+      notes: 'İskenderun Liman bölgesi ve sanayi tesislerine Otoyol üzerinden ekspres servis.'
+    },
+    osmaniye: {
+      name: 'Osmaniye OSB & Toprakkale Lojistik Bölgesi',
+      city: 'Osmaniye',
+      dist: '50 km',
+      eta: '35 - 45 dk',
+      nearestVan: '01 MSA 04 - Isuzu D-Max 4x4 Gezici Servis',
+      tech: 'Mustafa Usta (Mobil Torna & Hidrolik Revizyon)',
+      phone: '05344075585',
+      status: 'Nöbetçi / Çıkışa Hazır',
+      hotline: '0534 407 55 85',
+      equipment: ['Yerinde Hortum İmalatı', 'Komatsu & Volvo Teşhis Yazılımları', 'Vidalı Kompresör', 'Manuel Hidrolik Test Pompası'],
+      notes: 'Osmaniye Demir Çelik OSB fabrikalarına ve lojistik antrepolara hızlı müdahale.'
+    }
+  };
+
+  const currentHub = regions[selectedRegion] || regions.ceyhan;
+
   const vehicleClasses = [
     {
       type: 'Ağır Şantiye 4x4 Acil Müdahale Araçları',
@@ -77,6 +162,170 @@ export const FleetPage = () => {
               Arızalanan iş makinasını şantiyeden sanayiye taşımak büyük vinç, çekici masrafı ve günlerce iş kaybı demektir. Mesa İş Makinaları olarak 18 araçlık modern filomuzla fabrikayı şantiyenize taşıyoruz.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* ═══════════ INTERACTIVE: LIVE FLEET LOCATOR & REGIONAL ETA CALCULATOR ═══════════ */}
+      <section className="py-12 bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200 mb-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                <span>Canlı Telematik Radarı • 18 Araç Aktif</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Şantiyenize En Yakın Nöbetçi Mobil Servisi Bulun
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                Bulunduğunuz bölgeyi seçin; hazır bekleyen en yakın mobil atölyemizi, ustamızı ve tahmini varış süresini anında görün.
+              </p>
+            </div>
+
+            {/* 18 Fleet Live Counter Bar */}
+            <div className="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 text-xs shrink-0">
+              <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs">
+                <span className="text-slate-400 block text-[10px] font-bold">SAHADA</span>
+                <span className="text-red-600 font-mono font-black text-sm">8 Araç</span>
+              </div>
+              <div className="px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 shadow-xs">
+                <span className="text-emerald-600 block text-[10px] font-bold">NÖBETÇİ HAZIR</span>
+                <span className="text-emerald-700 font-mono font-black text-sm">7 Araç</span>
+              </div>
+              <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs">
+                <span className="text-slate-400 block text-[10px] font-bold">İKMAL / ATÖLYE</span>
+                <span className="text-slate-700 font-mono font-black text-sm">3 Araç</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Regional Selector Pills */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-8">
+            {Object.entries(regions).map(([key, reg]) => {
+              const isSelected = selectedRegion === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setSelectedRegion(key)}
+                  className={`p-3 rounded-2xl text-left border transition-all ${
+                    isSelected
+                      ? 'bg-red-600 text-white border-red-600 shadow-lg shadow-red-600/25 scale-[1.02]'
+                      : 'bg-slate-50 hover:bg-white text-slate-700 border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className={`text-[10px] font-black uppercase tracking-wider ${isSelected ? 'text-red-100' : 'text-slate-400'}`}>
+                      {reg.city}
+                    </span>
+                    <MapPin className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-red-500'}`} />
+                  </div>
+                  <span className="font-bold text-xs line-clamp-1 block">{reg.name.split('(')[0]}</span>
+                  <span className={`text-[11px] font-mono mt-1 block font-bold ${isSelected ? 'text-amber-200' : 'text-slate-500'}`}>
+                    ~{reg.eta.split('-')[0].trim()}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Interactive Match Result Card */}
+          <div className="bg-gradient-to-br from-white to-slate-50 border-2 border-red-500/30 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              
+              {/* Left Column: ETA & Vehicle Specs */}
+              <div className="lg:col-span-8 space-y-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="px-3 py-1 rounded-full bg-red-600 text-white text-xs font-black uppercase tracking-wide shadow-xs">
+                    {currentHub.name}
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                    {currentHub.status}
+                  </span>
+                  <span className="text-xs text-slate-500 font-mono font-bold">
+                    📍 Mesafe: {currentHub.dist}
+                  </span>
+                </div>
+
+                <div className="pt-2">
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                    {currentHub.nearestVan}
+                  </h3>
+                  <p className="text-sm font-bold text-red-600 flex items-center gap-2 mt-1">
+                    <Wrench className="w-4 h-4" />
+                    Görevli Usta: <span className="text-slate-800">{currentHub.tech}</span>
+                  </p>
+                  <p className="text-xs text-slate-600 mt-2 leading-relaxed bg-white/80 p-3 rounded-xl border border-slate-200">
+                    <strong className="text-slate-900">Bölge Operasyon Notu:</strong> {currentHub.notes}
+                  </p>
+                </div>
+
+                {/* On-board Equipment Badges */}
+                <div className="pt-2">
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                    Bu Araçtaki Hazır Donanım & Test Cihazları:
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {currentHub.equipment.map((eq, eqIdx) => (
+                      <div key={eqIdx} className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-700">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span className="font-medium truncate">{eq}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Dynamic ETA Box & Action CTAs */}
+              <div className="lg:col-span-4 bg-white border border-slate-200 rounded-2xl p-6 shadow-md text-center space-y-4">
+                <div className="space-y-1">
+                  <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                    Tahmini Şantiyeye Varış Süresi
+                  </span>
+                  <div className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-600 font-mono tracking-tight">
+                    {currentHub.eta}
+                  </div>
+                  <span className="text-[11px] text-emerald-700 font-bold block">
+                    ✓ Çukurova Otoyolu & Sahadan Canlı Veri
+                  </span>
+                </div>
+
+                <div className="pt-2 space-y-2.5">
+                  <a
+                    href={`https://wa.me/905344075585?text=${encodeURIComponent(`Merhaba MESA Servis, ${currentHub.name} bölgesindeki şantiyem için ${currentHub.nearestVan} aracını acil müdahale için çağırmak istiyorum.`)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition active:scale-98"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Bu Aracı WhatsApp'tan Çağır</span>
+                  </a>
+
+                  <a
+                    href={`tel:${currentHub.phone}`}
+                    className="w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition"
+                  >
+                    <Phone className="w-4 h-4 text-red-400" />
+                    <span>Nöbetçi Ustayı Ara: {currentHub.hotline}</span>
+                  </a>
+                </div>
+
+                <div className="pt-1">
+                  <span className="text-[10px] text-slate-400 block">
+                    7/24 Seyyar Hidrolik Hortum Presi & Orijinal Diagnostik Garantisi
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
       </section>
 
