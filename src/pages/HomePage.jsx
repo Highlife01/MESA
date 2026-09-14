@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
 import { guidesData } from '../data/guidesData';
+import { activeCitiesData } from '../data/citiesData';
 import { GoogleReviewsWidget } from '../components/GoogleReviewsWidget';
 import BrandMarquee from '../components/BrandMarquee';
 
