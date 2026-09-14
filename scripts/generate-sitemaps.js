@@ -121,11 +121,22 @@ const sitemapIndexXml = `<?xml version="1.0" encoding="UTF-8"?>
 </sitemapindex>`;
 
 const publicDir = path.resolve(__dirname, '../public');
-fs.writeFileSync(path.join(publicDir, 'sitemap-pages.xml'), pagesXml, 'utf-8');
-fs.writeFileSync(path.join(publicDir, 'sitemap-services.xml'), servicesXml, 'utf-8');
-fs.writeFileSync(path.join(publicDir, 'sitemap-cities.xml'), citiesXml, 'utf-8');
-fs.writeFileSync(path.join(publicDir, 'sitemap-regions.xml'), regionsXml, 'utf-8');
-fs.writeFileSync(path.join(publicDir, 'sitemap-guides.xml'), guidesXml, 'utf-8');
-fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemapIndexXml, 'utf-8');
+const distDir = path.resolve(__dirname, '../dist');
 
-console.log('✓ Tüm XML sitemap dosyaları (sayfalar, hizmetler, 81 il, bölgeler, rehberler) başarıyla üretildi.');
+const sitemapFiles = [
+  { name: 'sitemap-pages.xml', content: pagesXml },
+  { name: 'sitemap-services.xml', content: servicesXml },
+  { name: 'sitemap-cities.xml', content: citiesXml },
+  { name: 'sitemap-regions.xml', content: regionsXml },
+  { name: 'sitemap-guides.xml', content: guidesXml },
+  { name: 'sitemap.xml', content: sitemapIndexXml }
+];
+
+sitemapFiles.forEach(file => {
+  fs.writeFileSync(path.join(publicDir, file.name), file.content, 'utf-8');
+  if (fs.existsSync(distDir)) {
+    fs.writeFileSync(path.join(distDir, file.name), file.content, 'utf-8');
+  }
+});
+
+console.log('✓ Tüm XML sitemap dosyaları (sayfalar, hizmetler, 81 il, bölgeler, rehberler) hem public/ hem dist/ klasörlerine başarıyla senkronize edildi.');

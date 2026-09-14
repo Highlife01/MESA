@@ -2,93 +2,129 @@ import React, { createContext, useContext, useState, useEffect, useMemo } from '
 
 const OperationalContext = createContext();
 
+const safeGetStorage = (key, fallback) => {
+  if (typeof window === 'undefined') return fallback;
+  try {
+    const item = window.localStorage.getItem(key);
+    return item ? JSON.parse(item) : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const safeSetStorage = (key, value) => {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.warn(`[MESA Storage] Failed to persist ${key}:`, e);
+  }
+};
+
+const DEFAULT_LIVE_JOBS = [
+  {
+    id: 'MS-8294',
+    code: 'MS-8294',
+    customer: 'Kaya Hafriyat & Madencilik',
+    phone: '0533 444 5566',
+    machine: 'CAT 320D Paletli Ekskavatör',
+    issue: 'Hidrolik ana pompa aşırı ısınıyor / Bom yavaşlıyor',
+    location: 'Ceyhan Taş Ocağı Şantiyesi',
+    status: 'Mobil Ekip Yolda',
+    stepIndex: 2,
+    assignedTechnician: 'Mehmet Usta (Baş Teknisyen)',
+    vehicle: '01 MSA 01 (Ford Transit 4x4)',
+    techDistance: '4.2 km',
+    etaMinutes: 14,
+    createdAt: '14:20',
+    partsUsed: ['CAT Hidrolik Basınç Filtresi', 'Pilot Valf O-Ring Kiti'],
+    cost: 18500,
+    supervisorSignature: null,
+    technicianSignature: null
+  },
+  {
+    id: 'MS-5102',
+    code: 'MS-5102',
+    customer: 'ABC İnşaat Ltd.',
+    phone: '0532 555 0128',
+    machine: 'JCB 3CX Eco Kazıcı Yükleyici',
+    issue: 'Powershift 2. viteste sarsıntı ve çekiş düşüklüğü',
+    location: 'Seyhan Metal Sanayi',
+    status: 'Şantiyede',
+    stepIndex: 3,
+    assignedTechnician: 'Ahmet Usta (Hidrolik Uzmanı)',
+    vehicle: '01 MSA 02 (Iveco Daily Yüksek Tavan)',
+    techDistance: '0.0 km (Şantiyede)',
+    etaMinutes: 0,
+    createdAt: '11:15',
+    partsUsed: ['JCB Şanzıman Filtresi', 'Selenoid Bobini'],
+    cost: 12400,
+    supervisorSignature: null,
+    technicianSignature: null
+  },
+  {
+    id: 'MS-3071',
+    code: 'MS-3071',
+    customer: 'Özdemir Madencilik A.Ş.',
+    phone: '0533 888 1234',
+    machine: 'Hidromek HMK 220LC',
+    issue: 'Boom silindir keçesi patlak, yağ kaçağı mevcut',
+    location: 'Kozan Taş Ocağı',
+    status: 'Tamamlandı',
+    stepIndex: 5,
+    assignedTechnician: 'Can Usta (Saha Teknisyeni)',
+    vehicle: '01 MSA 03 (Renault Master)',
+    techDistance: '0.0 km',
+    etaMinutes: 0,
+    createdAt: '09:45',
+    partsUsed: ['Hidromek Boom Silindir Keçe Takımı', 'Hidrolik Yağ 20L'],
+    cost: 8750,
+    supervisorSignature: 'data:image/png;base64,completed',
+    technicianSignature: 'data:image/png;base64,completed'
+  }
+];
+
+const DEFAULT_PARTS_ORDERS = [
+  {
+    orderCode: 'SP-4201',
+    customerName: 'Ahmet Yılmaz',
+    companyName: 'Kaya Hafriyat & Madencilik',
+    phone: '0533 444 5566',
+    taxNo: '1234567890',
+    items: [
+      { id: 'p1', name: 'CAT Hidrolik Basınç Filtresi', quantity: 3, price: 2450 },
+      { id: 'p2', name: 'Pilot Valf O-Ring Kiti', quantity: 2, price: 850 }
+    ],
+    total: 9050,
+    address: 'Ceyhan Taş Ocağı Şantiyesi, Adana',
+    notes: 'Acil kargo talep edildi',
+    status: 'Hazırlanıyor',
+    createdAt: new Date().toISOString()
+  }
+];
+
 export const OperationalProvider = ({ children }) => {
-  // Live Active Jobs Queue (Synchronized across site, wizard, tracker, technician and ERP)
-  const [liveJobs, setLiveJobs] = useState([
-      {
-        id: 'MS-8294',
-        code: 'MS-8294',
-        customer: 'Kaya Hafriyat & Madencilik',
-        phone: '0533 444 5566',
-        machine: 'CAT 320D Paletli Ekskavatör',
-        issue: 'Hidrolik ana pompa aşırı ısınıyor / Bom yavaşlıyor',
-        location: 'Ceyhan Taş Ocağı Şantiyesi',
-        status: 'Mobil Ekip Yolda',
-        stepIndex: 2,
-        assignedTechnician: 'Mehmet Usta (Baş Teknisyen)',
-        vehicle: '01 MSA 01 (Ford Transit 4x4)',
-        techDistance: '4.2 km',
-        etaMinutes: 14,
-        createdAt: '14:20',
-        partsUsed: ['CAT Hidrolik Basınç Filtresi', 'Pilot Valf O-Ring Kiti'],
-        cost: 18500,
-        supervisorSignature: null,
-        technicianSignature: null
-      },
-      {
-        id: 'MS-5102',
-        code: 'MS-5102',
-        customer: 'ABC İnşaat Ltd.',
-        phone: '0532 555 0128',
-        machine: 'JCB 3CX Eco Kazıcı Yükleyici',
-        issue: 'Powershift 2. viteste sarsıntı ve çekiş düşüklüğü',
-        location: 'Seyhan Metal Sanayi',
-        status: 'Şantiyede',
-        stepIndex: 3,
-        assignedTechnician: 'Ahmet Usta (Hidrolik Uzmanı)',
-        vehicle: '01 MSA 02 (Iveco Daily Yüksek Tavan)',
-        techDistance: '0.0 km (Şantiyede)',
-        etaMinutes: 0,
-        createdAt: '11:15',
-        partsUsed: ['JCB Şanzıman Filtresi', 'Selenoid Bobini'],
-        cost: 12400,
-        supervisorSignature: null,
-        technicianSignature: null
-      },
-      {
-        id: 'MS-3071',
-        code: 'MS-3071',
-        customer: 'Özdemir Madencilik A.Ş.',
-        phone: '0533 888 1234',
-        machine: 'Hidromek HMK 220LC',
-        issue: 'Boom silindir keçesi patlak, yağ kaçağı mevcut',
-        location: 'Kozan Taş Ocağı',
-        status: 'Tamamlandı',
-        stepIndex: 5,
-        assignedTechnician: 'Can Usta (Saha Teknisyeni)',
-        vehicle: '01 MSA 03 (Renault Master)',
-        techDistance: '0.0 km',
-        etaMinutes: 0,
-        createdAt: '09:45',
-        partsUsed: ['Hidromek Boom Silindir Keçe Takımı', 'Hidrolik Yağ 20L'],
-        cost: 8750,
-        supervisorSignature: 'data:image/png;base64,completed',
-        technicianSignature: 'data:image/png;base64,completed'
-      }
-  ]);
+  // Live Active Jobs Queue (Synchronized across site, wizard, tracker, technician, ERP and LocalStorage)
+  const [liveJobs, setLiveJobs] = useState(() => safeGetStorage('mesa_live_jobs', DEFAULT_LIVE_JOBS));
 
-  // Cart for B2B Spare Parts
-  const [cart, setCart] = useState([]);
+  // Cart for B2B Spare Parts (Persisted across refreshes)
+  const [cart, setCart] = useState(() => safeGetStorage('mesa_cart', []));
 
-  // B2B Parts Orders (completed orders)
-  const [partsOrders, setPartsOrders] = useState([
-    {
-      orderCode: 'SP-4201',
-      customerName: 'Ahmet Yılmaz',
-      companyName: 'Kaya Hafriyat & Madencilik',
-      phone: '0533 444 5566',
-      taxNo: '1234567890',
-      items: [
-        { id: 'p1', name: 'CAT Hidrolik Basınç Filtresi', quantity: 3, price: 2450 },
-        { id: 'p2', name: 'Pilot Valf O-Ring Kiti', quantity: 2, price: 850 }
-      ],
-      total: 9050,
-      address: 'Ceyhan Taş Ocağı Şantiyesi, Adana',
-      notes: 'Acil kargo talep edildi',
-      status: 'Hazırlanıyor',
-      createdAt: new Date().toISOString()
-    }
-  ]);
+  // B2B Parts Orders (completed orders persisted)
+  const [partsOrders, setPartsOrders] = useState(() => safeGetStorage('mesa_parts_orders', DEFAULT_PARTS_ORDERS));
+
+  // Sync to LocalStorage on state change
+  useEffect(() => {
+    safeSetStorage('mesa_live_jobs', liveJobs);
+  }, [liveJobs]);
+
+  useEffect(() => {
+    safeSetStorage('mesa_cart', cart);
+  }, [cart]);
+
+  useEffect(() => {
+    safeSetStorage('mesa_parts_orders', partsOrders);
+  }, [partsOrders]);
 
   // Live Toast Notifications
   const [activeToast, setActiveToast] = useState(null);

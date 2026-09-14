@@ -7,9 +7,6 @@ import {
   ShieldCheck, Zap, Layers, ChevronDown, Check, Cpu, Sparkles, Navigation, Gauge, Shield
 } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
-import { guidesData } from '../data/guidesData';
-import { brandsData } from '../data/brandsData';
-import { activeCitiesData } from '../data/citiesData';
 import { GoogleReviewsWidget } from '../components/GoogleReviewsWidget';
 import BrandMarquee from '../components/BrandMarquee';
 

@@ -89,7 +89,7 @@ export function MesaErrorFallback({ onReset, error }) {
         </div>
 
         {/* Non-production debug info */}
-        {process.env.NODE_ENV !== 'production' && error && (
+        {(Boolean(import.meta.env?.DEV) || (typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production')) && error && (
           <div className="text-left bg-black/50 p-4 rounded-xl text-xs font-mono text-red-300 overflow-x-auto max-h-36 border border-red-950">
             {error.toString()}
           </div>

@@ -2,14 +2,11 @@ import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
-const envEmail = import.meta.env.VITE_SUPER_ADMIN_EMAIL || 'cebrailkara@gmail.com';
-const envPassword = import.meta.env.VITE_SUPER_ADMIN_PASSWORD || 'Ak010101';
-const envName = import.meta.env.VITE_SUPER_ADMIN_NAME || 'Cebrail Kara';
+const envEmail = (import.meta.env.VITE_SUPER_ADMIN_EMAIL || '').trim();
+const envPassword = (import.meta.env.VITE_SUPER_ADMIN_PASSWORD || '').trim();
+const envName = (import.meta.env.VITE_SUPER_ADMIN_NAME || 'Süper Admin').trim();
 
-export const isAdminLoginConfigured = Boolean(
-  (import.meta.env.VITE_SUPER_ADMIN_EMAIL && import.meta.env.VITE_SUPER_ADMIN_PASSWORD) ||
-  (envEmail && envPassword)
-);
+export const isAdminLoginConfigured = Boolean(envEmail && envPassword);
 
 export const SUPER_ADMIN_CREDENTIALS = {
   email: envEmail,
@@ -18,7 +15,7 @@ export const SUPER_ADMIN_CREDENTIALS = {
   role: 'super_admin',
   roleTitle: 'Süper Admin (Genel Koordinatör)',
   phone: '+90 533 529 36 74',
-  avatar: 'CK',
+  avatar: envName ? envName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'SA',
   permissions: [
     'ALL',
     'manage_orders',
