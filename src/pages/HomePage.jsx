@@ -11,6 +11,7 @@ import { guidesData } from '../data/guidesData';
 import { activeCitiesData } from '../data/citiesData';
 import { GoogleReviewsWidget } from '../components/GoogleReviewsWidget';
 import BrandMarquee from '../components/BrandMarquee';
+import { SITE_CONFIG } from '../config/siteConfig';
 
 export function HomePage() {
   const [openFaq, setOpenFaq] = useState(null);
@@ -37,24 +38,26 @@ export function HomePage() {
   const jsonLdSchema = {
     '@context': 'https://schema.org',
     '@type': 'AutoRepair',
-    'name': 'Mesa İş Makinaları Teknik Servis',
-    'image': 'https://mesaismak.web.app/images/mesa-logo.png',
-    'description': 'Adana ve Çukurova genelinde 5 mobil araçla 7/24 yerinde iş makinası tamiri, hidrolik pompa, teleskopik yükleyici, şanzıman ve motor revizyon servisi.',
+    'name': SITE_CONFIG.legalName,
+    'alternateName': SITE_CONFIG.siteName,
+    'image': SITE_CONFIG.logo,
+    'description': 'Türkiye genelinde 81 ilde şantiyede yerinde mobil iş makinası tamiri, hidrolik pompa, teleskopik yükleyici, şanzıman ve motor revizyon servisi.',
     'address': {
       '@type': 'PostalAddress',
-      'streetAddress': 'Seyhan OSB, Şantiyeler Yolu No: 48',
-      'addressLocality': 'Seyhan',
-      'addressRegion': 'Adana',
-      'postalCode': '01000',
+      'streetAddress': SITE_CONFIG.headquarters.street,
+      'addressLocality': SITE_CONFIG.headquarters.district,
+      'addressRegion': SITE_CONFIG.headquarters.city,
+      'postalCode': SITE_CONFIG.headquarters.postalCode,
       'addressCountry': 'TR'
     },
     'geo': {
       '@type': 'GeoCoordinates',
-      'latitude': 37.0000,
-      'longitude': 35.3213
+      'latitude': SITE_CONFIG.headquarters.latitude,
+      'longitude': SITE_CONFIG.headquarters.longitude
     },
-    'url': 'https://mesaismak.web.app',
-    'telephone': '+905335293674',
+    'url': SITE_CONFIG.siteUrl,
+    'telephone': SITE_CONFIG.phoneRaw,
+    'email': SITE_CONFIG.email,
     'priceRange': '₺₺',
     'openingHoursSpecification': [
       {

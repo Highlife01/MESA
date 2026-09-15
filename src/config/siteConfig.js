@@ -2,17 +2,17 @@
 export const SITE_CONFIG = {
   siteName: 'MESA İş Makinaları',
   legalName: 'Mesa İş Makinaları San. ve Tic. Ltd. Şti.',
-  siteUrl: 'https://mesaismak.web.app', // İleride özel alan adı bağlandığında burası güncellenir
-  defaultDomain: 'mesaismak.web.app',
-  ogImage: 'https://mesaismak.web.app/images/mesa-excavator-hero.png',
-  logo: 'https://mesaismak.web.app/images/mesa-logo.png',
+  siteUrl: 'https://www.mesaismakineleri.com.tr',
+  defaultDomain: 'www.mesaismakineleri.com.tr',
+  ogImage: 'https://www.mesaismakineleri.com.tr/images/mesa-excavator-hero.png',
+  logo: 'https://www.mesaismakineleri.com.tr/images/mesa-logo.png',
   phone: '0533 529 36 74',
   phoneRaw: '+905335293674',
   whatsapp: '0534 407 55 85',
   whatsappRaw: '905344075585',
-  email: 'info@mesaismak.web.app',
+  email: 'servis@mesaismakineleri.com.tr',
   
-  // Tek ve gerçek fiziki merkez (Google E-E-A-T & LocalBusiness uyumu)
+  // Tek ve gerçek fiziki merkez (Google E-E-A-T & LocalBusiness & GEO uyumu)
   headquarters: {
     street: 'Yeşiloba Mah. 46167. Sokak No: 19/A',
     district: 'Seyhan',
@@ -21,6 +21,10 @@ export const SITE_CONFIG = {
     country: 'TR',
     latitude: 36.9914,
     longitude: 35.2678,
+    geoRegion: 'TR-01',
+    geoPlacename: 'Seyhan, Adana',
+    geoPosition: '36.9914;35.2678',
+    icbm: '36.9914, 35.2678',
     areaServed: 'Türkiye (81 İl Mobil Saha ve Şantiye Müdahale)'
   },
 

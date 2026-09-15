@@ -1,6 +1,6 @@
 # 🚜 MESA İş Makinaları - Türkiye Geneli 7/24 Mobil Servis, Hidrolik Revizyon & Operasyon Portalı
 
-[![Production Status](https://img.shields.io/badge/status-live-success.svg)](https://mesaismak.web.app)
+[![Production Status](https://img.shields.io/badge/status-live-success.svg)](https://www.mesaismakineleri.com.tr)
 [![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6.2.0-646CFF.svg)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4.17-38B2AC.svg)](https://tailwindcss.com/)
@@ -9,9 +9,9 @@
 
 **MESA İş Makinaları**, Türkiye'nin 81 ilinde şantiye sahasında 7/24 yerinde mobil teknik servis, paletli ve lastikli ekskavatör, bekoloder, loder, dozer, teleskopik yükleyici (telehandler) tamiri, 500 bar seyyar hidrolik hortum presi, seyyar borwerk delik işleme, powershift şanzıman, ağır hizmet dizel motor rektifiyesi ve telematik filo operasyon yönetim platformudur.
 
-🌐 **Canlı Web Portalı:** [https://mesaismak.web.app](https://mesaismak.web.app)  
+🌐 **Canlı Web Portalı:** [https://www.mesaismakineleri.com.tr](https://www.mesaismakineleri.com.tr)  
 📞 **7/24 Acil Müdahale Çağrı Hattı:** `0533 529 36 74`  
-📍 **Merkez Atölye:** Seyhan OSB, Şantiyeler Yolu No: 48, Seyhan / Adana
+📍 **Merkez Atölye:** Yeşiloba Mah. 46167. Sokak No: 19/A, 01170 Seyhan / Adana
 
 ---
 
@@ -137,10 +137,10 @@ firebase deploy --only hosting
 ## 📞 İletişim ve Destek
 
 - **Yetkili:** MESA İş Makinaları Saha Yönetimi
-- **E-Posta:** `info@mesais.com`
+- **E-Posta:** `servis@mesaismakineleri.com.tr`
 - **Telefon:** `+90 533 529 36 74`
 - **WhatsApp:** `+90 534 407 55 85`
-- **Web:** [https://mesaismak.web.app](https://mesaismak.web.app)
+- **Web:** [https://www.mesaismakineleri.com.tr](https://www.mesaismakineleri.com.tr)
 
 ---
 *© 2026 MESA İş Makinaları. Tüm Hakları Saklıdır.*

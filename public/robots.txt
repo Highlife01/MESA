@@ -6,9 +6,9 @@ Disallow: /teknisyen
 Disallow: /admin
 Disallow: /login
 
-Sitemap: https://mesaismak.web.app/sitemap.xml
-Sitemap: https://mesaismak.web.app/sitemap-pages.xml
-Sitemap: https://mesaismak.web.app/sitemap-services.xml
-Sitemap: https://mesaismak.web.app/sitemap-cities.xml
-Sitemap: https://mesaismak.web.app/sitemap-regions.xml
-Sitemap: https://mesaismak.web.app/sitemap-guides.xml
+Sitemap: https://www.mesaismakineleri.com.tr/sitemap.xml
+Sitemap: https://www.mesaismakineleri.com.tr/sitemap-pages.xml
+Sitemap: https://www.mesaismakineleri.com.tr/sitemap-services.xml
+Sitemap: https://www.mesaismakineleri.com.tr/sitemap-cities.xml
+Sitemap: https://www.mesaismakineleri.com.tr/sitemap-regions.xml
+Sitemap: https://www.mesaismakineleri.com.tr/sitemap-guides.xml

@@ -9,7 +9,9 @@ export function SEO({
   ogType = 'website',
   ogImage = SITE_CONFIG.ogImage,
   schema = null,
-  breadcrumbs = null
+  jsonLd = null,
+  breadcrumbs = null,
+  geo = null
 }) {
   useEffect(() => {
     const fullTitle = title 
@@ -33,6 +35,19 @@ export function SEO({
     setMeta('keywords', keywords);
     setMeta('author', SITE_CONFIG.legalName);
     setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+
+    // GEO & Local SEO Meta Tags
+    const geoRegion = geo?.region || SITE_CONFIG.headquarters.geoRegion || 'TR-01';
+    const geoPlacename = geo?.placename || SITE_CONFIG.headquarters.geoPlacename || 'Seyhan, Adana';
+    const geoPosition = geo?.position || SITE_CONFIG.headquarters.geoPosition || `${SITE_CONFIG.headquarters.latitude};${SITE_CONFIG.headquarters.longitude}`;
+    const icbm = geo?.icbm || SITE_CONFIG.headquarters.icbm || `${SITE_CONFIG.headquarters.latitude}, ${SITE_CONFIG.headquarters.longitude}`;
+
+    setMeta('geo.region', geoRegion);
+    setMeta('geo.placename', geoPlacename);
+    setMeta('geo.position', geoPosition);
+    setMeta('ICBM', icbm);
+    setMeta('coverage', 'Turkey');
+    setMeta('distribution', 'Global');
 
     // Open Graph
     setMeta('og:title', fullTitle, true);
@@ -71,7 +86,7 @@ export function SEO({
     
     // Organization / LocalBusiness Schema (Always include HQ & Turkey areaServed)
     graph.push({
-      '@type': ['LocalBusiness', 'HomeAndConstructionBusiness'],
+      '@type': ['LocalBusiness', 'HomeAndConstructionBusiness', 'AutoRepair'],
       '@id': `${SITE_CONFIG.siteUrl}/#organization`,
       'name': SITE_CONFIG.legalName,
       'alternateName': SITE_CONFIG.siteName,
@@ -125,12 +140,15 @@ export function SEO({
       });
     }
 
-    // Add page specific schema if provided
-    if (schema) {
-      if (Array.isArray(schema)) {
-        graph.push(...schema);
+    // Add page specific schema if provided (supports schema, jsonLd, array, or @graph)
+    const activeSchema = schema || jsonLd;
+    if (activeSchema) {
+      if (Array.isArray(activeSchema)) {
+        graph.push(...activeSchema);
+      } else if (activeSchema['@graph'] && Array.isArray(activeSchema['@graph'])) {
+        graph.push(...activeSchema['@graph']);
       } else {
-        graph.push(schema);
+        graph.push(activeSchema);
       }
     }
 
@@ -146,7 +164,7 @@ export function SEO({
       '@graph': graph
     });
 
-  }, [title, description, keywords, canonical, ogType, ogImage, schema, breadcrumbs]);
+  }, [title, description, keywords, canonical, ogType, ogImage, schema, jsonLd, breadcrumbs, geo]);
 
   return null;
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SEO } from '../components/SEO';
+import { SITE_CONFIG } from '../config/siteConfig';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Building, ShieldCheck, AlertCircle, MessageCircle } from 'lucide-react';
 
 export const ContactPage = () => {
@@ -214,7 +215,9 @@ export const ContactPage = () => {
                 </div>
                 <div>
                   <div className="text-xs text-slate-500">E-Posta Adresleri</div>
-                  <div className="text-sm font-semibold text-slate-900">info@mesaismakinalari.com.tr</div>
+                  <a href={`mailto:${SITE_CONFIG.email}`} className="text-sm font-semibold text-slate-900 hover:text-red-600 transition-colors">
+                    {SITE_CONFIG.email}
+                  </a>
                 </div>
               </div>
 

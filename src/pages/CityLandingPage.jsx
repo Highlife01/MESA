@@ -48,9 +48,10 @@ export function CityLandingPage() {
         'description': currentCity.seoDescription,
         'provider': {
           '@type': 'LocalBusiness',
-          '@id': `${SITE_CONFIG.siteUrl}#organization`,
+          '@id': `${SITE_CONFIG.siteUrl}/#organization`,
           'name': SITE_CONFIG.legalName,
           'telephone': SITE_CONFIG.phoneRaw,
+          'email': SITE_CONFIG.email,
           'address': {
             '@type': 'PostalAddress',
             'streetAddress': SITE_CONFIG.headquarters.street,
@@ -132,6 +133,10 @@ export function CityLandingPage() {
         canonical={canonicalUrl}
         jsonLd={structuredData}
         breadcrumbs={breadcrumbs}
+        geo={{
+          region: `TR-${currentCity.plate}`,
+          placename: `${currentCity.name}, Turkey`
+        }}
       />
 
       {/* Breadcrumb Bar */}
