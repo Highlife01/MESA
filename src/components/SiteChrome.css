@@ -599,15 +599,21 @@
 .marquee-track-rtl {
   display: flex;
   width: max-content;
-  animation: marquee-rtl 35s linear infinite;
+  animation: marquee-rtl 48s linear infinite;
   will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
 }
 
 .marquee-track-ltr {
   display: flex;
   width: max-content;
-  animation: marquee-ltr 35s linear infinite;
+  animation: marquee-ltr 48s linear infinite;
   will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
 }
 
 .marquee-container:hover .marquee-track-rtl,
@@ -617,3 +623,9 @@
   animation-play-state: paused;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track-rtl,
+  .marquee-track-ltr {
+    animation: none !important;
+  }
+}

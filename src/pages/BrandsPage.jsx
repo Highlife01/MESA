@@ -42,9 +42,9 @@ export function BrandsPage() {
             >
               <div>
                 <div className="flex items-center justify-between border-b border-slate-100 pb-4 gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-28 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-center p-2 shrink-0">
-                      <BrandLogo brandId={brand.id} className="h-6 w-auto max-w-[90px] shrink-0" />
+                  <div className="flex items-center gap-4">
+                    <div className="h-14 w-36 sm:w-44 bg-gradient-to-b from-slate-50 to-slate-100/70 border border-slate-200/80 rounded-2xl flex items-center justify-center p-2.5 shrink-0 shadow-xs">
+                      <BrandLogo brandId={brand.id} className="h-8 sm:h-9 w-auto max-w-[130px] shrink-0 object-contain" />
                     </div>
                     <div>
                       <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">{brand.origin}</span>

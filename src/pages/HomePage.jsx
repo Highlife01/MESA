@@ -277,25 +277,25 @@ export function HomePage() {
       {/* ─────────────────────────────────────────────────────────────
           2. SUPPORTED BRANDS: Bidirectional Infinite Marquee
       ───────────────────────────────────────────────────────────── */}
-      <section className="bg-white py-12 border-b border-slate-200 overflow-hidden" id="markalar">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <section className="bg-gradient-to-b from-slate-50/60 via-white to-slate-50/40 py-14 border-b border-slate-200 overflow-hidden" id="markalar">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-red-50 border border-red-200 text-[10px] font-black text-red-700 tracking-wider uppercase mb-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 border border-red-200/80 text-[11px] font-black text-red-700 tracking-wider uppercase mb-1.5 shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-ping" />
                 DÜNYA STANDARTLARINDA TEŞHİS & ÖZEL SERVİS
               </div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Yetkili Seviyede Desteklenen İş Makinası Markaları</h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                Orijinal diagnostik arayüzleri, ağır hizmet revizyonu ve garantili yedek parça desteği sunduğumuz markalar
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">Yetkili Seviyede Desteklenen İş Makinası Markaları</h2>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+                Orijinal lisanslı teşhis adaptörleri, ağır hizmet revizyonu ve garantili OEM yedek parça desteği sunduğumuz küresel markalar
               </p>
             </div>
             <Link 
               to="/markalar"
-              className="text-xs font-bold text-white flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 self-start md:self-auto transition shadow-md shadow-red-600/25"
+              className="text-xs font-bold text-white flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 self-start md:self-auto transition shadow-md shadow-red-600/25 hover:shadow-lg hover:shadow-red-600/30 shrink-0"
             >
               <span>Tüm Markaları İncele</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

@@ -10,6 +10,7 @@ import { servicesData } from '../src/data/servicesData.js';
 import { regionsData } from '../src/data/regionsData.js';
 import { guidesData } from '../src/data/guidesData.js';
 import { activeCitiesData } from '../src/data/citiesData.js';
+import { cityGeoData } from '../src/data/cityGeoData.js';
 
 const distDir = path.resolve(__dirname, '../dist');
 const templatePath = path.join(distDir, 'index.html');
@@ -21,10 +22,10 @@ if (!fs.existsSync(templatePath)) {
 
 const templateHtml = fs.readFileSync(templatePath, 'utf-8');
 
-function createPrerenderedPage(routePath, { title, description, canonical, h1, intro, schema, highlights = [] }) {
+function createPrerenderedPage(routePath, { title, description, canonical, h1, intro, schema, highlights = [], geo = null }) {
   const fullTitle = (title.includes('MESA') || title.includes(SITE_CONFIG.siteName)) ? title : `${title} | ${SITE_CONFIG.siteName}`;
   const fullUrl = `${SITE_CONFIG.siteUrl}${canonical.startsWith('/') ? canonical : `/${canonical}`}`;
-  
+
   let html = templateHtml;
 
   // Replace Title
@@ -42,6 +43,18 @@ function createPrerenderedPage(routePath, { title, description, canonical, h1, i
   // Replace Canonical & OG URL
   html = html.replace(/<link rel="canonical" href=".*?" \/>/i, `<link rel="canonical" href="${fullUrl}" />`);
   html = html.replace(/<meta property="og:url" content=".*?" \/>/i, `<meta property="og:url" content="${fullUrl}" />`);
+
+  // Replace GEO meta tags (per-city local SEO — fallback: HQ koordinatları)
+  if (geo) {
+    const geoRegion = geo.region || 'TR-01';
+    const geoPlacename = geo.placename || SITE_CONFIG.headquarters.geoPlacename || 'Seyhan, Adana';
+    const geoPosition = `${geo.latitude};${geo.longitude}`;
+    const icbm = `${geo.latitude}, ${geo.longitude}`;
+    html = html.replace(/<meta name="geo\.region" content=".*?" \/>/i, `<meta name="geo.region" content="${geoRegion}" />`);
+    html = html.replace(/<meta name="geo\.placename" content=".*?" \/>/i, `<meta name="geo.placename" content="${geoPlacename}" />`);
+    html = html.replace(/<meta name="geo\.position" content=".*?" \/>/i, `<meta name="geo.position" content="${geoPosition}" />`);
+    html = html.replace(/<meta name="ICBM" content=".*?" \/>/i, `<meta name="ICBM" content="${icbm}" />`);
+  }
 
   // Inject JSON-LD Schema
   if (schema) {
@@ -80,7 +93,7 @@ function createPrerenderedPage(routePath, { title, description, canonical, h1, i
   // Determine output directory
   const cleanRoute = routePath.replace(/^\//, '');
   const targetDir = cleanRoute ? path.join(distDir, cleanRoute) : distDir;
-  
+
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
   }
@@ -185,9 +198,10 @@ createPrerenderedPage('/sehirler', {
   }
 });
 
-// 5. 12 City SEO Landing Pages (/sehirler/:slug)
+// 5. 81 City SEO Landing Pages (/sehirler/:slug) — şehir bazlı GEO koordinatları ile
 activeCitiesData.forEach(city => {
   const canonical = `/sehirler/${city.slug}`;
+  const cityGeo = cityGeoData[city.id] || { latitude: SITE_CONFIG.headquarters.latitude, longitude: SITE_CONFIG.headquarters.longitude };
   createPrerenderedPage(canonical, {
     title: city.seoTitle,
     description: city.seoDescription,
@@ -200,6 +214,12 @@ activeCitiesData.forEach(city => {
       ...city.servicedMachinery.map(m => `${city.name} ${m} tamir ve bakım desteği`),
       `12 ay veya 2.000 çalışma saati yazılı MESA teknik servis garantisi`
     ],
+    geo: {
+      region: `TR-${city.plate}`,
+      placename: `${city.name}, Turkey`,
+      latitude: cityGeo.latitude,
+      longitude: cityGeo.longitude
+    },
     schema: {
       '@context': 'https://schema.org',
       '@graph': [
@@ -219,6 +239,11 @@ activeCitiesData.forEach(city => {
               'addressRegion': SITE_CONFIG.headquarters.city,
               'postalCode': SITE_CONFIG.headquarters.postalCode,
               'addressCountry': 'TR'
+            },
+            'geo': {
+              '@type': 'GeoCoordinates',
+              'latitude': cityGeo.latitude,
+              'longitude': cityGeo.longitude
             }
           },
           'areaServed': {

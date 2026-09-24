@@ -1,54 +1,60 @@
 import React from 'react';
 
 // Authentic, high-precision SVG brand logos for heavy construction equipment
-// Explicit width/height attributes and style prevent iOS WebKit / Safari PWA SVG collapsing bug
-export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
+// Explicit width/height attributes, generous viewBoxes, and preserveAspectRatio prevent clipping or collapsing
+export function BrandLogo({ brandId, className = 'h-8 w-auto', style = {} }) {
   const normalizedId = (brandId || '').toLowerCase().trim();
-  const commonStyle = { maxHeight: '100%', maxWidth: '100%', height: '32px', width: 'auto', display: 'block' };
+  const commonStyle = {
+    maxHeight: '100%',
+    maxWidth: '100%',
+    width: 'auto',
+    display: 'block',
+    ...style
+  };
 
   switch (normalizedId) {
     case 'caterpillar':
     case 'cat':
       return (
         <svg 
-          viewBox="0 0 140 46" 
-          width="140" 
-          height="46" 
+          viewBox="0 0 160 44" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Caterpillar CAT"
         >
-          {/* CAT Black Typography with Golden Yellow Triangle in A */}
-          <text x="2" y="36" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="42" fill="#111111" letterSpacing="-1">
-            C
-          </text>
-          {/* Letter A with Triangle */}
-          <g transform="translate(38, 0)">
-            <text x="0" y="36" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="42" fill="#111111" letterSpacing="-1">
-              A
+          {/* CAT Black Typography with Golden Yellow Triangle in A & Heavy Yellow Stripe */}
+          <g transform="translate(14, 0)">
+            <text x="2" y="33" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="38" fill="#111111" letterSpacing="-1">
+              C
             </text>
-            {/* Iconic CAT Yellow Triangle */}
-            <polygon points="12,36 28,36 20,20" fill="#FFCD00" />
+            <g transform="translate(36, 0)">
+              <text x="0" y="33" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="38" fill="#111111" letterSpacing="-1">
+                A
+              </text>
+              {/* Iconic CAT Yellow Triangle */}
+              <polygon points="10,33 26,33 18,18" fill="#FFCD00" />
+            </g>
+            <text x="72" y="33" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="38" fill="#111111" letterSpacing="-1">
+              T
+            </text>
+            <rect x="2" y="37" width="98" height="3.5" rx="1.75" fill="#FFCD00" />
           </g>
-          <text x="76" y="36" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="42" fill="#111111" letterSpacing="-1">
-            T
-          </text>
         </svg>
       );
 
     case 'jcb':
       return (
         <svg 
-          viewBox="0 0 120 46" 
-          width="120" 
-          height="46" 
+          viewBox="0 0 130 44" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="JCB"
         >
           {/* Iconic JCB Yellow Rounded Badge */}
-          <rect x="2" y="4" width="116" height="38" rx="8" fill="#F8B800" stroke="#E5A800" strokeWidth="2" />
-          <text x="60" y="33" textAnchor="middle" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="28" fill="#111111" letterSpacing="2">
+          <rect x="5" y="4" width="120" height="36" rx="8" fill="#F8B800" stroke="#E5A800" strokeWidth="1.5" />
+          <text x="65" y="31" textAnchor="middle" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="27" fill="#111111" letterSpacing="2">
             JCB
           </text>
         </svg>
@@ -57,15 +63,14 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'komatsu':
       return (
         <svg 
-          viewBox="0 0 170 38" 
-          width="170" 
-          height="38" 
+          viewBox="0 0 200 42" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Komatsu"
         >
           {/* Bold Industrial Komatsu Blue */}
-          <text x="0" y="30" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="30" fill="#005BAB" letterSpacing="0.5">
+          <text x="100" y="30" textAnchor="middle" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="28" fill="#005BAB" letterSpacing="0.8">
             KOMATSU
           </text>
         </svg>
@@ -74,21 +79,20 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'hidromek':
       return (
         <svg 
-          viewBox="0 0 180 40" 
-          width="180" 
-          height="40" 
+          viewBox="0 0 220 44" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Hidromek"
         >
           {/* HMK Red/White Emblem + Typography */}
-          <g transform="translate(0, 4)">
-            <rect x="0" y="0" width="32" height="32" rx="6" fill="#E30613" />
-            <text x="16" y="23" textAnchor="middle" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="16" fill="#FFFFFF">
+          <g transform="translate(6, 6)">
+            <rect x="0" y="0" width="32" height="32" rx="7" fill="#E30613" />
+            <text x="16" y="23" textAnchor="middle" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="17" fill="#FFFFFF">
               H
             </text>
           </g>
-          <text x="40" y="28" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="24" fill="#1E293B" letterSpacing="1">
+          <text x="48" y="29" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="22" fill="#1E293B" letterSpacing="0.8">
             HİDROMEK
           </text>
         </svg>
@@ -97,20 +101,19 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'volvo':
       return (
         <svg 
-          viewBox="0 0 150 44" 
-          width="150" 
-          height="44" 
+          viewBox="0 0 185 44" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Volvo Construction Equipment"
         >
           {/* Volvo Iron Mark Circle & Arrow */}
-          <circle cx="20" cy="22" r="15" fill="none" stroke="#64748B" strokeWidth="3.5" />
-          <line x1="28" y1="14" x2="35" y2="7" stroke="#64748B" strokeWidth="3.5" strokeLinecap="round" />
+          <circle cx="20" cy="22" r="14" fill="none" stroke="#64748B" strokeWidth="3" />
+          <line x1="28" y1="14" x2="35" y2="7" stroke="#64748B" strokeWidth="3" strokeLinecap="round" />
           <polygon points="37,5 29,6 36,13" fill="#64748B" />
           {/* Volvo Blue Bar */}
-          <rect x="44" y="9" width="102" height="26" rx="4" fill="#003057" />
-          <text x="95" y="27" textAnchor="middle" fontFamily="Georgia, serif" fontWeight="bold" fontSize="16" fill="#FFFFFF" letterSpacing="4">
+          <rect x="46" y="9" width="130" height="26" rx="4" fill="#003057" />
+          <text x="111" y="27" textAnchor="middle" fontFamily="Georgia, serif" fontWeight="bold" fontSize="15" fill="#FFFFFF" letterSpacing="4">
             VOLVO
           </text>
         </svg>
@@ -119,16 +122,15 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'manitou':
       return (
         <svg 
-          viewBox="0 0 160 38" 
-          width="160" 
-          height="38" 
+          viewBox="0 0 195 44" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Manitou"
         >
           {/* Red curved bracket and bold Manitou */}
-          <path d="M4 8 Q18 2 32 8 Q24 24 16 32 Q4 22 4 8" fill="#E30613" />
-          <text x="40" y="28" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="24" fill="#1E293B" letterSpacing="1">
+          <path d="M6 10 Q20 4 32 10 Q24 26 16 34 Q6 24 6 10 Z" fill="#E30613" />
+          <text x="44" y="29" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="22" fill="#1E293B" letterSpacing="0.8">
             MANITOU
           </text>
         </svg>
@@ -137,14 +139,13 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'hitachi':
       return (
         <svg 
-          viewBox="0 0 160 38" 
-          width="160" 
-          height="38" 
+          viewBox="0 0 180 42" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Hitachi"
         >
-          <text x="0" y="27" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="25" fill="#E60012" letterSpacing="0.5">
+          <text x="90" y="29" textAnchor="middle" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="26" fill="#E60012" letterSpacing="1">
             HITACHI
           </text>
         </svg>
@@ -153,21 +154,20 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'bobcat':
       return (
         <svg 
-          viewBox="0 0 150 42" 
-          width="150" 
-          height="42" 
+          viewBox="0 0 175 44" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Bobcat"
         >
           {/* Bobcat Lynx Icon + Text */}
-          <g transform="translate(0, 3)">
-            <rect x="0" y="0" width="36" height="34" rx="8" fill="#E31837" />
-            <path d="M10 24 L18 10 L26 24 Z" fill="#FFFFFF" />
-            <circle cx="15" cy="18" r="1.5" fill="#E31837" />
-            <circle cx="21" cy="18" r="1.5" fill="#E31837" />
+          <g transform="translate(6, 6)">
+            <rect x="0" y="0" width="32" height="32" rx="7" fill="#E31837" />
+            <path d="M9 22 L16 10 L23 22 Z" fill="#FFFFFF" />
+            <circle cx="13" cy="17" r="1.5" fill="#E31837" />
+            <circle cx="19" cy="17" r="1.5" fill="#E31837" />
           </g>
-          <text x="44" y="28" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="23" fill="#1E293B" letterSpacing="0.5">
+          <text x="48" y="29" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="23" fill="#1E293B" letterSpacing="0.5">
             Bobcat
           </text>
         </svg>
@@ -176,15 +176,14 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'liebherr':
       return (
         <svg 
-          viewBox="0 0 160 36" 
-          width="160" 
-          height="36" 
+          viewBox="0 0 190 42" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Liebherr"
         >
           {/* Iconic Bold Liebherr font */}
-          <text x="0" y="26" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="24" fill="#1E293B" letterSpacing="1.5">
+          <text x="95" y="29" textAnchor="middle" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="24" fill="#1E293B" letterSpacing="1.2">
             LIEBHERR
           </text>
         </svg>
@@ -193,20 +192,19 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'merlo':
       return (
         <svg 
-          viewBox="0 0 140 38" 
-          width="140" 
-          height="38" 
+          viewBox="0 0 165 44" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Merlo"
         >
-          <g transform="translate(0, 5)">
-            <rect x="0" y="0" width="28" height="28" rx="6" fill="#008D46" />
-            <text x="14" y="20" textAnchor="middle" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="16" fill="#FFFFFF">
+          <g transform="translate(6, 6)">
+            <rect x="0" y="0" width="32" height="32" rx="7" fill="#008D46" />
+            <text x="16" y="23" textAnchor="middle" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="17" fill="#FFFFFF">
               M
             </text>
           </g>
-          <text x="36" y="27" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="22" fill="#1E293B" letterSpacing="1">
+          <text x="48" y="29" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="22" fill="#1E293B" letterSpacing="1">
             MERLO
           </text>
         </svg>
@@ -215,17 +213,16 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'hyundai':
       return (
         <svg 
-          viewBox="0 0 160 38" 
-          width="160" 
-          height="38" 
+          viewBox="0 0 190 44" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Hyundai Construction Equipment"
         >
           {/* Tilted oval H and Hyundai */}
-          <ellipse cx="18" cy="19" rx="14" ry="12" fill="none" stroke="#002C5F" strokeWidth="3" transform="rotate(-15 18 19)" />
-          <path d="M12 14 L12 24 M24 14 L24 24 M12 19 L24 19" stroke="#002C5F" strokeWidth="3" strokeLinecap="round" transform="rotate(-15 18 19)" />
-          <text x="40" y="27" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="21" fill="#002C5F" letterSpacing="0.5">
+          <ellipse cx="22" cy="22" rx="14" ry="12" fill="none" stroke="#002C5F" strokeWidth="2.8" transform="rotate(-15 22 22)" />
+          <path d="M16 17 L16 27 M28 17 L28 27 M16 22 L28 22" stroke="#002C5F" strokeWidth="2.8" strokeLinecap="round" transform="rotate(-15 22 22)" />
+          <text x="48" y="29" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="21" fill="#002C5F" letterSpacing="0.8">
             HYUNDAI
           </text>
         </svg>
@@ -234,16 +231,15 @@ export function BrandLogo({ brandId, className = 'h-8 w-auto' }) {
     case 'case':
       return (
         <svg 
-          viewBox="0 0 130 38" 
-          width="130" 
-          height="38" 
+          viewBox="0 0 145 44" 
           className={className} 
           style={commonStyle}
+          preserveAspectRatio="xMidYMid meet"
           aria-label="Case Construction Equipment"
         >
           {/* Red oval with bold CASE */}
-          <rect x="0" y="3" width="124" height="32" rx="16" fill="#C41230" />
-          <text x="62" y="25" textAnchor="middle" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="20" fill="#FFFFFF" letterSpacing="1.5">
+          <rect x="6" y="5" width="133" height="34" rx="17" fill="#C41230" />
+          <text x="72" y="29" textAnchor="middle" fontFamily="Arial Black, Impact, sans-serif" fontWeight="900" fontSize="22" fill="#FFFFFF" letterSpacing="2">
             CASE
           </text>
         </svg>

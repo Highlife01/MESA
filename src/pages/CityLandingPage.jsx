@@ -3,10 +3,11 @@ import { useParams, Link } from '../router/Router';
 import { SEO } from '../components/SEO';
 import { SITE_CONFIG } from '../config/siteConfig';
 import { getCityBySlug, activeCitiesData } from '../data/citiesData';
+import { cityGeoData } from '../data/cityGeoData';
 import { LocationShareButton } from '../components/LocationShareButton';
-import { 
-  Wrench, ShieldCheck, Clock, MapPin, Phone, MessageSquare, 
-  ChevronRight, ArrowRight, HelpCircle, CheckCircle2, 
+import {
+  Wrench, ShieldCheck, Clock, MapPin, Phone, MessageSquare,
+  ChevronRight, ArrowRight, HelpCircle, CheckCircle2,
   Settings, Truck, AlertTriangle, FileText, Camera, Navigation
 } from 'lucide-react';
 
@@ -35,6 +36,10 @@ export function CityLandingPage() {
   };
 
   const canonicalUrl = `/sehirler/${currentCity.slug}`;
+  const cityGeo = cityGeoData[currentCity.id] || {
+    latitude: SITE_CONFIG.headquarters.latitude,
+    longitude: SITE_CONFIG.headquarters.longitude
+  };
 
   // Google E-E-A-T uyumlu Schema (Sahte ofis yok, Service + BreadcrumbList + FAQPage)
   const structuredData = {
@@ -59,6 +64,11 @@ export function CityLandingPage() {
             'addressRegion': SITE_CONFIG.headquarters.city,
             'postalCode': SITE_CONFIG.headquarters.postalCode,
             'addressCountry': 'TR'
+          },
+          'geo': {
+            '@type': 'GeoCoordinates',
+            'latitude': cityGeo.latitude,
+            'longitude': cityGeo.longitude
           }
         },
         'areaServed': {
@@ -135,7 +145,9 @@ export function CityLandingPage() {
         breadcrumbs={breadcrumbs}
         geo={{
           region: `TR-${currentCity.plate}`,
-          placename: `${currentCity.name}, Turkey`
+          placename: `${currentCity.name}, Turkey`,
+          position: `${cityGeo.latitude};${cityGeo.longitude}`,
+          icbm: `${cityGeo.latitude}, ${cityGeo.longitude}`
         }}
       />
 
@@ -153,14 +165,19 @@ export function CityLandingPage() {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:16px_16px]" />
+        <div className="absolute -top-28 -right-24 w-[26rem] h-[26rem] rounded-full bg-red-600/15 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 left-1/4 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-600/20 text-red-400 border border-red-500/30 text-xs font-bold uppercase tracking-wider mb-4">
               <MapPin className="w-3.5 h-3.5" />
               <span>{currentCity.regionName} • {currentCity.name} Mobil Saha Servisi</span>
+              <span className="px-1.5 py-0.5 rounded-md bg-white/10 border border-white/15 text-[10px] leading-none tracking-normal text-slate-200">{currentCity.plate}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-6 leading-tight">
+            <div className="w-14 h-1.5 rounded-full bg-gradient-to-r from-red-600 via-red-500 to-amber-500 mb-5" />
+
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-6 leading-tight [text-wrap:balance]">
               {currentCity.h1}
             </h1>
 
@@ -198,19 +215,19 @@ export function CityLandingPage() {
             </div>
 
             {/* Key Trust Signals */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-6 border-t border-white/10 text-xs text-slate-300">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-wrap gap-2 pt-6 border-t border-white/10">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 hover:bg-white/10 hover:border-white/20 transition-colors">
                 <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                 <span>12 Ay Garanti</span>
-              </div>
-              <div className="flex items-center gap-2">
+              </span>
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 hover:bg-white/10 hover:border-white/20 transition-colors">
                 <Truck className="w-4 h-4 text-amber-400 flex-shrink-0" />
                 <span>Mobil Donanımlı Filo</span>
-              </div>
-              <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
+              </span>
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 hover:bg-white/10 hover:border-white/20 transition-colors">
                 <Clock className="w-4 h-4 text-red-400 flex-shrink-0" />
                 <span>Hızlı Saha Müdahalesi</span>
-              </div>
+              </span>
             </div>
           </div>
         </div>
@@ -579,24 +596,28 @@ export function CityLandingPage() {
               return (
                 <div
                   key={index}
-                  className="bg-white border border-slate-200 rounded-2xl overflow-hidden transition-all shadow-sm"
+                  className={`bg-white border rounded-2xl overflow-hidden transition-all duration-200 shadow-sm ${isOpen ? 'border-red-200 shadow-md shadow-red-600/5' : 'border-slate-200'}`}
                 >
                   <button
                     onClick={() => toggleFaq(index)}
-                    className="w-full text-left px-6 py-4 flex items-center justify-between gap-4 font-bold text-slate-900 text-sm hover:text-red-600 transition-colors"
+                    aria-expanded={isOpen}
+                    className="w-full text-left px-6 py-4 flex items-center justify-between gap-4 font-bold text-slate-900 text-sm hover:text-red-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/60 rounded-2xl"
                   >
                     <span>{item.q}</span>
                     <ChevronRight
-                      className={`w-4 h-4 text-slate-400 transition-transform duration-200 flex-shrink-0 ${
-                        isOpen ? 'rotate-90 text-red-600' : ''
-                      }`}
+                      className={`w-4 h-4 text-slate-400 transition-transform duration-300 ease-out flex-shrink-0 ${isOpen ? 'rotate-90 text-red-600' : ''
+                        }`}
                     />
                   </button>
-                  {isOpen && (
-                    <div className="px-6 pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
-                      {item.a}
+                  <div
+                    className={`grid transition-[grid-template-rows] duration-300 ease-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                  >
+                    <div className="overflow-hidden">
+                      <div className={`px-6 pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50 ${isOpen ? 'animate-fadeIn' : ''}`}>
+                        {item.a}
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })}

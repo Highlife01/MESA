@@ -12,6 +12,18 @@
     color: #0f172a;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+
+  /* Klavye erişilebilirliği: tutarlı, marka renkli odak halkası */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(220, 38, 38, 0.55);
+    border-radius: 8px;
+  }
 }
 
 /* ══════ Clean Modern Scrollbar ══════ */
