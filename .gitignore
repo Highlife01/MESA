@@ -8,3 +8,4 @@ dist-ssr
 .DS_Store
 Thumbs.db
 tmp/
+server/data.json

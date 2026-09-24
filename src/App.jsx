@@ -27,6 +27,7 @@ const ServiceTrackingPage = lazy(() => import('./pages/ServiceTrackingPage').the
 const GuidesPage = lazy(() => import('./pages/GuidesPage').then(m => ({ default: m.GuidesPage })));
 const GuideDetailPage = lazy(() => import('./pages/GuideDetailPage').then(m => ({ default: m.GuideDetailPage })));
 const CustomerPortalPage = lazy(() => import('./pages/CustomerPortalPage').then(m => ({ default: m.CustomerPortalPage })));
+const MachinePassportPage = lazy(() => import('./pages/MachinePassportPage').then(m => ({ default: m.MachinePassportPage })));
 const TechnicianPage = lazy(() => import('./pages/TechnicianPage').then(m => ({ default: m.TechnicianPage })));
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const FaultDiagnosticPage = lazy(() => import('./pages/FaultDiagnosticPage').then(m => ({ default: m.FaultDiagnosticPage })));
@@ -149,6 +150,7 @@ export function App() {
                       <Route path="/iletisim" element={<PageTransition><ContactPage /></PageTransition>} />
                       <Route path="/ariza-bildir" element={<PageTransition><EmergencyWizardPage /></PageTransition>} />
                       <Route path="/servis-takip" element={<PageTransition><ServiceTrackingPage /></PageTransition>} />
+                      <Route path="/m/:token" element={<PageTransition><MachinePassportPage /></PageTransition>} />
                       <Route path="/musteri-portali" element={<PageTransition><CustomerPortalPage /></PageTransition>} />
                       <Route path="/teknisyen" element={<PageTransition><TechnicianPage /></PageTransition>} />
                       <Route path="/panel" element={<PageTransition><DashboardPage /></PageTransition>} />

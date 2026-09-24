@@ -5,6 +5,10 @@ Disallow: /yonetim
 Disallow: /teknisyen
 Disallow: /admin
 Disallow: /login
+Disallow: /musteri-portali
+Disallow: /m/
+Disallow: /servis-takip
+Disallow: /ariza-bildir
 
 Sitemap: https://www.mesaismakineleri.com.tr/sitemap.xml
 Sitemap: https://www.mesaismakineleri.com.tr/sitemap-pages.xml

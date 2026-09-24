@@ -144,3 +144,47 @@ firebase deploy --only hosting
 
 ---
 *© 2026 MESA İş Makinaları. Tüm Hakları Saklıdır.*
+
+## 🔐 Gelişmiş Operasyon API'si
+
+Proje artık statik arayüzün yanında çalıştırılabilir bir Node.js API katmanı da içerir. API; tenant izolasyonu, rol tabanlı erişim, MFA, güvenli QR makine özeti, QR'dan servis talebi, iş emri durum makinesi, zorunlu servis kanıtları, stok hareketleri, QR token rotasyonu ve audit log uçlarını sağlar.
+
+### API'yi yerelde çalıştırma
+
+```bash
+cp .env.example .env
+# .env içinde MESA_ADMIN_PASSWORD değerini güçlü bir parola ile değiştirin
+npm run api
+```
+
+API varsayılan olarak `http://localhost:8787` adresinde çalışır. Frontend'in API'ye bağlanması için `VITE_API_BASE=http://localhost:8787` kullanılır. Yönetici girişi iki aşamalıdır; demo MFA kodu `123456` olarak tanımlıdır ve gerçek ortamda TOTP/SMS sağlayıcısıyla değiştirilmelidir.
+
+### Otomatik kabul testleri
+
+```bash
+npm run test:api
+npm run build
+```
+
+Kabul testleri; QR kamu görünümünün hassas veri döndürmediğini, oturumsuz portalın engellendiğini, MFA akışını, tenant kapsamlı makine listesini, makine servis geçmişini ve QR servis talebi oluşturmayı doğrular.
+
+### API modülleri
+
+- `GET /api/public/machines/:token/summary`: Hassas veri içermeyen kamu QR görünümü.
+- `POST /api/public/machines/:token/service-requests`: QR üzerinden rate-limit uygulanabilir servis talebi.
+- `POST /api/auth/login` ve `POST /api/auth/mfa/verify`: MFA destekli oturum.
+- `GET /api/portal/machines` ve `GET /api/portal/machines/:id/history`: Tenant ve rol kontrollü müşteri verisi.
+- `POST /api/work-orders/:id/transitions`: Kontrollü iş emri durum geçişi.
+- `POST /api/work-orders/:id/evidence`: Arıza, işlem, parça, test, sayaç, fotoğraf ve imza kanıtları.
+- `POST /api/inventory/parts/:id/movements`: Atomik stok hareketi.
+- `POST /api/admin/machines/:id/qr/rotate`: Eski QR tokenını geçersiz kılıp yenisini üretme.
+- `GET /api/admin/audit`: Yetkili audit olayları.
+
+### Üretim uyarısı
+
+Yerel JSON repository geliştirme ve demo içindir. Üretimde `server/index.js` içindeki repository Firestore/PostgreSQL gibi kalıcı bir veritabanına taşınmalı; parola hashleme Argon2id/bcrypt, gerçek TOTP MFA, Redis rate limit, object storage ve malware taraması eklenmelidir. Firebase Hosting tek başına Node API çalıştırmaz; API, Cloud Run/Functions veya ayrı bir Node sunucusunda yayınlanmalı ve `VITE_API_BASE` bu HTTPS adresine yönlendirilmelidir. Gerçek müşteri verisi, sunucu tarafı tenant yetkilendirmesi tamamlanmadan sisteme alınmamalıdır.
+
+Ayrıntılı domain modeli, tehdit modeli, API sınırı ve kabul testleri: [`docs/advanced-service-platform-blueprint.md`](docs/advanced-service-platform-blueprint.md)
+
+---
+*© 2026 MESA İş Makinaları. Tüm Hakları Saklıdır.*

@@ -17,6 +17,7 @@ import { FinanceTab } from '../components/dashboard/tabs/FinanceTab';
 import { FleetTab } from '../components/dashboard/tabs/FleetTab';
 import { PartsTab } from '../components/dashboard/tabs/PartsTab';
 import { AdminTab } from '../components/dashboard/tabs/AdminTab';
+import { AuditTab } from '../components/dashboard/tabs/AuditTab';
 
 // Modals
 import { EmergencyBroadcastModal } from '../components/dashboard/modals/EmergencyBroadcastModal';
@@ -29,17 +30,17 @@ import { CollectReceivableModal } from '../components/dashboard/modals/CollectRe
 import { MachineQrModal } from '../components/dashboard/modals/MachineQrModal';
 
 export function DashboardPage() {
-  const { 
-    activeOrders, partsOrders, updateOrderStatus, updatePartsOrderStatus, unreadAlertsCount, 
-    liveJobs, createEmergencyJob, deleteJob, deletePartsOrder, showToast 
+  const {
+    activeOrders, partsOrders, updateOrderStatus, updatePartsOrderStatus, unreadAlertsCount,
+    liveJobs, createEmergencyJob, deleteJob, deletePartsOrder, showToast, auditLogs
   } = useOperational();
-  const { user, isSuperAdmin, logout } = useAuth();
+  const { user, isSuperAdmin, isFinance, hasPermission, logout } = useAuth();
 
   // Route Guard: Deny unauthenticated access
   if (!user || !isSuperAdmin) {
     return (
       <div className="min-h-[85vh] flex items-center justify-center px-4 py-16 bg-slate-100">
-        <SEO 
+        <SEO
           title="Erişim Kısıtlandı | MESA ERP"
           description="MESA ERP Operasyon Merkezi için Süper Admin girişi zorunludur."
         />
@@ -94,65 +95,65 @@ export function DashboardPage() {
   const [chequeSearch, setChequeSearch] = useState('');
 
   const [cheques, setCheques] = useState([
-    { 
-      id: 'CK-90421', 
-      drawer: 'Kaya Hafriyat & Taş Ocağı Ltd.', 
-      bank: 'Garanti BBVA - Adana Çarşı', 
-      dueDate: '2026-09-25', 
-      amount: 245000, 
-      status: 'Portföyde', 
-      machine: 'CAT 320D Paletli Ekskavatör', 
-      desc: 'Ana hidrolik pompa revizyonu ve cer redüktör dişli seti' 
+    {
+      id: 'CK-90421',
+      drawer: 'Kaya Hafriyat & Taş Ocağı Ltd.',
+      bank: 'Garanti BBVA - Adana Çarşı',
+      dueDate: '2026-09-25',
+      amount: 245000,
+      status: 'Portföyde',
+      machine: 'CAT 320D Paletli Ekskavatör',
+      desc: 'Ana hidrolik pompa revizyonu ve cer redüktör dişli seti'
     },
-    { 
-      id: 'CK-88120', 
-      drawer: 'Çukurova Beton & Agrega A.Ş.', 
-      bank: 'Ziraat Bankası - Ceyhan', 
-      dueDate: '2026-10-05', 
-      amount: 185000, 
-      status: 'Tahsilde', 
-      machine: 'JCB 3CX Eco Kazıcı Yükleyici', 
-      desc: 'Powershift şanzıman revizyonu ve kavrama diskleri' 
+    {
+      id: 'CK-88120',
+      drawer: 'Çukurova Beton & Agrega A.Ş.',
+      bank: 'Ziraat Bankası - Ceyhan',
+      dueDate: '2026-10-05',
+      amount: 185000,
+      status: 'Tahsilde',
+      machine: 'JCB 3CX Eco Kazıcı Yükleyici',
+      desc: 'Powershift şanzıman revizyonu ve kavrama diskleri'
     },
-    { 
-      id: 'CK-76412', 
-      drawer: 'Özdemir Madencilik A.Ş.', 
-      bank: 'İş Bankası - Seyhan', 
-      dueDate: '2026-10-20', 
-      amount: 350000, 
-      status: 'Portföyde', 
-      machine: 'Hidromek HMK 220LC', 
-      desc: 'Isuzu motor rektifiye ve bom silindir borwerk revizyonu' 
+    {
+      id: 'CK-76412',
+      drawer: 'Özdemir Madencilik A.Ş.',
+      bank: 'İş Bankası - Seyhan',
+      dueDate: '2026-10-20',
+      amount: 350000,
+      status: 'Portföyde',
+      machine: 'Hidromek HMK 220LC',
+      desc: 'Isuzu motor rektifiye ve bom silindir borwerk revizyonu'
     },
-    { 
-      id: 'CK-65239', 
-      drawer: 'Toroslar Altyapı & Yol İnşaat', 
-      bank: 'Akbank - Adana Ticari Şube', 
-      dueDate: '2026-09-20', 
-      amount: 420000, 
-      status: 'Portföyde', 
-      machine: 'Volvo EC210D Ekskavatör', 
-      desc: 'Dağıtıcı hidrolik kumanda bloğu ve pilot selenoid takımı' 
+    {
+      id: 'CK-65239',
+      drawer: 'Toroslar Altyapı & Yol İnşaat',
+      bank: 'Akbank - Adana Ticari Şube',
+      dueDate: '2026-09-20',
+      amount: 420000,
+      status: 'Portföyde',
+      machine: 'Volvo EC210D Ekskavatör',
+      desc: 'Dağıtıcı hidrolik kumanda bloğu ve pilot selenoid takımı'
     },
-    { 
-      id: 'CK-54190', 
-      drawer: 'Seyhan Kum & Çakıl İşletmesi', 
-      bank: 'Halkbank - Yüreğir', 
-      dueDate: '2026-09-05', 
-      amount: 160000, 
-      status: 'Tahsil Edildi', 
-      machine: 'Bobcat S530 Mini Yükleyici', 
-      desc: 'Tandem hidrostatik yürüyüş pompası ve zincir kutusu bakımı' 
+    {
+      id: 'CK-54190',
+      drawer: 'Seyhan Kum & Çakıl İşletmesi',
+      bank: 'Halkbank - Yüreğir',
+      dueDate: '2026-09-05',
+      amount: 160000,
+      status: 'Tahsil Edildi',
+      machine: 'Bobcat S530 Mini Yükleyici',
+      desc: 'Tandem hidrostatik yürüyüş pompası ve zincir kutusu bakımı'
     },
-    { 
-      id: 'CK-43288', 
-      drawer: 'Akdeniz Mermer & Taş Sanayi', 
-      bank: 'Yapı Kredi - Mersin Serbest Bölge', 
-      dueDate: '2026-11-10', 
-      amount: 480000, 
-      status: 'Portföyde', 
-      machine: 'Liebherr R934 Maden Makinası', 
-      desc: 'Kule dönüş redüktörü ve hidrolik piston grubu revizyonu' 
+    {
+      id: 'CK-43288',
+      drawer: 'Akdeniz Mermer & Taş Sanayi',
+      bank: 'Yapı Kredi - Mersin Serbest Bölge',
+      dueDate: '2026-11-10',
+      amount: 480000,
+      status: 'Portföyde',
+      machine: 'Liebherr R934 Maden Makinası',
+      desc: 'Kule dönüş redüktörü ve hidrolik piston grubu revizyonu'
     }
   ]);
 
@@ -221,14 +222,15 @@ export function DashboardPage() {
   }, [receivables]);
 
   // Technicians & Telemetry Fleet Dataset
-  const [newTechForm, setNewTechForm] = useState({ 
-    name: '', vehicle: '', specialty: 'Hidrolik & Bom Tamiri', phone: '0534 407 55 85', location: 'Adana Merkez' 
+  const [newTechForm, setNewTechForm] = useState({
+    name: '', vehicle: '', specialty: 'Hidrolik & Bom Tamiri', phone: '0534 407 55 85', location: 'Adana Merkez'
   });
   const [extraTechs, setExtraTechs] = useState([]);
 
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrForm, setQrForm] = useState({
     machine: 'CAT 320D Paletli Ekskavatör',
+    token: 'mch_8f4c21a7',
     chassis: 'CAT0320DV99841',
     customer: 'Kaya Hafriyat & Madencilik Ltd.',
     location: 'Ceyhan Taş Ocağı Şantiyesi',
@@ -580,7 +582,7 @@ export function DashboardPage() {
         {/* Super Admin Command Banner */}
         <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 -mt-10 -mr-10 w-56 h-56 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
-          
+
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-red-600/20 shrink-0 border border-red-500/30">
@@ -730,26 +732,25 @@ export function DashboardPage() {
         <div className="flex items-center gap-1.5 p-1.5 bg-white border border-slate-200 rounded-2xl w-fit flex-wrap shadow-sm">
           {[
             { id: 'operations', label: 'Saha Operasyonları', icon: Activity, count: activeOrders.length },
-            { id: 'finance', label: 'Muhasebe & Finans', icon: Wallet, highlight: true, count: cheques.filter(c => c.status !== 'Tahsil Edildi').length },
+            { id: 'finance', label: 'Muhasebe & Finans', icon: Wallet, highlight: true, count: cheques.filter(c => c.status !== 'Tahsil Edildi').length, restricted: !isFinance },
             { id: 'fleet', label: 'Filo Telematik', icon: Truck, count: fleetVehicles.length + extraTechs.length },
             { id: 'parts', label: 'Yedek Parça Siparişleri', icon: Package, count: partsOrders.length },
+            { id: 'audit', label: 'Denetim Merkezi', icon: ShieldCheck, count: auditLogs.length },
             { id: 'admin', label: 'Süper Admin Yönetimi', icon: Crown },
-          ].map(tab => (
+          ].filter(tab => !tab.restricted).map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
-                activeTab === tab.id
-                  ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-md shadow-red-600/30'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${activeTab === tab.id
+                ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-md shadow-red-600/30'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
             >
               <tab.icon className="w-3.5 h-3.5" />
               <span>{tab.label}</span>
               {tab.count !== undefined && (
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
-                  activeTab === tab.id ? 'bg-black/20 text-white' : 'bg-slate-100 text-slate-600'
-                }`}>
+                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${activeTab === tab.id ? 'bg-black/20 text-white' : 'bg-slate-100 text-slate-600'
+                  }`}>
                   {tab.count}
                 </span>
               )}
@@ -828,7 +829,10 @@ export function DashboardPage() {
           />
         )}
 
-        {/* Tab 5: Admin */}
+        {/* Tab 5: Audit Center (append-only security log) */}
+        {activeTab === 'audit' && <AuditTab />}
+
+        {/* Tab 6: Admin */}
         {activeTab === 'admin' && (
           <AdminTab
             user={user}
