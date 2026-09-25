@@ -1,0 +1,175 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function staff() {
+      return signedIn() && request.auth.token.get('mesaRole', '') in ['admin', 'technician'];
+    }
+    function admin() {
+      return signedIn() && request.auth.token.get('mesaRole', '') == 'admin';
+    }
+    function text(value, maximum) { return value is string && value.size() <= maximum; }
+    function requiredText(value, maximum) { return text(value, maximum) && value.size() > 0; }
+    function optionalText(value, maximum) { return value == null || text(value, maximum); }
+    function signature(value) {
+      return value == null || (value is string && value.size() <= 150000
+        && value.matches('data:image/png;base64,[A-Za-z0-9+/]+={0,2}'));
+    }
+    function code(value, prefix) {
+      return value is string && value.matches(prefix + '-[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}');
+    }
+    function validStatus(d) {
+      return (d.status == 'Talep Alındı' && d.stepIndex == 0)
+        || (d.status == 'Atandı' && d.stepIndex == 1)
+        || (d.status == 'Mobil Ekip Yolda' && d.stepIndex == 2)
+        || (d.status in ['Şantiyede', 'Teşhiste'] && d.stepIndex == 3)
+        || (d.status == 'Onarımda' && d.stepIndex == 4)
+        || (d.status == 'Tamamlandı' && d.stepIndex == 5);
+    }
+    function validUsedPart(part) {
+      let quantity = part.qty;
+      let name = part.name;
+      return quantity is int && quantity >= 1 && quantity <= 999
+        && name is string && name.size() > 0 && name.size() <= 240
+        && part == { 'name': name, 'qty': quantity };
+    }
+    function validUsedParts(parts) {
+      let count = parts.size();
+      return parts is list && count <= 20
+        && (count <= 0 || validUsedPart(parts[0]))
+        && (count <= 1 || validUsedPart(parts[1]))
+        && (count <= 2 || validUsedPart(parts[2]))
+        && (count <= 3 || validUsedPart(parts[3]))
+        && (count <= 4 || validUsedPart(parts[4]))
+        && (count <= 5 || validUsedPart(parts[5]))
+        && (count <= 6 || validUsedPart(parts[6]))
+        && (count <= 7 || validUsedPart(parts[7]))
+        && (count <= 8 || validUsedPart(parts[8]))
+        && (count <= 9 || validUsedPart(parts[9]))
+        && (count <= 10 || validUsedPart(parts[10]))
+        && (count <= 11 || validUsedPart(parts[11]))
+        && (count <= 12 || validUsedPart(parts[12]))
+        && (count <= 13 || validUsedPart(parts[13]))
+        && (count <= 14 || validUsedPart(parts[14]))
+        && (count <= 15 || validUsedPart(parts[15]))
+        && (count <= 16 || validUsedPart(parts[16]))
+        && (count <= 17 || validUsedPart(parts[17]))
+        && (count <= 18 || validUsedPart(parts[18]))
+        && (count <= 19 || validUsedPart(parts[19]));
+    }
+    function validJob(d, documentId) {
+      return d.keys().hasOnly(['id', 'code', 'ownerUid', 'customer', 'phone', 'machine', 'issue',
+          'location', 'status', 'stepIndex', 'assignedTechnician', 'vehicle', 'techDistance',
+          'etaMinutes', 'createdAt', 'updatedAt', 'partsUsed', 'cost', 'supervisorSignature',
+          'technicianSignature', 'signerName', 'signerRole', 'technicianNotes'])
+        && code(d.code, 'MS') && d.id == documentId && d.code == documentId
+        && requiredText(d.ownerUid, 128)
+        && requiredText(d.customer, 160) && requiredText(d.phone, 40)
+        && requiredText(d.machine, 240) && requiredText(d.issue, 4000)
+        && requiredText(d.location, 2000) && validStatus(d)
+        && optionalText(d.assignedTechnician, 160) && optionalText(d.vehicle, 160)
+        && optionalText(d.techDistance, 80)
+        && (d.etaMinutes == null || (d.etaMinutes is int && d.etaMinutes >= 0 && d.etaMinutes <= 10080))
+        && d.createdAt is timestamp && d.updatedAt is timestamp
+        && validUsedParts(d.partsUsed)
+        && d.cost is number && d.cost >= 0 && d.cost <= 1000000000
+        && signature(d.supervisorSignature) && signature(d.technicianSignature)
+        && text(d.signerName, 160) && text(d.signerRole, 160) && text(d.technicianNotes, 4000);
+    }
+    match /mesaJobs/{documentId} {
+      allow read: if signedIn() && (staff() || resource.data.ownerUid == request.auth.uid);
+      allow create: if signedIn() && validJob(request.resource.data, documentId)
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.status == 'Talep Alındı'
+        && request.resource.data.assignedTechnician == null
+        && request.resource.data.vehicle == null && request.resource.data.techDistance == null
+        && request.resource.data.etaMinutes == null && request.resource.data.partsUsed.size() == 0
+        && request.resource.data.cost == 0 && request.resource.data.supervisorSignature == null
+        && request.resource.data.technicianSignature == null
+        && request.resource.data.signerName == '' && request.resource.data.signerRole == ''
+        && request.resource.data.technicianNotes == '';
+      allow update: if staff() && validJob(request.resource.data, documentId)
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status', 'stepIndex', 'assignedTechnician', 'vehicle', 'techDistance', 'etaMinutes',
+          'partsUsed', 'cost', 'supervisorSignature', 'technicianSignature', 'signerName',
+          'signerRole', 'technicianNotes', 'updatedAt'])
+        && (request.resource.data.supervisorSignature == null || request.resource.data.status == 'Tamamlandı')
+        && (request.resource.data.technicianSignature == null || request.resource.data.status == 'Tamamlandı')
+        && (resource.data.supervisorSignature == null
+          || !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+            'supervisorSignature', 'signerName', 'signerRole', 'technicianNotes', 'partsUsed']))
+        && (resource.data.technicianSignature == null
+          || request.resource.data.technicianSignature == resource.data.technicianSignature);
+      allow delete: if admin();
+    }
+
+    // This price list follows src/data/partsCatalogData.js. Deploy price changes together.
+    function productCatalog() {
+      return {
+        'PRT-101': ['JCB Orijinal Hidrolik Dönüş Filtresi', '32/925682', 1850],
+        'PRT-102': ['CAT Orijinal Yakıt Su Ayırıcı Filtre Kiti', '1R-0770 / 1R-0751', 2450],
+        'PRT-103': ['4SP 4 Telli Çelik Zırhlı Hidrolik Hortum (1" Metre)', 'PRK-4SP-16', 850],
+        'PRT-104': ['Mobil DTE 25 Ağır Hizmet Hidrolik Yağı (208 Lt Varil)', 'MOBIL-DTE-25-VG46', 19800],
+        'PRT-105': ['CAT C7.1 Common-Rail Enjektör (Sıfır OEM)', 'CAT-387-9433', 23500],
+        'PRT-106': ['Komatsu PC200 Cer Redüktör Floating Keçe Takımı', 'KM-203-27-41120', 5200],
+        'PRT-107': ['Montabert SC-36 Kırıcı Azot Diyafram Membranı', 'MTB-862214', 7200],
+        'PRT-108': ['Kawasaki K3V112DT Pompa Rotary Revizyon Kiti', 'KW-K3V112-ROTARY', 38500]
+      };
+    }
+    function validItem(item, products) {
+      let quantity = item.quantity;
+      let product = products[item.id];
+      return quantity is int && quantity >= 1 && quantity <= 999
+        && item == { 'id': item.id, 'name': product[0], 'oem': product[1], 'price': product[2], 'quantity': quantity };
+    }
+    function validItemAt(items, i, products) {
+      return items.size() <= i || validItem(items[i], products);
+    }
+    function itemAmount(items, i) {
+      return items.size() <= i ? 0 : items[i].price * items[i].quantity;
+    }
+    function validItems(items, total) {
+      let products = productCatalog();
+      return items is list && items.size() >= 1 && items.size() <= 8
+        && validItemAt(items, 0, products)
+        && validItemAt(items, 1, products)
+        && validItemAt(items, 2, products)
+        && validItemAt(items, 3, products)
+        && validItemAt(items, 4, products)
+        && validItemAt(items, 5, products)
+        && validItemAt(items, 6, products)
+        && validItemAt(items, 7, products)
+        && total is number && total >= 0 && total <= 1000000000
+        && total == itemAmount(items, 0) + itemAmount(items, 1) + itemAmount(items, 2) + itemAmount(items, 3) + itemAmount(items, 4) + itemAmount(items, 5) + itemAmount(items, 6) + itemAmount(items, 7);
+    }
+    function validOrder(d, documentId) {
+      return d.keys().hasOnly(['orderCode', 'ownerUid', 'customerName', 'companyName', 'phone',
+          'taxNo', 'items', 'total', 'address', 'notes', 'status', 'createdAt', 'updatedAt'])
+        && code(d.orderCode, 'SP') && d.orderCode == documentId && requiredText(d.ownerUid, 128)
+        && requiredText(d.customerName, 160) && text(d.companyName, 240)
+        && requiredText(d.phone, 40) && text(d.taxNo, 40)
+        && requiredText(d.address, 2000) && text(d.notes, 4000)
+        && d.status in ['Onay Bekliyor', 'Hazırlanıyor', 'Kargoya Verildi', 'Teslim Edildi']
+        && d.createdAt is timestamp && d.updatedAt is timestamp
+        && validItems(d.items, d.total);
+    }
+    match /mesaPartsOrders/{documentId} {
+      allow read: if signedIn() && (staff() || resource.data.ownerUid == request.auth.uid);
+      allow create: if signedIn() && validOrder(request.resource.data, documentId)
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.status == 'Onay Bekliyor'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+      // Existing line items are immutable; fulfillment must survive later catalog price changes.
+      allow update: if admin()
+        && request.resource.data.status in ['Onay Bekliyor', 'Hazırlanıyor', 'Kargoya Verildi', 'Teslim Edildi']
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
+      allow delete: if admin();
+    }
+    // No wildcard grants: other collections remain inaccessible in this dedicated database.
+  }
+}

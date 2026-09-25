@@ -9,3 +9,6 @@ dist-ssr
 Thumbs.db
 tmp/
 server/data.json
+firestore-debug.log
+firebase-debug.log
+ui-debug.log
