@@ -24,10 +24,11 @@ function generateUrlBlock(loc, priority = '0.8', changefreq = 'weekly') {
 }
 
 // 1. Pages Sitemap
+// Not: robots.txt ile çelişen (/ariza-bildir, /servis-takip) ve bölgeler
+// sitemap'inde tekrarlanan (/hizmet-bolgeleri) URL'ler bilinçli olarak dışarıda.
 const staticPages = [
   { path: '/', priority: '1.0', changefreq: 'daily' },
   { path: '/turkiye-is-makinalari-servisi', priority: '0.98', changefreq: 'daily' },
-  { path: '/hizmet-bolgeleri', priority: '0.92', changefreq: 'weekly' },
   { path: '/hizmetler', priority: '0.90', changefreq: 'weekly' },
   { path: '/bakim-hesaplayici', priority: '0.90', changefreq: 'weekly' },
   { path: '/ariza-kodu-cozucu', priority: '0.88', changefreq: 'weekly' },
@@ -36,8 +37,6 @@ const staticPages = [
   { path: '/filo', priority: '0.85', changefreq: 'monthly' },
   { path: '/hakkimizda', priority: '0.80', changefreq: 'monthly' },
   { path: '/iletisim', priority: '0.85', changefreq: 'monthly' },
-  { path: '/ariza-bildir', priority: '0.90', changefreq: 'daily' },
-  { path: '/servis-takip', priority: '0.85', changefreq: 'daily' },
   { path: '/rehberler', priority: '0.85', changefreq: 'weekly' }
 ];
 
@@ -46,11 +45,12 @@ const pagesXml = `<?xml version="1.0" encoding="UTF-8"?>
 ${staticPages.map(p => generateUrlBlock(p.path, p.priority, p.changefreq)).join('\n')}
 </urlset>`;
 
-// 2. Services Sitemap (both direct root and /hizmetler/:slug)
+// 2. Services Sitemap
+// Yinelenen /hizmetler/:slug varyantları sitemap'ten çıkarıldı: her hizmet
+// yalnızca kök URL ile listelenir (kopya içerik + crawl bütçesi israfını önler).
 const serviceUrls = [];
 servicesData.forEach(s => {
   serviceUrls.push({ path: `/${s.slug}`, priority: '0.95', changefreq: 'weekly' });
-  serviceUrls.push({ path: `/hizmetler/${s.slug}`, priority: '0.90', changefreq: 'weekly' });
 });
 
 const servicesXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -59,9 +59,10 @@ ${serviceUrls.map(s => generateUrlBlock(s.path, s.priority, s.changefreq)).join(
 </urlset>`;
 
 // 3. Regions Sitemap
+// /bolgeler, /hizmet-bolgeleri ile aynı sayfayı render ettiği için tek kanonik
+// URL (/hizmet-bolgeleri) listelenir.
 const regionUrls = [
-  { path: '/hizmet-bolgeleri', priority: '0.90', changefreq: 'weekly' },
-  { path: '/bolgeler', priority: '0.85', changefreq: 'weekly' }
+  { path: '/hizmet-bolgeleri', priority: '0.90', changefreq: 'weekly' }
 ];
 
 const regionsXml = `<?xml version="1.0" encoding="UTF-8"?>

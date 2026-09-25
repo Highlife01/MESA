@@ -167,13 +167,14 @@ servicesData.forEach(service => {
     }
   };
 
-  // Direct root URL (e.g. /is-makinalari-servisi)
+  // Direct root URL (e.g. /is-makinalari-servisi) — tek kanonik sürüm
   createPrerenderedPage(`/${service.slug}`, pageData);
 
   // Hizmetler sub URL (e.g. /hizmetler/is-makinalari-servisi)
+  // Kopya içerik: kanonik etiket kök URL'ye işaret eder (SEO konsolidasyonu)
   createPrerenderedPage(`/hizmetler/${service.slug}`, {
     ...pageData,
-    canonical: `/hizmetler/${service.slug}`
+    canonical: `/${service.slug}`
   });
 });
 
