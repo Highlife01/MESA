@@ -4,13 +4,14 @@ import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 
 // Firebase web identifiers are public. Authorization is enforced by Auth and
 // Firestore rules; passwords and service-account keys never belong here.
+// The API key is provided via VITE_FIREBASE_API_KEY (.env) — never hardcode it.
 const env = import.meta.env;
 const emulated = env.DEV && env.VITE_USE_FIREBASE_EMULATORS === 'true';
 const config = {
-  apiKey: env.VITE_FIREBASE_API_KEY || 'AIzaSyBIDitQc86CVj7DFvv1lGyjZwiNmEOUhck',
-  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || 'adanahizlisatis.firebaseapp.com',
-  projectId: emulated ? 'demo-mesa' : (env.VITE_FIREBASE_PROJECT_ID || 'adanahizlisatis'),
-  appId: env.VITE_FIREBASE_APP_ID || '1:203264732382:web:b88552eafc132d1cc9664f',
+  apiKey: env.VITE_FIREBASE_API_KEY || '',
+  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || '',
+  projectId: emulated ? 'demo-mesa' : (env.VITE_FIREBASE_PROJECT_ID || ''),
+  appId: env.VITE_FIREBASE_APP_ID || '',
 };
 
 export const isFirebaseConfigured = Boolean(config.apiKey && config.projectId && config.appId);
