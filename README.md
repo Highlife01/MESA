@@ -1,48 +1,150 @@
-# 🚜 MESA İş Makinaları - Türkiye Geneli 7/24 Mobil Servis, Hidrolik Revizyon & Operasyon Portalı
+# 🚜 MESA İş Makinaları — Türkiye Geneli 7/24 Mobil Servis, Hidrolik Revizyon & Operasyon Portalı
 
 [![Production Status](https://img.shields.io/badge/status-live-success.svg)](https://www.mesaismakineleri.com.tr)
-[![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://react.dev/)
+[![Live Site](https://img.shields.io/badge/domain-mesaismakineleri.com.tr-blue.svg)](https://www.mesaismakineleri.com.tr)
+[![Firebase Hosting](https://img.shields.io/badge/hosting-Firebase%20Hosting-FFCA28.svg)](https://mesaismak.web.app)
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB.svg)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6.2.0-646CFF.svg)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4.17-38B2AC.svg)](https://tailwindcss.com/)
-[![Firebase](https://img.shields.io/badge/Hosting-Firebase-FFCA28.svg)](https://firebase.google.com/)
-[![License](https://img.shields.io/badge/License-Proprietary-red.svg)]()
+[![Vitest](https://img.shields.io/badge/Tested%20with-Vitest-6E9F18.svg)](https://vitest.dev/)
+[![Security](https://img.shields.io/badge/Security-Hardened%20(No%20Client%20Secrets)-brightgreen.svg)]()
 
 **MESA İş Makinaları**, Türkiye'nin 81 ilinde şantiye sahasında 7/24 yerinde mobil teknik servis, paletli ve lastikli ekskavatör, bekoloder, loder, dozer, teleskopik yükleyici (telehandler) tamiri, 500 bar seyyar hidrolik hortum presi, seyyar borwerk delik işleme, powershift şanzıman, ağır hizmet dizel motor rektifiyesi ve telematik filo operasyon yönetim platformudur.
 
-🌐 **Canlı Web Portalı:** [https://www.mesaismakineleri.com.tr](https://www.mesaismakineleri.com.tr)  
-📞 **7/24 Acil Müdahale Çağrı Hattı:** `0533 529 36 74`  
-📍 **Merkez Atölye:** Yeşiloba Mah. 46167. Sokak No: 19/A, 01170 Seyhan / Adana
+- 🌐 **Canlı Web Portalı:** [https://www.mesaismakineleri.com.tr](https://www.mesaismakineleri.com.tr)
+- 🌐 **Firebase Hosting URL:** [https://mesaismak.web.app](https://mesaismak.web.app)
+- 📞 **7/24 Acil Çağrı:** `0533 529 36 74`
+- 💬 **WhatsApp Destek:** `+90 534 407 55 85`
+- 📍 **Merkez Atölye:** Yeşiloba Mah. 46167. Sokak No: 19/A, 01170 Seyhan / Adana
 
 ---
 
-## 🌟 Temel Modüller ve Özellikler
+## 📑 İçindekiler
 
-### 1. 🇹🇷 81 İl Kapsamlı Mobil Servis Şebekesi
-- Türkiye'nin 7 coğrafi bölgesine (Marmara, Ege, Akdeniz, İç Anadolu, Karadeniz, Doğu Anadolu, Güneydoğu Anadolu) göre organize edilmiş 81 il servis ağı.
-- Her il için ortalama intikal süresi, nöbetçi teknisyen ve sanayi sitesi / OSB hızlı arama altyapısı.
-- Arama motorları için özel olarak optimize edilmiş dinamik 81 il açılış sayfaları (`/sehirler/:slug`).
+1. [Öne Çıkan Modüller ve Yetenekler](#-öne-çıkan-modüller-ve-yetenekler)
+2. [Güvenlik ve Kimlik Doğrulama Mimarisi](#-güvenlik-ve-kimlik-doğrulama-mimarisi)
+3. [Personel Rol Yönetimi CLI](#-personel-rol-yönetimi-cli)
+4. [Gelişmiş Node.js Operasyon API'si](#-gelişmiş-nodejs-operasyon-apisi)
+5. [SEO, SSG Prerender ve PWA Altyapısı](#-seo-ssg-prerender-ve-pwa-altyapısı)
+6. [Proje Dizin Yapısı](#-proje-dizin-yapısı)
+7. [Kurulum ve Yerel Geliştirme](#-kurulum-ve-yerel-geliştirme)
+8. [Test Süreçleri](#-test-süreçleri)
+9. [Üretim Derlemesi ve Canlı Dağıtım](#-üretim-derlemesi-ve-canlı-dağıtım)
+10. [İletişim ve Lisans](#-iletişim-ve-destek)
+
+---
+
+## 🌟 Öne Çıkan Modüller ve Yetenekler
+
+### 1. 🇹🇷 81 İl ve 7 Coğrafi Bölge Servis Ağı
+- Türkiye'nin 7 bölgesinde organize edilmiş tam donanımlı mobil servis filosu.
+- Her il için ortalama intikal süresi, nöbetçi teknisyen ve sanayi sitesi / OSB arama altyapısı.
+- SEO optimizasyonlu 81 dinamik il açılış sayfası (`/sehirler/:slug`).
 
 ### 2. 🚨 7/24 Acil Arıza Bildirim Sihirbazı (`/ariza-bildir`)
-- Şantiyede acil arıza yaşayan operatörler ve şantiye şefleri için 3 adımlı ekspres arıza kayıt sihirbazı.
-- Makine tipi, arıza kategorisi (Hidrolik, Motor, Şanzıman, Elektrik/Elektronik, Yürüyüş/Cer, Ataşman), anlık GPS konum paylaşımı ve tek tıkla WhatsApp entegrasyonu.
+- Şantiyede arıza yaşayan operatörler için 3 adımlı ekspres kayıt sihirbazı.
+- Makine tipi, arıza kategorisi (Hidrolik, Motor, Şanzıman, Elektrik/Elektronik, Yürüyüş/Cer, Ataşman), GPS konum paylaşımı ve doğrudan doğrulanmış WhatsApp entegrasyonu.
 
 ### 3. 🧮 OEM Periyodik Bakım & Maliyet Hesaplayıcı (`/bakim-hesaplayici`)
-- Caterpillar, Komatsu, Volvo, Hidromek, JCB, Hitachi vb. ağır iş makineleri için 250, 500, 1000 ve 2000 çalışma saati bakım paketleri.
-- OEM filtre ve ağır hizmet yağ maliyetlerini işçilik ve yağ analiziyle birleştiren şeffaf maliyet hesaplama motoru ve PDF / WhatsApp teklif dökümü.
+- CAT, Komatsu, Volvo, Hidromek, JCB makineleri için 250, 500, 1000 ve 2000 çalışma saati bakım paketleri.
+- OEM filtre ve ağır hizmet yağ maliyetlerini işçilik ve yağ analiziyle birleştiren hesaplama motoru.
 
-### 4. 🔍 Ağır Vasıta Hata Kodu Çözücü (`/ariza-kodu-cozucu`)
-- SPN/FMI, CAT MID/CID, Komatsu VHP ve SAE standart arıza kodlarını tarayan akıllı arıza teşhis rehberi.
-- Kritiklik seviyesi, saha acil eylem planı ve teknisyen yönlendirmesi.
+### 4. 🔍 Ağır Vasıta DTC Arıza Kodu Çözücü (`/ariza-kodu-cozucu`)
+- SPN/FMI, CAT MID/CID, Komatsu VHP ve SAE standart arıza kodlarını tarayan diagnostik rehber.
+- Kritiklik seviyesi ve saha acil eylem planı önerileri.
 
 ### 5. 📊 Operasyon & ERP Yönetim Paneli (`/panel`)
-- **Filo Telematik:** 81 ildeki servis araçlarının anlık konumları, telematik durumları ve hız/arıza göstergeleri.
-- **Finans & Muhasebe:** Çift girişli (double-entry) kasa hareketleri, çek-senet takip sistemi, cari hesap mutabakatları.
-- **İş Emirleri & QR Etiket:** Makinelere basılan QR kodla servis geçmişine hızlı erişim ve iş emri yönetimi.
+- **Filo Telematik:** Servis araçlarının anlık konumları ve saha durumları.
+- **Finans & Muhasebe:** Çift girişli (double-entry) kasa hareketleri, çek-senet takip sistemi.
+- **İş Emirleri & Süreç:** Durum makinesi (state machine) destekli iş emri takibi.
 
-### 6. 🛡️ Güvenilirlik & Hata İzolasyonu (NVIDIA Nemotron Onaylı Mimari)
-- **Çift Katmanlı ErrorBoundary:** Runtime hatalarında uygulamanın beyaz ekrana düşmesini engelleyen, MESA kurumsal acil arayüzü sunan hata yakalama katmanı.
-- **ImageWithFallback & Yerel Görseller:** Dış CDN kesintilerini sıfırlayan, tamamen yerel yüksek çözünürlüklü endüstriyel görseller ve `onError` kurtarma korumaları.
-- **SSG Prerender & XML Sitemap:** Tüm sayfaların arama motorlarına statik HTML olarak anında sunulmasını sağlayan SEO altyapısı.
+### 6. 📱 Saha Teknisyen Mobil Terminali (`/teknisyen`) & PWA
+- Saha teknisyenleri için iş emri tamamlama, telematik sayaç, parça sarfiyatı ve dijital imza toplama ekranı.
+- Çevrimdışı önbellekleme destekli PWA Service Worker (`public/sw.js`).
+
+### 7. 🏷️ Dijital Makine Pasaportu & Dinamik QR (`/m/:token`)
+- Makinelere basılan güvenli QR kodlar ile sayaç saati ve kamuya açık servis özeti sorgulama.
+
+---
+
+## 🛡️ Güvenlik ve Kimlik Doğrulama Mimarisi
+
+Platform kurumsal güvenlik, veri izolasyonu ve OWASP standartlarına uygun olarak tasarlanmıştır:
+
+1. **İstemci Tarafında Sıfır Sır (Zero-Secrets Client Bundle):**
+   - Kaynak kodda ve derlenen JavaScript paketlerinde (`dist/assets/*.js`) hiçbir statik parola, gizli anahtar veya demo hesabı bulunmaz.
+   - Hassas sunucu ortam değişkenleri (`.cloudrun.env.yaml`, servis anahtarları) `.gitignore` ile korunur; depoya yalnızca güvenli şablonlar eklenir.
+
+2. **Firebase Auth & Custom Claims ile Rol Yetkilendirme:**
+   - Personel kimlik doğrulaması Firebase Auth (E-posta/Şifre) üzerinden yürütülür.
+   - Sayfa erişimleri (`RequireStaff`) istemci tarafındaki rol tahminine değil, Firebase ID token üzerindeki güvenli `mesaRole` custom claim'ine dayanır:
+     - `admin` / `super_admin`: Tam yetkili yönetim paneli (`/panel`).
+     - `technician`: Saha teknisyen terminali (`/teknisyen`).
+     - `customer_admin`: Müşteri makine takip portalı (`/musteri-portali`).
+     - `finance`, `warehouse`, `dispatcher`, `manager`: İlgili ERP modülleri.
+
+3. **Güvenlik Başlıkları & İçerik Güvenliği Politikası (CSP):**
+   - `firebase.json` üzerinden `Strict-Transport-Security (HSTS)`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN` ve sıkılaştırılmış `Content-Security-Policy` uygulanır.
+
+---
+
+## 🔑 Personel Rol Yönetimi CLI
+
+Firebase Console üzerinde kullanıcı oluşturulduktan sonra personellere `mesaRole` atamak için hazır CLI aracı kullanılır:
+
+```bash
+# 1. Servis hesabı JSON anahtarını çevre değişkenine tanımlayın:
+export GOOGLE_APPLICATION_CREDENTIALS="/guvenli/dizin/serviceAccountKey.json"
+# PowerShell için:
+# $env:GOOGLE_APPLICATION_CREDENTIALS="C:\anahtarlar\serviceAccountKey.json"
+
+# 2. Personele rol atayın:
+npm run staff:role -- personel@mesaismakineleri.com.tr admin
+npm run staff:role -- teknisyen@mesaismakineleri.com.tr technician
+npm run staff:role -- finans@mesaismakineleri.com.tr finance
+npm run staff:role -- depo@mesaismakineleri.com.tr warehouse
+npm run staff:role -- yetkili@musteri.com customer_admin tenant_abc "ABC İnşaat Ltd."
+
+# 3. Mevcut rolü sorgulayın:
+npm run staff:role -- personel@mesaismakineleri.com.tr --show
+
+# 4. Rolü iptal edin (tüm aktif oturumları anında sonlandırır):
+npm run staff:role -- personel@mesaismakineleri.com.tr --remove
+```
+
+---
+
+## ⚙️ Gelişmiş Node.js Operasyon API'si
+
+Proje, bağımsız bir mikroservis olarak çalışabilen hafif ve güçlü bir Node.js API katmanı içerir (`server/index.js`):
+
+- **MFA Doğrulama & RFC 6238 TOTP:** Yalnızca şifresi doğrulanmış ara token'ların API çağrısı yapması engellenmiştir. Üretimde RFC 6238 uyumlu dinamik TOTP (Google Authenticator) kodu zorunludur.
+- **Kayan Pencereli Rate Limiting:** Brute-force saldırılarına karşı 15 dakikalık pencerede IP başına maksimum 10 başarısız denemeye izin verilir.
+- **Güvenli QR & Servis Talebi:** Makine QR kodlarından kamuya açık güvenli servis talebi oluşturma (`POST /api/public/machines/:token/service-requests`).
+- **İş Emri Durum Geçişleri & Kanıt Seti:** Ön teşhis, atama, parça onayı, test adımları ve imza kanıtları toplanmadan iş emrinin tamamlanmasını engelleyen iş kuralı denetimi.
+
+```bash
+# API'yi yerelde başlatma:
+npm run api
+```
+
+---
+
+## 🚀 SEO, SSG Prerender ve PWA Altyapısı
+
+Platform, tek sayfa uygulaması (SPA) olmasına rağmen arama motorları için tam statik HTML sunumu (SSG) yapar:
+
+1. **144 Sayfa SSG Prerender Motoru (`scripts/prerender.js`):**
+   - Ana sayfa, 81 il açılış sayfası, 22 hizmet sayfası, 7 bölge sayfası, kurumsal sayfalar ve teknik rehberler derleme anında statik HTML olarak `dist/` klasörüne yazılır.
+   - Tüm dinamik veriler HTML ve JSON-LD seviyesinde XSS ataklarına karşı kaçışlanır (`escapeHtml`, `safeJsonLd`).
+   - SEO başlıkları ve açıklamaları doğrudan bileşenlerin `<SEO>` bloklarından okunarak tek doğruluk kaynağı (single source of truth) sağlanır.
+
+2. **Dinamik XML Sitemap Otomasyonu (`scripts/generate-sitemaps.js`):**
+   - `sitemap.xml` ana haritası; sayfalar, hizmetler, 81 il, bölgeler ve teknik rehberleri alt sitemap'lere bağlar ve hem `public/` hem `dist/` dizinlerine senkronize edilir.
+
+3. **SPA Fallback Güvenliği (`dist/spa.html`):**
+   - `firebase.json` içindeki `**` yönlendirmesi `spa.html` dosyasına yönlendirilir.
+   - `spa.html`, `<meta name="robots" content="noindex, follow" />` etiketi taşır ve kanonik URL içermez; böylece arama motorlarının var olmayan veya dinamik sayfaları yanlışlıkla indekslemesi önlenir.
 
 ---
 
@@ -51,31 +153,41 @@
 ```text
 mesaismak/
 ├── public/
-│   ├── images/              # Yüksek çözünürlüklü yerel hizmet ve atölye görselleri
-│   ├── favicon.ico          # Site faviconları
-│   └── sw.js                # PWA Service Worker
+│   ├── images/                 # Yüksek çözünürlüklü hizmet, filo ve atölye görselleri
+│   ├── favicon.ico             # Site faviconları
+│   ├── manifest.json           # PWA web manifestosu
+│   ├── robots.txt              # Arama motoru robot direktifleri
+│   ├── sitemap*.xml            # Üretilen dinamik site haritaları
+│   └── sw.js                   # PWA Service Worker (V6 önbellekleme & SWR)
 ├── scripts/
-│   ├── generate-sitemaps.js # Otomatik XML Sitemap üreteci (81 il + hizmetler + rehberler)
-│   └── prerender.js         # Statik SSG (Static Site Generation) motoru
+│   ├── generate-sitemaps.js    # Otomatik XML Sitemap üreteci
+│   ├── prerender.js            # 144 sayfalık SSG Prerender motoru
+│   └── set-staff-role.mjs      # Firebase Admin custom claims yetki yönetim aracı
+├── server/
+│   ├── index.js                # Node.js operasyon ve durum makinesi API'si
+│   ├── api.test.js             # API entegrasyon ve kabul testleri
+│   └── data.json               # Geliştirme ortamı yerel veri tabanı
 ├── src/
-│   ├── components/          # Yeniden kullanılabilir UI bileşenleri
-│   │   ├── dashboard/       # Operasyon paneli sekmeleri (Filo, Finans, İş Emirleri)
-│   │   ├── ErrorBoundary.jsx# Kurumsal hata kurtarma bileşeni
-│   │   ├── ImageWithFallback.jsx # Kırık görsel önleyici bileşen
-│   │   ├── Navbar.jsx       # Üst navigasyon ve acil durum çağrısı
-│   │   ├── Footer.jsx       # Kurumsal alt bilgi
-│   │   └── WhatsAppWidget.jsx # Canlı WhatsApp destek balonu
-│   ├── context/             # Global Context API (Dil, Operasyon, Yetki)
-│   ├── data/                # Statik veriler (81 il, hizmetler, markalar, rehberler)
-│   ├── pages/               # Rota sayfaları (Ana Sayfa, Detaylar, Hesaplayıcı vb.)
-│   ├── router/              # Bağımsız, hafif ve ultra hızlı SPA Router
-│   ├── App.jsx              # Ana uygulama kabuğu ve rota tanımları
-│   ├── index.css            # TailwindCSS ve küresel animasyon stilleri
-│   └── main.jsx             # React DOM kök girişi ve PWA kaydı
-├── firebase.json            # Firebase Hosting ve caching kuralları
-├── package.json             # Bağımlılıklar ve derleme betikleri
-├── tailwind.config.js       # Tailwind tema yapılandırması
-└── vite.config.js           # Vite derleme yapılandırması
+│   ├── components/             # Yeniden kullanılabilir UI bileşenleri
+│   │   ├── dashboard/          # ERP yönetim paneli sekmeleri (Filo, Finans, İş Emirleri)
+│   │   ├── ErrorBoundary.jsx   # Çift katmanlı kurumsal hata yakalama bileşeni
+│   │   ├── RequireStaff.jsx    # Güvenli personel rota koruyucusu
+│   │   ├── SEO.jsx             # Dinamik meta etiket ve Open Graph yöneticisi
+│   │   └── WhatsAppWidget.jsx  # 7/24 canlı WhatsApp destek butonu
+│   ├── context/                # Global durum yöneticileri (AuthContext, OperationalContext)
+│   ├── data/                   # 81 il, hizmetler, markalar, rehberler ve katalog verileri
+│   ├── lib/                    # Firebase istemcisi, analitik ve WhatsApp yardımcıları
+│   ├── pages/                  # Sayfa bileşenleri (Ana Sayfa, Şehirler, Hesaplayıcı vb.)
+│   ├── router/                 # Ultra hafif ve optimize SPA yönlendirici
+│   ├── App.jsx                 # Kök uygulama ve rota ağacı
+│   └── main.jsx                # DOM başlatma, PWA kaydı ve analitik dinleyicileri
+├── tests/                      # Vitest birim ve mantık testleri
+├── .cloudrun.env.example.yaml  # Cloud Run ortam değişkenleri şablonu
+├── .env.example                # İstemci ortam değişkenleri şablonu
+├── firebase.json               # Hosting, caching kuralları ve CSP güvenlik başlıkları
+├── package.json                # Bağımlılıklar ve npm scriptleri
+├── vitest.config.js            # Vitest test koşucu yapılandırması
+└── vite.config.js              # Vite 6 modül derleyici yapılandırması
 ```
 
 ---
@@ -97,128 +209,64 @@ cd MESA
 npm install
 ```
 
-### 3. Geliştirme Sunucusunu Başlatın
+### 3. Ortam Değişkenlerini Tanımlayın
+```bash
+cp .env.example .env
+```
+`.env` dosyası genel istemci tanımlayıcılarını içerir (Firebase API anahtarları istemci tarafında genel kimlik işlevi görür, asla parola veya sunucu sırrı içermez).
+
+### 4. Geliştirme Sunucusunu Başlatın
 ```bash
 npm run dev
 ```
-Geliştirme sunucusu varsayılan olarak `http://localhost:3000` adresinde çalışacaktır.
+Uygulama yerelde `http://localhost:5173` (veya belirtilen portta) çalışmaya başlar.
 
 ---
 
-## 📦 Üretim Derlemesi ve Dağıtım
+## 🧪 Test Süreçleri
 
-### Üretim Paketi Oluşturma (SSG & Sitemap)
+Projede hem istemci iş mantığı hem de sunucu API güvenlik akışları için otomatik testler bulunmaktadır:
+
+```bash
+# 1. Operasyonel kurallar ve istemci mantık testleri (Vitest):
+npm test
+
+# 2. Node.js API kabul, MFA ve rate-limit testleri:
+npm run test:api
+
+# 3. İki test paketini birlikte çalıştırma:
+npm test; npm run test:api
+```
+
+---
+
+## 📦 Üretim Derlemesi ve Canlı Dağıtım
+
+### 1. Üretim Derlemesi Oluşturma (Build + SSG + Sitemaps)
 ```bash
 npm run build
 ```
 Bu komut sırasıyla:
-1. Vite ile tüm modülleri optimize ederek `dist/` klasörüne derler.
-2. Tüm 81 il, hizmetler ve sayfalar için XML sitemap dosyalarını oluşturur.
-3. Arama motoru botları (SEO) için statik SSG prerender HTML çıktılarını üretir.
+1. `vite build` çalıştırarak React modüllerini küçültür ve optimize eder (`dist/`).
+2. `generate-sitemaps.js` ile tüm XML sitemap'leri derler.
+3. `prerender.js` ile 144 açılış sayfasını arama motorları için statik HTML olarak hazırlar ve `dist/spa.html` fallback dosyasını üretir.
 
-### Firebase Hosting Dağıtımı
+### 2. Firebase Hosting'e Dağıtım
 ```bash
-firebase deploy --only hosting
+npx firebase deploy --only hosting
 ```
-
----
-
-## 🛠️ Teknoloji Yığını
-
-- **Frontend Kütüphanesi:** React 18
-- **Derleme Aracı:** Vite 6
-- **Stil & Tasarım:** TailwindCSS 3, PostCSS, Autoprefixer
-- **İkon Seti:** Lucide React
-- **Dağıtım & CDN:** Google Firebase Hosting
-- **Mühendislik Standartları:** NVIDIA Nemotron Architectural Code Review Checklists
 
 ---
 
 ## 📞 İletişim ve Destek
 
-- **Yetkili:** MESA İş Makinaları Saha Yönetimi
+- **Firma:** MESA İş Makinaları San. ve Tic. Ltd. Şti.
 - **E-Posta:** `servis@mesaismakineleri.com.tr`
 - **Telefon:** `+90 533 529 36 74`
 - **WhatsApp:** `+90 534 407 55 85`
+- **Adres:** Yeşiloba Mah. 46167. Sokak No: 19/A, 01170 Seyhan / Adana
 - **Web:** [https://www.mesaismakineleri.com.tr](https://www.mesaismakineleri.com.tr)
 
 ---
-*© 2026 MESA İş Makinaları. Tüm Hakları Saklıdır.*
 
-## 🔐 Gelişmiş Operasyon API'si
-
-Proje artık statik arayüzün yanında çalıştırılabilir bir Node.js API katmanı da içerir. API; tenant izolasyonu, rol tabanlı erişim, MFA, güvenli QR makine özeti, QR'dan servis talebi, iş emri durum makinesi, zorunlu servis kanıtları, stok hareketleri, QR token rotasyonu ve audit log uçlarını sağlar.
-
-### API'yi yerelde çalıştırma
-
-```bash
-cp .env.example .env
-# .env içinde MESA_ADMIN_PASSWORD değerini güçlü bir parola ile değiştirin
-npm run api
-```
-
-API varsayılan olarak `http://localhost:8787` adresinde çalışır. Frontend'in API'ye bağlanması için `VITE_API_BASE=http://localhost:8787` kullanılır. Yönetici girişi iki aşamalıdır; demo MFA kodu `123456` olarak tanımlıdır ve gerçek ortamda TOTP/SMS sağlayıcısıyla değiştirilmelidir.
-
-### Otomatik kabul testleri
-
-```bash
-npm run test:api
-npm run build
-```
-
-Kabul testleri; QR kamu görünümünün hassas veri döndürmediğini, oturumsuz portalın engellendiğini, MFA akışını, tenant kapsamlı makine listesini, makine servis geçmişini ve QR servis talebi oluşturmayı doğrular.
-
-### API modülleri
-
-- `GET /api/public/machines/:token/summary`: Hassas veri içermeyen kamu QR görünümü.
-- `POST /api/public/machines/:token/service-requests`: QR üzerinden rate-limit uygulanabilir servis talebi.
-- `POST /api/auth/login` ve `POST /api/auth/mfa/verify`: MFA destekli oturum.
-- `GET /api/portal/machines` ve `GET /api/portal/machines/:id/history`: Tenant ve rol kontrollü müşteri verisi.
-- `POST /api/work-orders/:id/transitions`: Kontrollü iş emri durum geçişi.
-- `POST /api/work-orders/:id/evidence`: Arıza, işlem, parça, test, sayaç, fotoğraf ve imza kanıtları.
-- `POST /api/inventory/parts/:id/movements`: Atomik stok hareketi.
-- `POST /api/admin/machines/:id/qr/rotate`: Eski QR tokenını geçersiz kılıp yenisini üretme.
-- `GET /api/admin/audit`: Yetkili audit olayları.
-
-### Üretim uyarısı
-
-Yerel JSON repository geliştirme ve demo içindir. Üretimde `server/index.js` içindeki repository Firestore/PostgreSQL gibi kalıcı bir veritabanına taşınmalı; parola hashleme Argon2id/bcrypt, gerçek TOTP MFA, Redis rate limit, object storage ve malware taraması eklenmelidir. Firebase Hosting tek başına Node API çalıştırmaz; API, Cloud Run/Functions veya ayrı bir Node sunucusunda yayınlanmalı ve `VITE_API_BASE` bu HTTPS adresine yönlendirilmelidir. Gerçek müşteri verisi, sunucu tarafı tenant yetkilendirmesi tamamlanmadan sisteme alınmamalıdır.
-
-Ayrıntılı domain modeli, tehdit modeli, API sınırı ve kabul testleri: [`docs/advanced-service-platform-blueprint.md`](docs/advanced-service-platform-blueprint.md)
-
-## 🛡️ Güvenlik ve Kimlik Doğrulama Mimarisi (2026 Güncellemesi)
-
-Platform, kurumsal güvenlik ve veri gizliliği standartlarına uygun olarak kapsamlı şekilde güçlendirilmiştir:
-
-### 1. Personel ve Yönetici Giriş Güvenliği
-- **Sert Kodlanmış Kimlik Bilgilerinin Temizlenmesi:** İstemci tarafındaki (client bundle) tüm statik parolalar ve demo kullanıcı hesapları kaldırılmıştır.
-- **Firebase Auth & Custom Claims:** Personel kimlik doğrulaması Firebase Auth (E-posta / Şifre) üzerinden yürütülür. Yetkilendirme `mesaRole` custom claim'i (`admin`, `super_admin`, `technician`, `finance`, `warehouse`, `customer_admin`, `dispatcher`, `manager`) ile yönetilir.
-- **Personel Rolü Atama Aracı:**
-  ```bash
-  # Servis hesabı JSON anahtarını tanımlayın:
-  export GOOGLE_APPLICATION_CREDENTIALS="/guvenli/dizin/serviceAccountKey.json"
-  # (PowerShell: $env:GOOGLE_APPLICATION_CREDENTIALS="C:\anahtarlar\serviceAccountKey.json")
-
-  # Yetki ata:
-  npm run staff:role -- personel@mesaismakineleri.com.tr admin
-  npm run staff:role -- usta@mesaismakineleri.com.tr technician
-  npm run staff:role -- musteri@sirket.com customer_admin tenant_abc "ABC İnşaat"
-
-  # Rolü sorgula veya kaldır:
-  npm run staff:role -- personel@mesaismakineleri.com.tr --show
-  npm run staff:role -- personel@mesaismakineleri.com.tr --remove
-  ```
-
-### 2. Node Operasyon API Sertleştirmesi (`server/index.js`)
-- **MFA Doğrulama & RFC 6238 TOTP:** Yalnızca şifresi doğrulanmış oturumların API çağrısı yapması engellenmiştir (`actor()` kontrolü). Üretim ortamında RFC 6238 standardına uygun 6 haneli zaman bazlı tek kullanımlık şifreler (TOTP) zorunludur.
-- **Dinamik Rate Limiting & Brute-Force Koruması:** IP bazlı kayan pencere (sliding window) ile 15 dakikada en fazla 10 başarısız denemeye izin verilir.
-- **Kritik Sırların İzolasyonu:** `.cloudrun.env.yaml` git takibinden çıkarılmış (`.gitignore`), şablon olarak `.cloudrun.env.example.yaml` sunulmuştur.
-
-### 3. SEO ve SPA Fallback
-- `firebase.json` içinde `**` yönlendirmesi `dist/spa.html` dosyasına bağlanmıştır.
-- `spa.html` kanonik etiket içermez ve `noindex, follow` yönergesiyle arama motorlarının 404 / dinamik sayfaları dizine eklemesini önler.
-- 144 statik açılış sayfası prerender motoru ile taranabilir HTML olarak derlenir.
-
----
-*© 2026 MESA İş Makinaları. Tüm Hakları Saklıdır.*
-
+*© 2026 MESA İş Makinaları San. ve Tic. Ltd. Şti. Tüm Hakları Saklıdır.*
