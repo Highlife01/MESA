@@ -20,7 +20,13 @@ try {
   result = await request('/api/portal/machines'); assert.equal(result.status, 401);
   result = await request('/api/auth/login', { method: 'POST', body: JSON.stringify({ email: 'filo@abc-insaat.local', password: 'demo-customer' }) }); assert.equal(result.status, 200); assert.equal(result.body.mfaRequired, true);
   const pending = result.body.sessionToken;
+  assert.equal('challenge' in result.body, false);
+  // Regresyon: yalnızca şifresi doğrulanmış (MFA bekleyen) token API'ye erişememeli
+  result = await request('/api/portal/machines', { headers: { Authorization: `Bearer ${pending}` } }); assert.equal(result.status, 401);
+  result = await request('/api/auth/mfa/verify', { method: 'POST', body: JSON.stringify({ sessionToken: pending, code: '000000' }) }); assert.equal(result.status, 401);
   result = await request('/api/auth/mfa/verify', { method: 'POST', body: JSON.stringify({ sessionToken: pending, code: '123456' }) }); assert.equal(result.status, 200); const token = result.body.token;
+  assert.notEqual(token, pending);
+  result = await request('/api/portal/machines', { headers: { Authorization: `Bearer ${pending}` } }); assert.equal(result.status, 401);
   result = await request('/api/portal/machines', { headers: { Authorization: `Bearer ${token}` } }); assert.equal(result.status, 200); assert.equal(result.body.machines.length, 3);
   result = await request('/api/portal/machines/MCH-01-ABC-32/history', { headers: { Authorization: `Bearer ${token}` } }); assert.equal(result.status, 200); assert.equal(result.body.workOrders.some(order => order.id === 'MS-128'), true);
   result = await request('/api/public/machines/mch_8f4c21a7/service-requests', { method: 'POST', body: JSON.stringify({ description: 'Hidrolik yağ kaçağı ve performans düşüşü bildirimi' }) }); assert.equal(result.status, 201);

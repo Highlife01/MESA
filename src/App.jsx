@@ -13,6 +13,8 @@ import { MobileStickyCTA } from './components/MobileStickyCTA';
 
 import { ShoppingCart, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { RequireStaff } from './components/RequireStaff';
+import { SITE_CONFIG } from './config/siteConfig';
 
 // ── Lazy-loaded Pages (code splitting) ──
 const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
@@ -64,10 +66,10 @@ function PageLoader() {
         <div className="mt-5 pt-4 border-t border-slate-800 flex flex-col items-center gap-2 animate-fadeIn">
           <span className="text-[11px] text-slate-400">Yükleme geciktiyse doğrudan teknisyen hattımızı arayabilirsiniz:</span>
           <a
-            href="tel:05344075585"
+            href={`tel:${SITE_CONFIG.phoneRaw}`}
             className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-2 transition shadow-lg shadow-red-600/30"
           >
-            <span>7/24 Acil Çağrı: 0534 407 55 85</span>
+            <span>7/24 Acil Çağrı: {SITE_CONFIG.phone}</span>
           </a>
           <button
             onClick={() => window.location.reload()}
@@ -151,9 +153,9 @@ export function App() {
                       <Route path="/ariza-bildir" element={<PageTransition><EmergencyWizardPage /></PageTransition>} />
                       <Route path="/servis-takip" element={<PageTransition><ServiceTrackingPage /></PageTransition>} />
                       <Route path="/m/:token" element={<PageTransition><MachinePassportPage /></PageTransition>} />
-                      <Route path="/musteri-portali" element={<PageTransition><CustomerPortalPage /></PageTransition>} />
-                      <Route path="/teknisyen" element={<PageTransition><TechnicianPage /></PageTransition>} />
-                      <Route path="/panel" element={<PageTransition><DashboardPage /></PageTransition>} />
+                      <Route path="/musteri-portali" element={<PageTransition><RequireStaff access="customer"><CustomerPortalPage /></RequireStaff></PageTransition>} />
+                      <Route path="/teknisyen" element={<PageTransition><RequireStaff access="technician"><TechnicianPage /></RequireStaff></PageTransition>} />
+                      <Route path="/panel" element={<PageTransition><RequireStaff access="admin"><DashboardPage /></RequireStaff></PageTransition>} />
                       <Route path="/admin" element={<PageTransition><AdminLoginPage /></PageTransition>} />
                       <Route path="/login" element={<PageTransition><AdminLoginPage /></PageTransition>} />
                       <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />

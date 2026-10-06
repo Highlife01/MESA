@@ -10,145 +10,19 @@ import {
   UserRound, Wrench, X, Sparkles, Check
 } from 'lucide-react';
 
-const PORTAL_SESSION_KEY = 'mesa_customer_portal_session';
-
 const statusStyles = {
   amber: 'bg-amber-50 text-amber-800 border-amber-200',
   red: 'bg-red-50 text-red-700 border-red-200',
   emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200'
 };
 
-function CustomerLogin({ onLogin }) {
-  const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!email.trim() || code.trim().length < 4) {
-      setError('Kurumsal e-posta ve en az 4 haneli doğrulama kodu gereklidir.');
-      return;
-    }
-    const sessionData = {
-      company: 'ABC İnşaat Ltd. Şti.',
-      email: email.trim(),
-      customerId: 'cust_abc_insaat',
-      loginAt: new Date().toISOString()
-    };
-    sessionStorage.setItem(PORTAL_SESSION_KEY, JSON.stringify(sessionData));
-    onLogin(true);
-  };
-
-  const handleQuickDemo = () => {
-    setEmail('abcoinsaat@gmail.com');
-    setCode('2026');
-    const sessionData = {
-      company: 'ABC İnşaat Ltd. Şti.',
-      email: 'abcoinsaat@gmail.com',
-      customerId: 'cust_abc_insaat',
-      loginAt: new Date().toISOString()
-    };
-    sessionStorage.setItem(PORTAL_SESSION_KEY, JSON.stringify(sessionData));
-    onLogin(true);
-  };
-
-  return (
-    <div className="min-h-[85vh] bg-slate-100 flex items-center justify-center px-4 py-12">
-      <SEO title="Güvenli Müşteri Portalı | MESA" description="MESA kurumsal müşteri servis ve filo portalı." canonical="/musteri-portali" />
-      <div className="w-full max-w-md bg-white rounded-[2rem] border border-slate-200 shadow-xl overflow-hidden">
-        <div className="bg-slate-950 p-8 text-white relative overflow-hidden">
-          <div className="absolute -right-12 -top-16 w-44 h-44 rounded-full bg-red-600/20 blur-3xl" />
-          <div className="relative">
-            <div className="w-12 h-12 rounded-2xl bg-red-600 flex items-center justify-center mb-5 shadow-lg shadow-red-600/30">
-              <LockKeyhole className="w-6 h-6" />
-            </div>
-            <span className="text-[10px] uppercase tracking-[0.2em] font-black text-red-300">MESA SECURE ACCESS</span>
-            <h1 className="text-2xl font-black mt-2">Kurumsal Servis Portalı</h1>
-            <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-              Filo, telematik sayaçları ve doğrulanmış iş emirlerini yalnızca yetkili kurumsal hesabınızla görüntüleyin.
-            </p>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="p-8 space-y-4">
-          <div className="flex gap-2.5 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs leading-relaxed">
-            <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5" />
-            <span>Finans, telefon ve tam şasi bilgileri yetkisiz veya QR erişiminde gösterilmez.</span>
-          </div>
-
-          <label className="block">
-            <span className="text-xs font-bold text-slate-700">Kurumsal E-Posta</span>
-            <div className="relative mt-1.5">
-              <Mail className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-              <input
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                type="email"
-                placeholder="filo@abcoinsaat.com"
-                className="w-full pl-10 pr-3 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-red-500 text-sm"
-              />
-            </div>
-          </label>
-
-          <label className="block">
-            <span className="text-xs font-bold text-slate-700">Tek Kullanımlık Doğrulama Kodu / Şifre</span>
-            <input
-              value={code}
-              onChange={e => setCode(e.target.value)}
-              type="password"
-              placeholder="••••••"
-              className="w-full mt-1.5 px-3 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-red-500 text-sm tracking-[0.2em]"
-            />
-          </label>
-
-          {error && <p className="text-xs font-semibold text-red-600">{error}</p>}
-
-          <button className="w-full py-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-sm shadow-lg shadow-red-600/20 transition active:scale-[.98]">
-            Güvenli Giriş Yap
-          </button>
-
-          {/* Quick Demo Access Button */}
-          <button
-            type="button"
-            onClick={handleQuickDemo}
-            className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition flex items-center justify-center gap-1.5"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span>ABC İnşaat Olarak Hızlı Giriş (Demo)</span>
-          </button>
-
-          <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2">
-            <span>SSO / 2FA Hazır</span>
-            <a href="mailto:servis@mesaismakineleri.com.tr" className="font-bold hover:text-red-600">
-              Yeni Erişim Talep Et
-            </a>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
 export function CustomerPortalPage() {
   const { machines, liveJobs, transitionWorkOrderStatus, showToast, addAuditLog } = useOperational();
-  const { user, isCustomer, isSuperAdmin } = useAuth();
+  const { user, isSuperAdmin, logout: authLogout } = useAuth();
 
-  // ── TENANT KİMLİĞİ: oturum sahibinin gerçek tenant'ı (kabul testi: müşteri A ↔ müşteri B izolasyonu) ──
-  const sessionTenantId = useMemo(() => {
-    if (user?.tenantId) return user.tenantId;
-    if (isSuperAdmin) return null; // Süper admin tüm tenant'ları görebilir
-    try {
-      const raw = sessionStorage.getItem(PORTAL_SESSION_KEY);
-      return raw ? (JSON.parse(raw).customerId || 'cust_abc_insaat') : null;
-    } catch {
-      return null;
-    }
-  }, [user, isSuperAdmin]);
-
-  const [authenticated, setAuthenticated] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return Boolean(window.sessionStorage.getItem(PORTAL_SESSION_KEY)) || isCustomer || isSuperAdmin;
-  });
+  // ── TENANT KİMLİĞİ: yalnızca sunucu tarafında atanmış `tenantId` claim'inden okunur ──
+  // (Süper admin tüm tenant'ları görür; tenant'ı olmayan hesap hiçbir veri görmez.)
+  const sessionTenantId = user?.tenantId || null;
 
   // Filter machines by tenant (Tenant Isolation — IDOR koruması frontend katmanı)
   const customerMachines = useMemo(() => {
@@ -157,7 +31,7 @@ export function CustomerPortalPage() {
     return machines.filter(m => m.customerId === sessionTenantId);
   }, [machines, sessionTenantId, isSuperAdmin]);
 
-  const [activeMachine, setActiveMachine] = useState(customerMachines[0] || machines[0]);
+  const [activeMachine, setActiveMachine] = useState(customerMachines[0] || null);
   const [query, setQuery] = useState('');
   const [historyFilter, setHistoryFilter] = useState('Tümü');
   const [showNotifications, setShowNotifications] = useState(true);
@@ -184,13 +58,9 @@ export function CustomerPortalPage() {
     });
   }, [customerJobs, historyFilter, query]);
 
-  if (!authenticated) {
-    return <CustomerLogin onLogin={setAuthenticated} />;
-  }
-
+  // Erişim kontrolü App.jsx içindeki <RequireStaff access="customer"> sarmalayıcısında yapılır.
   const logout = () => {
-    sessionStorage.removeItem(PORTAL_SESSION_KEY);
-    setAuthenticated(false);
+    authLogout();
   };
 
   // One-click approve pending service quotation
@@ -230,12 +100,30 @@ export function CustomerPortalPage() {
     showToast('ABC İnşaat filo ve bakım raporu indirildi.');
   };
 
+  if (!activeMachine) {
+    return (
+      <div className="min-h-[70vh] bg-slate-100 flex items-center justify-center p-4">
+        <SEO title="Kurumsal Müşteri Portalı | MESA Filo Servis" description="Yetkili müşteri portalı." noindex />
+        <div className="max-w-md w-full bg-white border border-slate-200 rounded-3xl p-8 text-center shadow-xl space-y-4">
+          <h1 className="text-xl font-black text-slate-900">Henüz tanımlı makineniz yok</h1>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Hesabınıza bağlı bir filo kaydı bulunamadı. Makinelerinizin portala eklenmesi için MESA servis ekibiyle iletişime geçin.
+          </p>
+          <button onClick={logout} className="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold">
+            Oturumu Kapat
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 p-4 sm:p-8">
       <SEO
         title="Kurumsal Müşteri Portalı | MESA Filo Servis"
         description="Yetkili müşteri makine, sayaç, servis geçmişi ve teklif onay portalı."
         canonical="/musteri-portali"
+        noindex
       />
 
       <div className="max-w-[1440px] mx-auto space-y-6">

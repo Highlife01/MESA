@@ -2,7 +2,9 @@ import React, { useState, useMemo } from 'react';
 import { Link } from '../router/Router';
 import { SEO } from '../components/SEO';
 import { partsCatalogData } from '../data/partsCatalogData';
-import { useOperational } from '../context/OperationalContext';
+import { useOperational, createTrackingCode } from '../context/OperationalContext';
+import { openWhatsApp, whatsappUrl } from '../lib/whatsapp';
+import { trackEvent } from '../lib/analytics';
 import { 
   Search, ShoppingCart, CheckCircle2, ShieldCheck, Truck, 
   Trash2, Plus, Minus, Send, Phone, ArrowRight, X, PackageCheck 
@@ -59,6 +61,29 @@ export function PartsShopPage() {
     });
   }, [searchQuery, selectedCategory]);
 
+  const buildOrderMessage = (order) => {
+    const itemsText = order.items
+      .map(i => `- ${i.name} (OEM: ${i.oem}) x ${i.quantity} = ${(i.price * i.quantity).toLocaleString('tr-TR')} TL`)
+      .join('\n');
+    return [
+      'MESA İŞ MAKİNALARI YEDEK PARÇA SİPARİŞİ',
+      '',
+      `Sipariş No: ${order.orderCode}`,
+      `Firma/Müşteri: ${order.companyName || order.customerName}`,
+      `Telefon: ${order.phone}`,
+      order.taxNo ? `Vergi No: ${order.taxNo}` : null,
+      `Teslimat: ${order.address}`,
+      order.notes ? `Not: ${order.notes}` : null,
+      '',
+      'Parçalar:',
+      itemsText,
+      '',
+      `Toplam Tutar: ${order.total.toLocaleString('tr-TR')} TL (KDV Hariç, liste fiyatı)`,
+      '',
+      'Sipariş teyidi ve sevkiyat bilgisi rica ediyorum.'
+    ].filter(line => line !== null).join('\n');
+  };
+
   const handleCheckoutSubmit = (e) => {
     e.preventDefault();
     if (!customerName || !phone || !address) {
@@ -67,6 +92,7 @@ export function PartsShopPage() {
     }
 
     const newOrder = createPartsOrder({
+      orderCode: createTrackingCode('SP'),
       customerName,
       companyName,
       phone,
@@ -75,16 +101,18 @@ export function PartsShopPage() {
       notes
     });
 
-    setOrderCompletedData(newOrder);
+    // Sipariş MESA'ya WhatsApp üzerinden ulaşır; gönderim anında açılır.
+    const opened = openWhatsApp(buildOrderMessage(newOrder), 'parts_order_whatsapp_open');
+    trackEvent('generate_lead', { form: 'parts_order', value: newOrder.total, currency: 'TRY' });
+
+    setOrderCompletedData({ ...newOrder, whatsappOpened: opened });
     setIsCheckoutOpen(false);
     setIsCartOpen(false);
   };
 
   const getWhatsAppMessage = (order) => {
     if (!order) return '';
-    const itemsText = order.items.map(i => `- ${i.name} (OEM: ${i.oem}) x ${i.quantity} = ${(i.price * i.quantity).toLocaleString('tr-TR')} TL`).join('%0A');
-    const msg = `*MESA İŞ MAKİNALARI YEDEK PARÇA SİPARİŞİ*%0A%0A*Sipariş No:* ${order.orderCode}%0A*Firma/Müşteri:* ${order.companyName || order.customerName}%0A*Telefon:* ${order.phone}%0A*Teslimat:* ${order.address}%0A%0A*Parçalar:*%0A${itemsText}%0A%0A*Toplam Tutar:* ${order.total.toLocaleString('tr-TR')} TL (KDV Hariç)%0A%0ASiparişi onaylıyorum, kargo/sevkiyat durumunu bildiriniz.`;
-    return `https://wa.me/905344075585?text=${msg}`;
+    return whatsappUrl(buildOrderMessage(order));
   };
 
   return (
@@ -418,10 +446,12 @@ export function PartsShopPage() {
             </div>
 
             <div>
-              <span className="text-xs text-slate-500 block uppercase font-bold">Siparişiniz Alındı</span>
+              <span className="text-xs text-slate-500 block uppercase font-bold">Sipariş Talebiniz Hazırlandı</span>
               <h3 className="text-2xl font-mono font-black text-red-600 mt-1">{orderCompletedData.orderCode}</h3>
-              <p className="text-xs text-slate-600 mt-2">
-                Parça siparişiniz depomuzda hazırlanıyor. Servis takip ekranından kodunuz ile durumu canlı izleyebilirsiniz.
+              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                {orderCompletedData.whatsappOpened
+                  ? 'WhatsApp penceresi açıldı. Hazırlanan mesajı gönderdiğinizde siparişiniz depo ekibimize ulaşır; stok ve fiyat teyidiyle size dönüş yapılır.'
+                  : 'Siparişinizi depo ekibimize iletmek için aşağıdaki WhatsApp butonuna basıp hazırlanan mesajı gönderin.'}
               </p>
             </div>
 
@@ -433,7 +463,7 @@ export function PartsShopPage() {
                 className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-lg transition-colors"
               >
                 <Send className="w-4 h-4" />
-                <span>WhatsApp ile Hızlı Teyit Et</span>
+                <span>{orderCompletedData.whatsappOpened ? 'WhatsApp Mesajını Tekrar Aç' : 'WhatsApp ile Siparişi Gönder'}</span>
               </a>
 
               <Link

@@ -1,16 +1,34 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from '../router/Router';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useLocation } from '../router/Router';
 import { SEO } from '../components/SEO';
-import { useAuth, SUPER_ADMIN_CREDENTIALS, SYSTEM_ACCOUNTS } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { 
   ShieldCheck, Lock, Mail, Eye, EyeOff, ArrowRight, 
-  Crown, CheckCircle2, AlertCircle, Wrench, Sparkles, LogOut, ArrowLeft,
-  User, Building2, Wallet, Package
+  Crown, CheckCircle2, AlertCircle, Wrench, LogOut, ArrowLeft,
+  User, Building2
 } from 'lucide-react';
 
+// Yalnızca site içi göreli yollara yönlendir (open-redirect koruması)
+function safeNext(search) {
+  try {
+    const next = new URLSearchParams(search).get('next') || '';
+    return next.startsWith('/') && !next.startsWith('//') ? next : '';
+  } catch {
+    return '';
+  }
+}
+
+function defaultRouteFor(role) {
+  if (role === 'technician') return '/teknisyen';
+  if (role === 'customer_admin') return '/musteri-portali';
+  return '/panel';
+}
+
 export function AdminLoginPage() {
-  const { user, isSuperAdmin, isTechnician, isCustomer, login, verifyMfa, mfaChallenge, logout, loginError, setLoginError, isAdminLoginConfigured } = useAuth();
+  const { user, isSuperAdmin, isTechnician, login, verifyMfa, mfaChallenge, logout, loginError, setLoginError, ensureAuth, isAuthReady } = useAuth();
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const nextPath = safeNext(search);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,6 +37,13 @@ export function AdminLoginPage() {
   const [successToast, setSuccessToast] = useState(false);
   const [mfaCode, setMfaCode] = useState('');
 
+  useEffect(() => { ensureAuth(); }, [ensureAuth]);
+
+  const goAfterLogin = (role) => {
+    setSuccessToast(true);
+    setTimeout(() => navigate(nextPath || defaultRouteFor(role), { replace: true }), 500);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoginError('');
@@ -26,20 +51,11 @@ export function AdminLoginPage() {
 
     try {
       const res = await login(email, password);
-      setLoading(false);
       if (res.success) {
-        setSuccessToast(true);
-        setTimeout(() => {
-          if (res.user?.role === 'technician') {
-            navigate('/teknisyen');
-          } else if (res.user?.role === 'customer_admin') {
-            navigate('/musteri-portali');
-          } else {
-            navigate('/panel');
-          }
-        }, 600);
+        setPassword('');
+        goAfterLogin(res.user?.role);
       }
-    } catch {
+    } finally {
       setLoading(false);
     }
   };
@@ -50,18 +66,9 @@ export function AdminLoginPage() {
     const res = await verifyMfa(mfaCode);
     setLoading(false);
     if (res.success) {
-      setSuccessToast(true);
-      setTimeout(() => {
-        navigate('/panel');
-      }, 600);
+      setPassword('');
+      goAfterLogin(res.user?.role);
     }
-  };
-
-  const handleFillAccount = (accountKey) => {
-    const acc = SYSTEM_ACCOUNTS[accountKey] || SUPER_ADMIN_CREDENTIALS;
-    setEmail(acc.email);
-    setPassword(acc.password);
-    setLoginError('');
   };
 
   // If already logged in
@@ -71,6 +78,7 @@ export function AdminLoginPage() {
         <SEO 
           title="Oturum Açık | MESA Portal"
           description="Mesa İş Makinaları yönetim ve operasyon paneli."
+          noindex
         />
         <div className="max-w-md w-full bg-white border border-slate-200 rounded-3xl p-8 text-center shadow-xl backdrop-blur-xl animate-fadeIn space-y-4">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-red-600 to-red-700 text-white flex items-center justify-center mx-auto shadow-xl shadow-red-600/25 border border-red-400/30">
@@ -95,24 +103,28 @@ export function AdminLoginPage() {
               </Link>
             )}
 
-            <Link
-              to="/teknisyen"
-              className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition"
-            >
-              <Wrench className="w-3.5 h-3.5 text-amber-400" />
-              <span>Saha Teknisyen Terminaline Git</span>
-            </Link>
+            {(isTechnician) && (
+              <Link
+                to="/teknisyen"
+                className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+              >
+                <Wrench className="w-3.5 h-3.5 text-amber-400" />
+                <span>Saha Teknisyen Terminaline Git</span>
+              </Link>
+            )}
 
-            <Link
-              to="/musteri-portali"
-              className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-2 transition border border-slate-200"
-            >
-              <Building2 className="w-3.5 h-3.5 text-blue-600" />
-              <span>Müşteri Portalına Git</span>
-            </Link>
+            {(user.role === 'customer_admin' || isSuperAdmin) && (
+              <Link
+                to="/musteri-portali"
+                className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-2 transition border border-slate-200"
+              >
+                <Building2 className="w-3.5 h-3.5 text-blue-600" />
+                <span>Müşteri Portalına Git</span>
+              </Link>
+            )}
 
             <button
-              onClick={logout}
+              onClick={() => logout()}
               className="w-full py-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs flex items-center justify-center gap-2 transition border border-red-200"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -129,6 +141,7 @@ export function AdminLoginPage() {
       <SEO 
         title="Güvenli Personel & Yönetici Girişi | MESA ERP"
         description="MESA İş Makinaları telematik, ERP, saha teknisyen ve müşteri yönetim sistemi giriş ekranı."
+        noindex
       />
 
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
@@ -181,7 +194,8 @@ export function AdminLoginPage() {
           {mfaChallenge ? (
             <form onSubmit={handleMfaSubmit} className="space-y-4">
               <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs leading-relaxed">
-                <b>İki aşamalı doğrulama gerekli.</b><br />SMS veya authenticator kodunuzu girin. Demo ortamı için: <b>123456</b>
+                <b>İki aşamalı doğrulama gerekli.</b><br />Authenticator uygulamanızdaki 6 haneli kodu girin.
+                {import.meta.env.DEV && <><br />Yerel geliştirme ortamı kodu: <b>123456</b></>}
               </div>
               <input
                 value={mfaCode}
@@ -246,7 +260,7 @@ export function AdminLoginPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !isAuthReady}
                 className="w-full mt-2 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-red-600/25 transition active:scale-98 disabled:opacity-50"
               >
                 {loading ? (
@@ -261,57 +275,11 @@ export function AdminLoginPage() {
             </form>
           )}
 
-          {/* Quick Demo Fill Buttons for All Roles */}
-          <div className="mt-6 pt-5 border-t border-slate-100 space-y-2">
-            <span className="text-[10px] uppercase tracking-wider font-black text-slate-400 block text-center mb-2">
-              Hızlı Demo Hesapları (Tek Tıkla Doldur)
-            </span>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleFillAccount('super_admin')}
-                className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition"
-              >
-                <span className="text-[11px] font-bold text-red-700 block flex items-center gap-1">
-                  <Crown className="w-3 h-3 text-red-600" /> Süper Admin
-                </span>
-                <span className="text-[9px] text-slate-400 block truncate">Cebrail Kara (Root)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleFillAccount('technician')}
-                className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition"
-              >
-                <span className="text-[11px] font-bold text-slate-900 block flex items-center gap-1">
-                  <Wrench className="w-3 h-3 text-amber-600" /> Saha Ustası
-                </span>
-                <span className="text-[9px] text-slate-400 block truncate">Mehmet Usta (Saha)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleFillAccount('customer_admin')}
-                className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition"
-              >
-                <span className="text-[11px] font-bold text-blue-700 block flex items-center gap-1">
-                  <Building2 className="w-3 h-3 text-blue-600" /> B2B Müşteri
-                </span>
-                <span className="text-[9px] text-slate-400 block truncate">ABC İnşaat Ltd.</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleFillAccount('finance')}
-                className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition"
-              >
-                <span className="text-[11px] font-bold text-emerald-700 block flex items-center gap-1">
-                  <Wallet className="w-3 h-3 text-emerald-600" /> Finans Sorumlusu
-                </span>
-                <span className="text-[9px] text-slate-400 block truncate">Fatma Hanım (Mali)</span>
-              </button>
-            </div>
+          <div className="mt-6 pt-5 border-t border-slate-100 text-center text-[11px] text-slate-500 leading-relaxed">
+            Hesabınız yok veya şifrenizi unuttunuz mu?{' '}
+            <a href="mailto:servis@mesaismakineleri.com.tr" className="font-bold text-slate-700 hover:text-red-600">
+              Sistem yöneticisine yazın
+            </a>
           </div>
 
         </div>

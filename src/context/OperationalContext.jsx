@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { AUDIT_EVENT_NAME } from '../lib/security';
+import { partsCatalogData } from '../data/partsCatalogData';
+
+const PARTS_CATALOG = new Map(partsCatalogData.map(part => [part.id, part]));
 
 const OperationalContext = createContext();
 
@@ -21,6 +24,16 @@ const safeSetStorage = (key, value) => {
     console.warn(`[MESA Storage] Failed to persist ${key}:`, e);
   }
 };
+
+// Kriptografik olarak güvenli rastgele hex (Math.random tahmin edilebilir ve çakışabilir)
+const secureHex = (length = 8) => {
+  const bytes = new Uint8Array(Math.ceil(length / 2));
+  globalThis.crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('').slice(0, length);
+};
+
+/** İnsan tarafından okunabilir, çakışma riski düşük takip kodu: MS-7A5C9B80 */
+export const createTrackingCode = (prefix) => `${prefix}-${secureHex(8).toUpperCase()}`;
 
 // ============ INITIAL DATASETS ============
 
@@ -377,8 +390,7 @@ export const OperationalProvider = ({ children }) => {
     if (!machine) return null;
 
     const oldToken = machine.token;
-    const randomHex = Math.random().toString(36).substring(2, 10);
-    const newToken = `mch_${randomHex}`;
+    const newToken = `mch_${secureHex(32)}`;
 
     // Mark old token revoked
     setRevokedTokens(prev => [...new Set([...prev, oldToken])]);
@@ -482,24 +494,27 @@ export const OperationalProvider = ({ children }) => {
   };
 
   // Create Emergency Request
+  // Müşteri tarafından oluşturulan taleplerde teknisyen/ETA UYDURULMAZ: talep
+  // "Talep Alındı" aşamasında başlar. Personel paneli atama yaparsa "Atandı" olur.
   const createEmergencyJob = (jobData) => {
-    const newCode = 'MS-' + Math.floor(1000 + Math.random() * 9000);
+    const newCode = jobData.code || createTrackingCode('MS');
+    const isAssigned = Boolean(jobData.assignedTechnician);
     const newJob = {
       id: newCode,
       code: newCode,
       customer: jobData.customer || 'Şantiye Yetkilisi',
       customerId: jobData.customerId || 'cust_generic',
-      phone: jobData.phone || '0534 407 55 85',
+      phone: jobData.phone || '',
       machine: jobData.machine || 'İş Makinası',
       machineId: jobData.machineId || 'MCH-01-GEN',
       issue: jobData.issue || 'Arıza Tespiti',
-      location: jobData.location || 'Adana / Çukurova',
-      status: 'Mobil Ekip Yolda',
-      stepIndex: 1,
-      assignedTechnician: jobData.assignedTechnician || 'Mehmet Usta (Nöbetçi Filo)',
-      vehicle: jobData.vehicle || '01 MSA 01 (Mobil Servis)',
-      techDistance: '8.5 km',
-      etaMinutes: jobData.etaMinutes || 24,
+      location: jobData.location || '',
+      status: isAssigned ? 'Atandı' : 'Talep Alındı',
+      stepIndex: isAssigned ? 1 : 0,
+      assignedTechnician: jobData.assignedTechnician || null,
+      vehicle: jobData.vehicle || null,
+      techDistance: jobData.techDistance || null,
+      etaMinutes: jobData.etaMinutes || null,
       createdAt: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
       partsUsed: [],
       cost: 0,
@@ -517,8 +532,8 @@ export const OperationalProvider = ({ children }) => {
     }
 
     addAuditLog({
-      actorName: 'Süper Admin',
-      actorRole: 'super_admin',
+      actorName: jobData.actorName || newJob.customer,
+      actorRole: jobData.actorRole || 'customer',
       actionType: 'WORK_ORDER_CREATED',
       details: `${newCode} nolu arıza bildirimi alındı. Makine: ${newJob.machine}, Şantiye: ${newJob.location}`,
       resourceType: 'work_order',
@@ -735,21 +750,26 @@ export const OperationalProvider = ({ children }) => {
   }, [cart]);
 
   const createPartsOrder = (orderData) => {
-    const orderCode = 'SP-' + Math.floor(1000 + Math.random() * 9000);
+    const orderCode = orderData.orderCode || createTrackingCode('SP');
+    // Fiyat/isim her zaman katalogdan alınır (localStorage'daki sepet değiştirilebilir).
+    const items = cart.map(item => {
+      const part = PARTS_CATALOG.get(item.id) || item;
+      return {
+        id: item.id,
+        name: part.name,
+        oem: part.oem || '',
+        quantity: Math.max(1, Math.min(999, Math.floor(Number(item.quantity || item.qty) || 1))),
+        price: Number(part.price) || 0
+      };
+    });
     const newOrder = {
       orderCode,
       customerName: orderData.customerName || '',
       companyName: orderData.companyName || '',
       phone: orderData.phone || '',
       taxNo: orderData.taxNo || '',
-      items: cart.map(item => ({
-        id: item.id,
-        name: item.name,
-        oem: item.oem || '',
-        quantity: item.quantity || item.qty || 1,
-        price: item.price || 0
-      })),
-      total: cartTotal,
+      items,
+      total: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
       address: orderData.address || '',
       notes: orderData.notes || '',
       status: 'Onay Bekliyor',

@@ -1,210 +1,274 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { checkRateLimit, resetRateLimit, appendSecurityAudit, startActivityWatch, isSessionExpired, clearActivity, SESSION_TIMEOUT_MS } from '../lib/security';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { checkRateLimit, resetRateLimit, appendSecurityAudit, startActivityWatch, isSessionExpired, clearActivity, touchActivity, SESSION_TIMEOUT_MS } from '../lib/security';
 
-const AuthContext = createContext();
+/**
+ * MESA kimlik doğrulama katmanı
+ * ─────────────────────────────────────────────
+ * Parola veya hesap listesi İSTEMCİ KODUNDA TUTULMAZ. İki sağlayıcı desteklenir:
+ *
+ *  1. Node API (VITE_API_BASE tanımlıysa): parola + MFA sunucuda doğrulanır.
+ *  2. Firebase Authentication (varsayılan): e-posta/şifre girişi; rol bilgisi
+ *     yalnızca sunucu tarafında atanan custom claim'den (`mesaRole`) okunur.
+ *     Rol atamak için: `npm run staff:role -- <email> <rol>` (scripts/set-staff-role.mjs).
+ *
+ * Tarayıcı depolamasındaki hiçbir veri yetki kaynağı olarak kullanılmaz.
+ */
+
+const AuthContext = createContext(null);
 const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '');
 const AUTH_TOKEN_KEY = 'mesa_api_token';
-const AUTH_USER_KEY = 'mesa_auth_user';
+// Yalnızca "bu tarayıcıda daha önce personel girişi yapıldı" ipucu; yetki taşımaz.
+// Ziyaretçilerin Firebase SDK'sını gereksiz yere indirmemesi için kullanılır.
+const STAFF_HINT_KEY = 'mesa_staff_session_hint';
 
-const envEmail = (import.meta.env.VITE_SUPER_ADMIN_EMAIL || 'cebrailkara@gmail.com').trim();
-const envPassword = (import.meta.env.VITE_SUPER_ADMIN_PASSWORD || 'Ak010101').trim();
-const envName = (import.meta.env.VITE_SUPER_ADMIN_NAME || 'Cebrail Kara').trim();
+export const AUTH_PROVIDER = API_BASE ? 'api' : 'firebase';
 
-export const isAdminLoginConfigured = Boolean(envEmail && envPassword);
-
-export const SUPER_ADMIN_CREDENTIALS = {
-  id: 'usr_super_admin',
-  email: envEmail,
-  password: envPassword,
-  name: envName,
-  role: 'super_admin',
-  roleTitle: 'Süper Admin (Genel Koordinatör)',
-  phone: '+90 534 407 55 85',
-  avatar: 'CK',
-  permissions: [
-    'ALL',
-    'manage_orders',
-    'delete_orders',
-    'manage_fleet',
-    'manage_technicians',
-    'manage_inventory',
-    'manage_pricing',
-    'export_telematics',
-    'system_configuration',
-    'audit_logs',
-    'rotate_qr_tokens',
-    'access_technician_panel',
-    'access_customer_portal'
-  ]
+// Custom claim değeri → uygulama rolü
+const CLAIM_TO_ROLE = {
+  admin: 'super_admin',
+  super_admin: 'super_admin',
+  technician: 'technician',
+  finance: 'finance',
+  warehouse: 'warehouse',
+  customer_admin: 'customer_admin',
+  dispatcher: 'technician',
+  manager: 'super_admin'
 };
 
-// Standart Sistem Hesapları ve Rol Dizini
-export const SYSTEM_ACCOUNTS = {
-  super_admin: SUPER_ADMIN_CREDENTIALS,
-  technician: {
-    id: 'usr_tech_mehmet',
-    email: 'usta@mesaismakineleri.com.tr',
-    altEmail: 'mehmet.usta@mesaismakineleri.com.tr',
-    password: 'Usta2026!',
-    name: 'Mehmet Usta',
-    role: 'technician',
-    roleTitle: 'Baş Saha Teknisyeni & Motor/Şanzıman Uzmanı',
-    phone: '+90 534 407 55 85',
-    avatar: 'MU',
-    assignedVehicle: '01 MSA 01 (Ford Transit 4x4)',
-    permissions: [
-      'access_technician_panel',
-      'update_work_order',
-      'add_evidence',
-      'record_meter_hours',
-      'consume_parts',
-      'collect_customer_signature'
-    ]
+export const ROLE_PROFILES = {
+  super_admin: {
+    title: 'Süper Admin (Genel Koordinatör)',
+    permissions: ['ALL']
   },
-  technician_ahmet: {
-    id: 'usr_tech_ahmet',
-    email: 'ahmet.usta@mesaismakineleri.com.tr',
-    password: 'Usta2026!',
-    name: 'Ahmet Usta',
-    role: 'technician',
-    roleTitle: 'Mobil Saha Ustası & Hidrolik Uzmanı',
-    phone: '+90 532 555 0128',
-    avatar: 'AU',
-    assignedVehicle: '01 MSA 02 (Iveco Daily)',
-    permissions: [
-      'access_technician_panel',
-      'update_work_order',
-      'add_evidence',
-      'record_meter_hours',
-      'consume_parts',
-      'collect_customer_signature'
-    ]
+  technician: {
+    title: 'Saha Teknisyeni',
+    permissions: ['access_technician_panel', 'update_work_order', 'add_evidence', 'record_meter_hours', 'consume_parts', 'collect_customer_signature']
   },
   finance: {
-    id: 'usr_fin_fatma',
-    email: 'muhasebe@mesaismakineleri.com.tr',
-    password: 'Finans2026!',
-    name: 'Fatma Hanım',
-    role: 'finance',
-    roleTitle: 'Finans & Muhasebe Sorumlusu',
-    phone: '+90 533 888 1234',
-    avatar: 'FH',
-    permissions: [
-      'view_finance',
-      'manage_cheques',
-      'manage_cash',
-      'collect_receivables',
-      'export_financial_reports'
-    ]
+    title: 'Finans & Muhasebe Sorumlusu',
+    permissions: ['view_finance', 'manage_cheques', 'manage_cash', 'collect_receivables', 'export_financial_reports']
   },
   warehouse: {
-    id: 'usr_wh_ali',
-    email: 'depo@mesaismakineleri.com.tr',
-    password: 'Depo2026!',
-    name: 'Ali Bey',
-    role: 'warehouse',
-    roleTitle: 'Yedek Parça Depo & Lojistik Müdürü',
-    phone: '+90 533 444 5566',
-    avatar: 'AB',
-    permissions: [
-      'manage_inventory',
-      'dispatch_parts',
-      'record_stock_movement',
-      'view_orders'
-    ]
+    title: 'Yedek Parça Depo & Lojistik',
+    permissions: ['manage_inventory', 'dispatch_parts', 'record_stock_movement', 'view_orders']
   },
   customer_admin: {
-    id: 'usr_cust_abcoinsaat',
-    email: 'abcoinsaat@gmail.com',
-    password: 'Musteri2026!',
-    name: 'Ahmet Kaya',
-    company: 'ABC İnşaat Ltd. Şti.',
-    tenantId: 'cust_abc_insaat',
-    role: 'customer_admin',
-    roleTitle: 'Kurumsal Filo Yetkilisi',
-    phone: '+90 532 100 2030',
-    avatar: 'AK',
-    permissions: [
-      'access_customer_portal',
-      'view_own_fleet',
-      'create_service_request',
-      'approve_service_quotes'
-    ]
+    title: 'Kurumsal Filo Yetkilisi',
+    permissions: ['access_customer_portal', 'view_own_fleet', 'create_service_request', 'approve_service_quotes']
   }
 };
 
+const initials = (name = '') => name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]?.toLocaleUpperCase('tr-TR')).join('') || 'M';
+
+function profileFor({ id, email, name, role, tenantId = null, company = null, phone = '' }) {
+  const profile = ROLE_PROFILES[role];
+  if (!profile) return null;
+  const displayName = name || (email ? email.split('@')[0] : 'Personel');
+  return {
+    id,
+    email,
+    name: displayName,
+    role,
+    roleTitle: profile.title,
+    permissions: profile.permissions,
+    avatar: initials(displayName),
+    tenantId,
+    company,
+    phone,
+    loginTime: new Date().toISOString()
+  };
+}
+
+function userFromFirebase(firebaseUser, claims) {
+  if (!firebaseUser || firebaseUser.isAnonymous) return null;
+  const role = CLAIM_TO_ROLE[claims?.mesaRole];
+  if (!role) return null;
+  return profileFor({
+    id: firebaseUser.uid,
+    email: firebaseUser.email || '',
+    name: firebaseUser.displayName || claims?.name || '',
+    role,
+    tenantId: claims?.tenantId || null,
+    company: claims?.company || null,
+    phone: firebaseUser.phoneNumber || ''
+  });
+}
+
+function userFromApi(apiUser) {
+  if (!apiUser) return null;
+  const role = CLAIM_TO_ROLE[apiUser.role] || apiUser.role;
+  return profileFor({ id: apiUser.id, email: apiUser.email, name: apiUser.name, role, tenantId: apiUser.tenantId || null });
+}
+
+function firebaseErrorMessage(error) {
+  switch (error?.code) {
+    case 'auth/invalid-credential':
+    case 'auth/invalid-email':
+    case 'auth/user-not-found':
+    case 'auth/wrong-password':
+      return 'E-posta veya şifre hatalı.';
+    case 'auth/user-disabled':
+      return 'Bu hesap devre dışı bırakılmış.';
+    case 'auth/too-many-requests':
+      return 'Çok fazla başarısız deneme. Lütfen birkaç dakika sonra tekrar deneyin.';
+    case 'auth/operation-not-allowed':
+      return 'E-posta/şifre ile giriş Firebase konsolunda etkinleştirilmemiş.';
+    case 'auth/network-request-failed':
+      return 'Bağlantı kurulamadı. İnternet bağlantınızı kontrol edin.';
+    default:
+      return 'Giriş yapılamadı. Lütfen tekrar deneyin.';
+  }
+}
+
 async function api(path, options = {}) {
   if (!API_BASE) throw new Error('API_NOT_CONFIGURED');
+  const { token, ...rest } = options;
   const response = await fetch(`${API_BASE}${path}`, {
+    ...rest,
     headers: {
       'Content-Type': 'application/json',
-      ...(options.token ? { Authorization: `Bearer ${options.token}` } : {})
-    },
-    ...options
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    }
   });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload?.error?.message || 'API isteği başarısız.');
   return payload;
 }
 
+const readStorage = (storage, key) => {
+  try { return typeof window !== 'undefined' ? window[storage].getItem(key) : null; } catch { return null; }
+};
+const writeStorage = (storage, key, value) => {
+  try {
+    if (typeof window === 'undefined') return;
+    if (value === null) window[storage].removeItem(key);
+    else window[storage].setItem(key, value);
+  } catch { /* depolama kapalı — sessizce devam */ }
+};
+
 export const SESSION_TIMEOUT_MS_EXPORT = SESSION_TIMEOUT_MS;
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    if (typeof window === 'undefined') return null;
-    try {
-      const stored = window.sessionStorage.getItem(AUTH_USER_KEY) || window.localStorage.getItem(AUTH_USER_KEY);
-      return stored ? JSON.parse(stored) : null;
-    } catch {
-      return null;
-    }
-  });
-
-  const [apiToken, setApiToken] = useState(() => (typeof window !== 'undefined' ? window.sessionStorage.getItem(AUTH_TOKEN_KEY) : null));
+  const [user, setUser] = useState(null);
+  const [authStatus, setAuthStatus] = useState('idle'); // idle | loading | ready
   const [loginError, setLoginError] = useState('');
   const [mfaChallenge, setMfaChallenge] = useState(null);
+  const [apiToken, setApiToken] = useState(() => readStorage('sessionStorage', AUTH_TOKEN_KEY));
 
-  // Sync user to storage
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      if (user) {
-        window.sessionStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
-      } else {
-        window.sessionStorage.removeItem(AUTH_USER_KEY);
+  const firebaseRef = useRef(null);
+  const initRef = useRef(null);
+  const unsubscribeRef = useRef(null);
+
+  const loadFirebase = useCallback(async () => {
+    if (!firebaseRef.current) firebaseRef.current = await import('../lib/firebase');
+    return firebaseRef.current;
+  }, []);
+
+  /** Kimlik katmanını (gerekirse) başlatır. Korumalı sayfalar ve giriş ekranı çağırır. */
+  const ensureAuth = useCallback(() => {
+    if (initRef.current) return initRef.current;
+    setAuthStatus('loading');
+
+    initRef.current = (async () => {
+      if (AUTH_PROVIDER === 'api') {
+        const token = readStorage('sessionStorage', AUTH_TOKEN_KEY);
+        if (token) {
+          try {
+            const { user: restored } = await api('/api/me', { token });
+            setUser(userFromApi(restored));
+          } catch {
+            writeStorage('sessionStorage', AUTH_TOKEN_KEY, null);
+            setApiToken(null);
+          }
+        }
+        setAuthStatus('ready');
+        return;
       }
-    } catch (e) {
-      console.warn('Storage sync error:', e);
-    }
-  }, [user]);
 
+      try {
+        const fb = await loadFirebase();
+        if (!fb.isFirebaseConfigured || !fb.auth) {
+          setAuthStatus('ready');
+          return;
+        }
+        await new Promise(resolve => {
+          let first = true;
+          unsubscribeRef.current = fb.onIdTokenChanged(fb.auth, async (firebaseUser) => {
+            let next = null;
+            if (firebaseUser && !firebaseUser.isAnonymous) {
+              try {
+                const token = await firebaseUser.getIdTokenResult();
+                next = userFromFirebase(firebaseUser, token.claims);
+              } catch {
+                next = null;
+              }
+            }
+            setUser(next);
+            if (!next) writeStorage('localStorage', STAFF_HINT_KEY, null);
+            if (first) { first = false; setAuthStatus('ready'); resolve(); }
+          });
+        });
+      } catch (error) {
+        console.warn('[MESA Auth] Kimlik katmanı başlatılamadı:', error);
+        setAuthStatus('ready');
+      }
+    })();
+
+    return initRef.current;
+  }, [loadFirebase]);
+
+  // Daha önce personel girişi yapılmış tarayıcılarda oturumu otomatik geri yükle.
   useEffect(() => {
-    if (!apiToken || !API_BASE) return;
-    api('/api/me', { token: apiToken })
-      .then(({ user: restored }) => setUser(restored))
-      .catch(() => {
-        window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
-        setApiToken(null);
-      });
-  }, [apiToken]);
+    const hasHint = readStorage('localStorage', STAFF_HINT_KEY) || readStorage('sessionStorage', AUTH_TOKEN_KEY);
+    if (hasHint) ensureAuth();
+    return () => { if (unsubscribeRef.current) unsubscribeRef.current(); };
+  }, [ensureAuth]);
 
-  // Oturum aktivitesini güvenli şekilde işaretle
-  const touchActivitySafe = () => {
-    try { startActivityWatch(); } catch { /* no-op */ }
+  const auditSuccess = (authUser, email) => {
+    appendSecurityAudit({
+      actorName: authUser.name,
+      actorRole: authUser.role,
+      actionType: 'LOGIN_SUCCESS',
+      details: `${authUser.roleTitle} oturumu açıldı (${email}).`,
+      resourceType: 'auth',
+      resourceId: authUser.id
+    });
+  };
+
+  const auditFailure = (email, reason) => {
+    appendSecurityAudit({
+      actorName: email || 'Bilinmeyen',
+      actorRole: 'anonymous',
+      actionType: 'LOGIN_FAILED',
+      details: `Başarısız giriş denemesi: ${reason}`,
+      resourceType: 'auth',
+      resourceId: email || 'anon'
+    });
+  };
+
+  const fail = (message, email, reason = message) => {
+    auditFailure(email, reason);
+    setLoginError(message);
+    return { success: false, error: message };
   };
 
   const login = async (email, password) => {
     const cleanEmail = (email || '').trim().toLowerCase();
-    const cleanPassword = (password || '').trim();
+    const cleanPassword = password || '';
     setLoginError('');
 
-    // ── Rate limit: hesap + tarayıcı bazlı deneme sınırı (5 deneme / 15 dk) ──
-    const rateKey = `login:${cleanEmail || 'anon'}`;
+    if (!cleanEmail || !cleanPassword) {
+      return fail('E-posta ve şifre zorunludur.', cleanEmail);
+    }
+
+    // Tarayıcı tarafı deneme sınırı yalnızca kullanıcı deneyimi içindir;
+    // asıl sınırlama Firebase Auth / API sunucusunda uygulanır.
+    const rateKey = `login:${cleanEmail}`;
     const rate = checkRateLimit(rateKey, 5, 15 * 60 * 1000);
     if (!rate.allowed) {
       const msg = `Çok fazla başarısız giriş denemesi. ${Math.ceil(rate.retryAfterSec / 60)} dakika sonra tekrar deneyin.`;
       appendSecurityAudit({
-        actorName: cleanEmail || 'Bilinmeyen',
+        actorName: cleanEmail,
         actorRole: 'anonymous',
         actionType: 'LOGIN_RATE_LIMITED',
         details: `Giriş denemesi hız sınırına takıldı (${rate.retryAfterSec} sn bekleme).`,
@@ -215,7 +279,9 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: msg };
     }
 
-    if (API_BASE) {
+    await ensureAuth();
+
+    if (AUTH_PROVIDER === 'api') {
       try {
         const result = await api('/api/auth/login', {
           method: 'POST',
@@ -225,95 +291,35 @@ export const AuthProvider = ({ children }) => {
           setMfaChallenge(result.sessionToken);
           return { success: false, mfaRequired: true };
         }
+        return fail('Sunucu beklenmeyen bir yanıt verdi.', cleanEmail);
       } catch (error) {
-        setLoginError(error.message);
-        return { success: false, error: error.message };
+        return fail(error.message, cleanEmail);
       }
     }
 
-    // 1. Check Super Admin
-    if (
-      cleanEmail === SUPER_ADMIN_CREDENTIALS.email.toLowerCase() &&
-      cleanPassword === SUPER_ADMIN_CREDENTIALS.password
-    ) {
+    const fb = await loadFirebase();
+    if (!fb.isFirebaseConfigured || !fb.auth) {
+      return fail('Personel girişi bu ortamda yapılandırılmamış (Firebase ayarları eksik).', cleanEmail, 'not_configured');
+    }
+
+    try {
+      const credential = await fb.signInWithEmailAndPassword(fb.auth, cleanEmail, cleanPassword);
+      const token = await credential.user.getIdTokenResult(true);
+      const authUser = userFromFirebase(credential.user, token.claims);
+      if (!authUser) {
+        await fb.signOut(fb.auth).catch(() => {});
+        return fail('Bu hesaba MESA personel rolü atanmamış. Yöneticinizle iletişime geçin.', cleanEmail, 'missing_role_claim');
+      }
       resetRateLimit(rateKey);
-      const authUser = {
-        ...SUPER_ADMIN_CREDENTIALS,
-        loginTime: new Date().toISOString()
-      };
+      writeStorage('localStorage', STAFF_HINT_KEY, '1');
+      touchActivity();
+      startActivityWatch();
       setUser(authUser);
-      touchActivitySafe();
-      appendSecurityAudit({
-        actorName: authUser.name,
-        actorRole: authUser.role,
-        actionType: 'LOGIN_SUCCESS',
-        details: `Süper admin oturumu açıldı (${cleanEmail}).`,
-        resourceType: 'auth',
-        resourceId: authUser.id
-      });
+      auditSuccess(authUser, cleanEmail);
       return { success: true, user: authUser };
+    } catch (error) {
+      return fail(firebaseErrorMessage(error), cleanEmail, error?.code || 'unknown');
     }
-
-    // 2. Check Other System Accounts (Technician, Finance, Warehouse, Customer)
-    for (const key of Object.keys(SYSTEM_ACCOUNTS)) {
-      const acc = SYSTEM_ACCOUNTS[key];
-      const matchEmail = acc.email.toLowerCase() === cleanEmail || (acc.altEmail && acc.altEmail.toLowerCase() === cleanEmail);
-      if (matchEmail && acc.password === cleanPassword) {
-        resetRateLimit(rateKey);
-        const authUser = {
-          ...acc,
-          loginTime: new Date().toISOString()
-        };
-        setUser(authUser);
-        touchActivitySafe();
-        appendSecurityAudit({
-          actorName: authUser.name,
-          actorRole: authUser.role,
-          actionType: 'LOGIN_SUCCESS',
-          details: `${authUser.roleTitle || authUser.role} oturumu açıldı (${cleanEmail}).`,
-          resourceType: 'auth',
-          resourceId: authUser.id
-        });
-        return { success: true, user: authUser };
-      }
-    }
-
-    // 2b. Başarısız giriş → audit log (kabul testi gereği)
-    appendSecurityAudit({
-      actorName: cleanEmail || 'Bilinmeyen',
-      actorRole: 'anonymous',
-      actionType: 'LOGIN_FAILED',
-      details: `Başarısız giriş denemesi: geçersiz e-posta veya şifre.`,
-      resourceType: 'auth',
-      resourceId: cleanEmail || 'anon'
-    });
-
-    // Fallback: If password matches Master Admin password or default Usta password
-    if (cleanEmail.includes('usta') || cleanEmail.includes('teknisyen') || cleanEmail.includes('personel')) {
-      const authUser = {
-        ...SYSTEM_ACCOUNTS.technician,
-        email: cleanEmail,
-        loginTime: new Date().toISOString()
-      };
-      setUser(authUser);
-      return { success: true, user: authUser };
-    }
-
-    const message = 'E-posta veya şifre hatalı. Lütfen geçerli bir personel veya yönetici hesabı giriniz.';
-    setLoginError(message);
-    return { success: false, error: message };
-  };
-
-  // Hızlı Demo Rol Değiştirici (Geliştirici & Test İçin)
-  const switchDemoRole = (roleKey) => {
-    const acc = SYSTEM_ACCOUNTS[roleKey] || SYSTEM_ACCOUNTS.super_admin;
-    const authUser = {
-      ...acc,
-      loginTime: new Date().toISOString()
-    };
-    setUser(authUser);
-    setLoginError('');
-    return authUser;
   };
 
   const verifyMfa = async (code) => {
@@ -323,27 +329,32 @@ export const AuthProvider = ({ children }) => {
         method: 'POST',
         body: JSON.stringify({ sessionToken: mfaChallenge, code })
       });
+      const authUser = userFromApi(result.user);
+      if (!authUser) throw new Error('Bu hesabın rolü portal erişimi için tanımlı değil.');
       setMfaChallenge(null);
       setApiToken(result.token);
-      window.sessionStorage.setItem(AUTH_TOKEN_KEY, result.token);
-      setUser(result.user);
+      writeStorage('sessionStorage', AUTH_TOKEN_KEY, result.token);
+      touchActivity();
+      startActivityWatch();
+      setUser(authUser);
       setLoginError('');
-      return { success: true, user: result.user };
+      auditSuccess(authUser, authUser.email);
+      return { success: true, user: authUser };
     } catch (error) {
       setLoginError(error.message);
       return { success: false, error: error.message };
     }
   };
 
-  const logout = async (reason = 'user') => {
-    if (apiToken && API_BASE) {
+  const logout = useCallback(async (reason = 'user') => {
+    if (AUTH_PROVIDER === 'api' && apiToken) {
       await api('/api/auth/logout', { method: 'POST', token: apiToken }).catch(() => { });
     }
-    if (typeof window !== 'undefined') {
-      window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
-      window.sessionStorage.removeItem(AUTH_USER_KEY);
-      window.localStorage.removeItem(AUTH_USER_KEY);
+    if (AUTH_PROVIDER === 'firebase' && firebaseRef.current?.auth) {
+      await firebaseRef.current.signOut(firebaseRef.current.auth).catch(() => { });
     }
+    writeStorage('sessionStorage', AUTH_TOKEN_KEY, null);
+    writeStorage('localStorage', STAFF_HINT_KEY, null);
     clearActivity();
     setApiToken(null);
     setUser(null);
@@ -359,17 +370,18 @@ export const AuthProvider = ({ children }) => {
         resourceId: '-'
       });
     }
-  };
+  }, [apiToken]);
 
-  // ── Boşta kalma oturum zaman aşımı (Faz 0: oturum çalma mitigasyonu) ──
+  // ── Boşta kalma oturum zaman aşımı ──
   useEffect(() => {
     if (!user) return undefined;
     try { startActivityWatch(); } catch { /* no-op */ }
+    if (isSessionExpired()) { logout('timeout'); return undefined; }
     const interval = setInterval(() => {
       if (isSessionExpired()) logout('timeout');
     }, 60 * 1000);
     return () => clearInterval(interval);
-  }, [user]);
+  }, [user, logout]);
 
   // Role Checks
   const isSuperAdmin = user?.role === 'super_admin';
@@ -377,10 +389,11 @@ export const AuthProvider = ({ children }) => {
   const isFinance = user?.role === 'finance' || isSuperAdmin;
   const isWarehouse = user?.role === 'warehouse' || isSuperAdmin;
   const isCustomer = user?.role === 'customer_admin' || isSuperAdmin;
+  const isStaff = Boolean(user) && user.role !== 'customer_admin';
 
   const hasPermission = (permission) => {
     if (!user) return false;
-    if (user.permissions?.includes('ALL') || isSuperAdmin) return true;
+    if (isSuperAdmin || user.permissions?.includes('ALL')) return true;
     return user.permissions?.includes(permission) || false;
   };
 
@@ -388,24 +401,25 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
-        isAuthenticated: !!user,
+        isAuthenticated: Boolean(user),
         isSuperAdmin,
         isTechnician,
         isFinance,
         isWarehouse,
         isCustomer,
+        isStaff,
         hasPermission,
         login,
-        switchDemoRole,
         verifyMfa,
         mfaChallenge,
         logout,
         loginError,
         setLoginError,
-        superAdminEmail: SUPER_ADMIN_CREDENTIALS.email,
-        isAdminLoginConfigured,
-        apiToken,
-        systemAccounts: SYSTEM_ACCOUNTS
+        ensureAuth,
+        authStatus,
+        isAuthReady: authStatus === 'ready',
+        authProvider: AUTH_PROVIDER,
+        apiToken
       }}
     >
       {children}

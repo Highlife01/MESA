@@ -186,5 +186,39 @@ Yerel JSON repository geliştirme ve demo içindir. Üretimde `server/index.js` 
 
 Ayrıntılı domain modeli, tehdit modeli, API sınırı ve kabul testleri: [`docs/advanced-service-platform-blueprint.md`](docs/advanced-service-platform-blueprint.md)
 
+## 🛡️ Güvenlik ve Kimlik Doğrulama Mimarisi (2026 Güncellemesi)
+
+Platform, kurumsal güvenlik ve veri gizliliği standartlarına uygun olarak kapsamlı şekilde güçlendirilmiştir:
+
+### 1. Personel ve Yönetici Giriş Güvenliği
+- **Sert Kodlanmış Kimlik Bilgilerinin Temizlenmesi:** İstemci tarafındaki (client bundle) tüm statik parolalar ve demo kullanıcı hesapları kaldırılmıştır.
+- **Firebase Auth & Custom Claims:** Personel kimlik doğrulaması Firebase Auth (E-posta / Şifre) üzerinden yürütülür. Yetkilendirme `mesaRole` custom claim'i (`admin`, `super_admin`, `technician`, `finance`, `warehouse`, `customer_admin`, `dispatcher`, `manager`) ile yönetilir.
+- **Personel Rolü Atama Aracı:**
+  ```bash
+  # Servis hesabı JSON anahtarını tanımlayın:
+  export GOOGLE_APPLICATION_CREDENTIALS="/guvenli/dizin/serviceAccountKey.json"
+  # (PowerShell: $env:GOOGLE_APPLICATION_CREDENTIALS="C:\anahtarlar\serviceAccountKey.json")
+
+  # Yetki ata:
+  npm run staff:role -- personel@mesaismakineleri.com.tr admin
+  npm run staff:role -- usta@mesaismakineleri.com.tr technician
+  npm run staff:role -- musteri@sirket.com customer_admin tenant_abc "ABC İnşaat"
+
+  # Rolü sorgula veya kaldır:
+  npm run staff:role -- personel@mesaismakineleri.com.tr --show
+  npm run staff:role -- personel@mesaismakineleri.com.tr --remove
+  ```
+
+### 2. Node Operasyon API Sertleştirmesi (`server/index.js`)
+- **MFA Doğrulama & RFC 6238 TOTP:** Yalnızca şifresi doğrulanmış oturumların API çağrısı yapması engellenmiştir (`actor()` kontrolü). Üretim ortamında RFC 6238 standardına uygun 6 haneli zaman bazlı tek kullanımlık şifreler (TOTP) zorunludur.
+- **Dinamik Rate Limiting & Brute-Force Koruması:** IP bazlı kayan pencere (sliding window) ile 15 dakikada en fazla 10 başarısız denemeye izin verilir.
+- **Kritik Sırların İzolasyonu:** `.cloudrun.env.yaml` git takibinden çıkarılmış (`.gitignore`), şablon olarak `.cloudrun.env.example.yaml` sunulmuştur.
+
+### 3. SEO ve SPA Fallback
+- `firebase.json` içinde `**` yönlendirmesi `dist/spa.html` dosyasına bağlanmıştır.
+- `spa.html` kanonik etiket içermez ve `noindex, follow` yönergesiyle arama motorlarının 404 / dinamik sayfaları dizine eklemesini önler.
+- 144 statik açılış sayfası prerender motoru ile taranabilir HTML olarak derlenir.
+
 ---
 *© 2026 MESA İş Makinaları. Tüm Hakları Saklıdır.*
+

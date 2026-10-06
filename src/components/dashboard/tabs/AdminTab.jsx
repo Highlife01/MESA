@@ -27,7 +27,7 @@ export function AdminTab({
                 <h3 className="text-lg font-black text-slate-900 truncate">{user?.name || 'Cebrail Kara'}</h3>
                 <span className="px-2 py-0.5 rounded-md bg-red-600 text-white text-[10px] font-black uppercase">ROOT</span>
               </div>
-              <p className="text-xs text-red-600 font-mono mt-0.5">{user?.email || 'cebrailkara@gmail.com'}</p>
+              <p className="text-xs text-red-600 font-mono mt-0.5">{user?.email || '—'}</p>
               <p className="text-xs text-slate-500 mt-1">Süper Admin & Saha Operasyonları Genel Koordinatörü</p>
             </div>
           </div>

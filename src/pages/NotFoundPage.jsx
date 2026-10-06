@@ -9,7 +9,7 @@ export function NotFoundPage() {
       <SEO
         title="404 — Sayfa Bulunamadı"
         description="Aradığınız sayfa bulunamadı. Mesa İş Makinaları ana sayfasına dönün."
-        canonical="/404"
+        noindex
       />
 
       <div className="text-center max-w-lg mx-auto">

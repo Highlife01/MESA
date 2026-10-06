@@ -11,7 +11,8 @@ export function SEO({
   schema = null,
   jsonLd = null,
   breadcrumbs = null,
-  geo = null
+  geo = null,
+  noindex = false
 }) {
   useEffect(() => {
     const fullTitle = title 
@@ -34,7 +35,9 @@ export function SEO({
     setMeta('description', description);
     setMeta('keywords', keywords);
     setMeta('author', SITE_CONFIG.legalName);
-    setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    setMeta('robots', noindex
+      ? 'noindex, nofollow'
+      : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
 
     // GEO & Local SEO Meta Tags
     const geoRegion = geo?.region || SITE_CONFIG.headquarters.geoRegion || 'TR-01';
@@ -164,7 +167,7 @@ export function SEO({
       '@graph': graph
     });
 
-  }, [title, description, keywords, canonical, ogType, ogImage, schema, jsonLd, breadcrumbs, geo]);
+  }, [title, description, keywords, canonical, ogType, ogImage, schema, jsonLd, breadcrumbs, geo, noindex]);
 
   return null;
 }

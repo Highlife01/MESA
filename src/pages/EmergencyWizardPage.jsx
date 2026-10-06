@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate, useLocation } from '../router/Router';
 import { SEO } from '../components/SEO';
-import { useOperational } from '../context/OperationalContext';
+import { useOperational, createTrackingCode } from '../context/OperationalContext';
 import { LocationShareButton } from '../components/LocationShareButton';
 import { activeCitiesData } from '../data/citiesData';
+import { SITE_CONFIG } from '../config/siteConfig';
+import { whatsappUrl, openWhatsApp } from '../lib/whatsapp';
+import { trackEvent } from '../lib/analytics';
 import { 
   ShieldAlert, Wrench, MapPin, Camera, Mic, 
   CheckCircle2, ArrowRight, ArrowLeft, Phone, Clock, Truck, Send, Search, Sparkles
@@ -16,6 +19,7 @@ export function EmergencyWizardPage() {
 
   const [step, setStep] = useState(1);
   const [successOrder, setSuccessOrder] = useState(null);
+  const [whatsappOpened, setWhatsappOpened] = useState(false);
   const [validationError, setValidationError] = useState('');
 
   const [formData, setFormData] = useState({
@@ -53,6 +57,19 @@ export function EmergencyWizardPage() {
     }
   }, [search]);
 
+  const buildDispatchMessage = (order) => [
+    'MESA 7/24 ACİL İŞ MAKİNASI ÇAĞRISI',
+    '',
+    `Takip No: ${order.code}`,
+    `Firma/Yetkili: ${order.customer}`,
+    `Telefon: ${order.phone}`,
+    `Makine: ${order.machine}`,
+    `Şantiye: ${order.location}`,
+    `Arıza: ${order.issue}`,
+    '',
+    'Acil seyyar servis aracının yönlendirilmesini talep ediyorum.'
+  ].join('\n');
+
   const handleFinish = (e) => {
     e.preventDefault();
     setValidationError('');
@@ -64,21 +81,29 @@ export function EmergencyWizardPage() {
     const fullLocation = `${formData.city} / ${formData.district} - ${formData.location}${formData.gpsLink ? ` (GPS: ${formData.gpsLink})` : ''}`;
     const fullIssue = `${formData.issueCategory} (${formData.priority})${formData.photoName ? ` [Fotoğraf: ${formData.photoName}]` : ''} - ${formData.notes || ''}`;
 
-    const newOrder = addEmergencyOrder({
+    const order = {
+      code: createTrackingCode('MS'),
       customer: formData.customerName,
       phone: formData.phone,
       machine: `${formData.brand} ${formData.machineType} (${formData.modelYear})`,
       location: fullLocation,
       issue: fullIssue
-    });
+    };
 
+    // Talep MESA'ya YALNIZCA WhatsApp üzerinden ulaşır; bu yüzden gönderim anında
+    // (kullanıcı etkileşimi sırasında, pop-up engeline takılmadan) WhatsApp açılır.
+    const opened = openWhatsApp(buildDispatchMessage(order), 'emergency_whatsapp_open');
+    setWhatsappOpened(opened);
+    trackEvent('generate_lead', { form: 'emergency_wizard', priority: formData.priority, city: formData.city });
+
+    // Yerel kopya: müşteri /servis-takip ekranında kendi talebini görebilsin.
+    const newOrder = addEmergencyOrder({ ...order, actorName: formData.customerName, actorRole: 'customer' });
     setSuccessOrder(newOrder);
   };
 
   const getWhatsAppDispatchLink = (order) => {
     if (!order) return '';
-    const msg = `*MESA 7/24 ACİL İŞ MAKİNASI ÇAĞRISI*%0A%0A*Takip No:* ${order.code}%0A*Firma/Yetkili:* ${order.customer}%0A*Telefon:* ${order.phone}%0A*Makine:* ${order.machine}%0A*Şantiye:* ${order.location}%0A*Arıza:* ${order.issue}%0A%0AAcil seyyar servis aracının yönlendirilmesini talep ediyorum.`;
-    return `https://wa.me/905335293674?text=${msg}`;
+    return whatsappUrl(buildDispatchMessage(order));
   };
 
   return (
@@ -485,10 +510,12 @@ export function EmergencyWizardPage() {
             </div>
 
             <div>
-              <span className="text-xs text-slate-500 uppercase tracking-wider font-bold block">Çağrınız Merkez Ekibimize Ulaştı</span>
+              <span className="text-xs text-slate-500 uppercase tracking-wider font-bold block">Takip Numaranız</span>
               <h2 className="text-3xl font-mono font-black text-red-600 mt-1">{successOrder.code}</h2>
-              <p className="text-sm text-slate-600 mt-2 max-w-md mx-auto">
-                En yakın seyyar mobil servis aracımız şantiyenize yönlendirildi. Tahmini varış süresi: <strong>25-35 Dakika</strong>.
+              <p className="text-sm text-slate-600 mt-3 max-w-md mx-auto leading-relaxed">
+                {whatsappOpened
+                  ? <>WhatsApp penceresi açıldı. <strong>Hazırlanan mesajı gönderdiğinizde</strong> talebiniz nöbetçi ekibimize ulaşır ve sizi en kısa sürede ararak varış süresini bildiririz.</>
+                  : <>Talebinizi ekibimize iletmek için aşağıdaki <strong>WhatsApp</strong> butonuna basıp mesajı gönderin ya da acil hattımızı arayın.</>}
               </p>
             </div>
 
@@ -500,14 +527,22 @@ export function EmergencyWizardPage() {
                 className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-lg transition-colors"
               >
                 <Send className="w-4 h-4" />
-                <span>WhatsApp ile Konum Gönder & Hızlandır</span>
+                <span>{whatsappOpened ? 'WhatsApp Mesajını Tekrar Aç' : 'WhatsApp ile Talebi Gönder'}</span>
+              </a>
+
+              <a
+                href={`tel:${SITE_CONFIG.phoneRaw}`}
+                className="w-full py-3.5 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-lg transition-colors"
+              >
+                <Phone className="w-4 h-4" />
+                <span>Acil Hattı Ara: {SITE_CONFIG.phone}</span>
               </a>
 
               <Link
                 to={`/servis-takip?code=${successOrder.code}`}
                 className="block w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition-colors border border-slate-200"
               >
-                Canlı Servis Aracını Haritada İzle
+                Talep Durumunu Görüntüle
               </Link>
             </div>
           </div>

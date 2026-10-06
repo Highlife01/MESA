@@ -8,8 +8,27 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.API_PORT || 8787);
 const DB_FILE = process.env.MESA_DB_FILE || path.join(__dirname, 'data.json');
 const IS_PROD = process.env.NODE_ENV === 'production';
+const TRUST_PROXY = process.env.TRUST_PROXY === 'true';
+const MFA_TOTP_SECRET = String(process.env.MESA_MFA_TOTP_SECRET || '').replace(/\s+/g, '').toUpperCase();
+const CORS_ORIGIN = process.env.CORS_ORIGIN || (IS_PROD ? '' : '*');
+const MAX_BODY_BYTES = 1024 * 1024;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const LOGIN_MAX_ATTEMPTS = 10;
 const sessions = new Map();
 const attempts = new Map();
+
+// Üretimde güvensiz varsayılanlarla açılmayı reddet
+if (IS_PROD) {
+  const missing = [];
+  if (!process.env.MESA_ADMIN_EMAIL) missing.push('MESA_ADMIN_EMAIL');
+  if (!process.env.MESA_ADMIN_PASSWORD || process.env.MESA_ADMIN_PASSWORD.length < 12) missing.push('MESA_ADMIN_PASSWORD (en az 12 karakter)');
+  if (!MFA_TOTP_SECRET) missing.push('MESA_MFA_TOTP_SECRET (base32)');
+  if (!CORS_ORIGIN || CORS_ORIGIN === '*') missing.push('CORS_ORIGIN (tam origin, * olamaz)');
+  if (missing.length) {
+    console.error(`MESA API üretim yapılandırması eksik: ${missing.join(', ')}`);
+    process.exit(1);
+  }
+}
 
 const now = () => new Date().toISOString();
 const id = (prefix) => `${prefix}_${crypto.randomBytes(8).toString('hex')}`;
@@ -21,12 +40,48 @@ const verifyPassword = (value, stored) => { try { const [, salt64, derived64] = 
 const json = (res, status, body, extra = {}) => { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', ...extra }); res.end(JSON.stringify(body)); };
 const error = (res, status, message, code = 'REQUEST_FAILED') => json(res, status, { error: { code, message } });
 
+// ─── RFC 6238 TOTP (Google Authenticator uyumlu, 30 sn, 6 hane, SHA-1) ───────
+function base32Decode(input) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits = '';
+  for (const char of input.replace(/=+$/, '')) { const value = alphabet.indexOf(char); if (value === -1) throw new Error('INVALID_BASE32'); bits += value.toString(2).padStart(5, '0'); }
+  const bytes = [];
+  for (let i = 0; i + 8 <= bits.length; i += 8) bytes.push(parseInt(bits.slice(i, i + 8), 2));
+  return Buffer.from(bytes);
+}
+function totp(secret, counter) {
+  const buffer = Buffer.alloc(8); buffer.writeBigUInt64BE(BigInt(counter));
+  const digest = crypto.createHmac('sha1', base32Decode(secret)).update(buffer).digest();
+  const offset = digest[digest.length - 1] & 0x0f;
+  const code = (digest.readUInt32BE(offset) & 0x7fffffff) % 1000000;
+  return String(code).padStart(6, '0');
+}
+function safeEqual(a, b) { const left = Buffer.from(String(a)); const right = Buffer.from(String(b)); return left.length === right.length && crypto.timingSafeEqual(left, right); }
+function verifyMfaCode(code) {
+  const candidate = String(code || '').trim();
+  if (!/^\d{6}$/.test(candidate)) return false;
+  if (MFA_TOTP_SECRET) { const step = Math.floor(Date.now() / 30000); return [-1, 0, 1].some(drift => safeEqual(totp(MFA_TOTP_SECRET, step + drift), candidate)); }
+  // Yalnızca yerel geliştirme/test: sabit demo kodu
+  return !IS_PROD && candidate === '123456';
+}
+function clientKey(req) {
+  const forwarded = TRUST_PROXY ? String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() : '';
+  return forwarded || req.socket.remoteAddress || 'unknown';
+}
+function isRateLimited(key) { const entry = attempts.get(key); if (!entry) return false; if (Date.now() - entry.firstAt > LOGIN_WINDOW_MS) { attempts.delete(key); return false; } return entry.count >= LOGIN_MAX_ATTEMPTS; }
+function recordFailure(key) { const entry = attempts.get(key); if (!entry || Date.now() - entry.firstAt > LOGIN_WINDOW_MS) attempts.set(key, { count: 1, firstAt: Date.now() }); else entry.count += 1; }
+function pruneExpired() { const current = Date.now(); for (const [token, session] of sessions) if (session.expiresAt < current) sessions.delete(token); for (const [key, entry] of attempts) if (current - entry.firstAt > LOGIN_WINDOW_MS) attempts.delete(key); }
+setInterval(pruneExpired, 10 * 60 * 1000).unref();
+
 const seed = {
   users: [
-    { id: 'usr_super_admin', email: process.env.MESA_ADMIN_EMAIL || 'admin@mesaismak.local', passwordHash: hashPassword(process.env.MESA_ADMIN_PASSWORD || 'change-me-now'), name: 'MESA Genel Koordinatör', role: 'super_admin', tenantId: 'mesa', active: true },
-    { id: 'usr_customer_admin', email: 'filo@abc-insaat.local', passwordHash: hashPassword('demo-customer'), name: 'Ahmet Kaya', role: 'customer_admin', tenantId: 'tenant_abc', active: true },
-    { id: 'usr_dispatcher', email: 'operasyon@mesaismak.local', passwordHash: hashPassword('demo-dispatcher'), name: 'Operasyon Koordinatörü', role: 'dispatcher', tenantId: 'mesa', active: true },
-    { id: 'usr_technician', email: 'teknisyen@mesaismak.local', passwordHash: hashPassword('demo-technician'), name: 'Mehmet Usta', role: 'technician', tenantId: 'mesa', active: true }
+    { id: 'usr_super_admin', email: process.env.MESA_ADMIN_EMAIL || 'admin@mesaismak.local', passwordHash: hashPassword(process.env.MESA_ADMIN_PASSWORD || crypto.randomBytes(24).toString('base64url')), name: 'MESA Genel Koordinatör', role: 'super_admin', tenantId: 'mesa', active: true },
+    // Demo hesapları yalnızca geliştirme/test ortamında oluşturulur
+    ...(IS_PROD ? [] : [
+      { id: 'usr_customer_admin', email: 'filo@abc-insaat.local', passwordHash: hashPassword('demo-customer'), name: 'Ahmet Kaya', role: 'customer_admin', tenantId: 'tenant_abc', active: true },
+      { id: 'usr_dispatcher', email: 'operasyon@mesaismak.local', passwordHash: hashPassword('demo-dispatcher'), name: 'Operasyon Koordinatörü', role: 'dispatcher', tenantId: 'mesa', active: true },
+      { id: 'usr_technician', email: 'teknisyen@mesaismak.local', passwordHash: hashPassword('demo-technician'), name: 'Mehmet Usta', role: 'technician', tenantId: 'mesa', active: true }
+    ])
   ],
   tenants: [
     { id: 'mesa', name: 'MESA İş Makineleri', type: 'provider' },
@@ -60,35 +115,43 @@ function loadDb() {
 let db = loadDb();
 function saveDb() { fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2)); }
 function audit(actor, action, resource, resourceId, metadata = {}) { db.audit.unshift({ id: id('audit'), actorId: actor?.id || 'anonymous', actorRole: actor?.role || 'public', action, resource, resourceId, metadata, createdAt: now() }); saveDb(); }
-function readBody(req) { return new Promise((resolve, reject) => { let raw = ''; req.on('data', chunk => { raw += chunk; if (raw.length > 1024 * 1024) req.destroy(); }); req.on('end', () => { try { resolve(raw ? JSON.parse(raw) : {}); } catch { reject(new Error('INVALID_JSON')); } }); req.on('error', reject); }); }
+function readBody(req) { return new Promise((resolve, reject) => { const chunks = []; let size = 0; let aborted = false; req.on('data', chunk => { if (aborted) return; size += chunk.length; if (size > MAX_BODY_BYTES) { aborted = true; reject(new Error('PAYLOAD_TOO_LARGE')); return; } chunks.push(chunk); }); req.on('end', () => { if (aborted) return; const raw = Buffer.concat(chunks).toString('utf8'); try { const parsed = raw ? JSON.parse(raw) : {}; resolve(parsed && typeof parsed === 'object' ? parsed : {}); } catch { reject(new Error('INVALID_JSON')); } }); req.on('error', reject); }); }
 function bearer(req) { const match = String(req.headers.authorization || '').match(/^Bearer\s+(.+)$/i); return match?.[1] || ''; }
-function actor(req) { const session = sessions.get(bearer(req)); if (!session || session.expiresAt < Date.now()) return null; return db.users.find(user => user.id === session.userId && user.active) || null; }
+// MFA tamamlanmamış (yalnızca şifresi doğrulanmış) oturumlar API erişimi için GEÇERSİZDİR
+function actor(req) { const session = sessions.get(bearer(req)); if (!session || session.mfaPending || session.expiresAt < Date.now()) return null; return db.users.find(user => user.id === session.userId && user.active) || null; }
 function requireAuth(req, res, roles = []) { const user = actor(req); if (!user) { error(res, 401, 'Oturum gerekli.', 'AUTH_REQUIRED'); return null; } if (roles.length && !roles.includes(user.role) && user.role !== 'super_admin') { error(res, 403, 'Bu işlem için rol yetkiniz yok.', 'FORBIDDEN'); return null; } return user; }
 function sameTenant(user, record) { return user.role === 'super_admin' || user.tenantId === record.tenantId || (user.tenantId === 'mesa' && record.tenantId === 'tenant_abc'); }
 function sanitizeMachine(machine, detailed = false) { const base = { id: machine.id, publicToken: machine.publicToken, assetCode: machine.id, brand: machine.brand, model: machine.model, year: machine.year, currentHours: machine.currentHours, site: machine.site, status: machine.status, nextMaintenanceHours: machine.nextMaintenanceHours, lastServiceAt: machine.lastServiceAt }; return detailed ? { ...base, serialNumber: machine.serialNumber, locationVisibility: machine.locationVisibility, qrRevokedAt: machine.qrRevokedAt } : base; }
 function validTransition(from, to) { const allowed = { received: ['triaged', 'cancelled'], triaged: ['scheduled', 'assigned', 'cancelled'], scheduled: ['assigned', 'cancelled'], assigned: ['en_route', 'cancelled'], en_route: ['on_site', 'cancelled'], on_site: ['waiting_parts', 'waiting_approval', 'testing', 'cancelled'], waiting_parts: ['on_site', 'waiting_approval', 'cancelled'], waiting_approval: ['testing', 'cancelled'], testing: ['completed', 'on_site'], completed: ['customer_approved', 'invoiced'], customer_approved: ['invoiced'] }; return allowed[from]?.includes(to); }
 function evidenceComplete(workOrder) { const list = db.evidence.filter(item => item.workOrderId === workOrder.id); const types = new Set(list.map(item => item.type)); return ['cause', 'action', 'parts', 'tests', 'meter', 'beforeAfterPhotos', 'customerSignature'].every(type => types.has(type)); }
-function sendOptions(res) { res.writeHead(204, { 'Access-Control-Allow-Origin': process.env.CORS_ORIGIN || '*', 'Access-Control-Allow-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Methods': 'GET, POST, PATCH, OPTIONS', 'Access-Control-Max-Age': '86400' }); res.end(); }
+function sendOptions(res) { res.writeHead(204, { 'Access-Control-Allow-Origin': CORS_ORIGIN, 'Access-Control-Allow-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Methods': 'GET, POST, PATCH, OPTIONS', 'Access-Control-Max-Age': '86400', 'Vary': 'Origin' }); res.end(); }
 
 async function router(req, res) {
-  const origin = process.env.CORS_ORIGIN || '*';
-  res.setHeader('Access-Control-Allow-Origin', origin); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS'); res.setHeader('X-Content-Type-Options', 'nosniff'); res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin'); res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors 'none'; base-uri 'self'");
+  const origin = CORS_ORIGIN;
+  res.setHeader('Access-Control-Allow-Origin', origin); res.setHeader('Vary', 'Origin'); res.setHeader('Cache-Control', 'no-store'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS'); res.setHeader('X-Content-Type-Options', 'nosniff'); res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin'); res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors 'none'; base-uri 'self'");
   if (req.method === 'OPTIONS') return sendOptions(res);
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`); const pathname = url.pathname; const method = req.method;
   try {
     if (method === 'GET' && pathname === '/api/health') return json(res, 200, { ok: true, service: 'mesa-operations-api', time: now() });
     if (method === 'POST' && pathname === '/api/auth/login') {
-      const body = await readBody(req); const key = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown'); const count = attempts.get(key) || 0; if (count >= 10) return error(res, 429, 'Çok fazla deneme. Daha sonra tekrar deneyin.', 'RATE_LIMITED');
-      const user = db.users.find(item => item.email.toLowerCase() === String(body.email || '').trim().toLowerCase() && item.active); if (!user || !verifyPassword(body.password || '', user.passwordHash)) { attempts.set(key, count + 1); audit(null, 'login_failed', 'user', user?.id || 'unknown'); return error(res, 401, 'E-posta veya şifre hatalı.', 'INVALID_CREDENTIALS'); }
-      const token = crypto.randomBytes(32).toString('hex'); sessions.set(token, { userId: user.id, mfaPending: true, expiresAt: Date.now() + 15 * 60 * 1000 }); audit(user, 'login_password_verified', 'user', user.id); return json(res, 200, { mfaRequired: true, challenge: token.slice(0, 6), sessionToken: token, message: 'MFA doğrulaması gerekli. Demo kodu 123456.' });
+      const key = clientKey(req); if (isRateLimited(key)) return error(res, 429, 'Çok fazla deneme. Daha sonra tekrar deneyin.', 'RATE_LIMITED');
+      const body = await readBody(req);
+      const user = db.users.find(item => item.email.toLowerCase() === String(body.email || '').trim().toLowerCase() && item.active); if (!user || !verifyPassword(body.password || '', user.passwordHash)) { recordFailure(key); audit(null, 'login_failed', 'user', user?.id || 'unknown'); return error(res, 401, 'E-posta veya şifre hatalı.', 'INVALID_CREDENTIALS'); }
+      const token = crypto.randomBytes(32).toString('hex'); sessions.set(token, { userId: user.id, mfaPending: true, mfaFailures: 0, expiresAt: Date.now() + 5 * 60 * 1000 }); audit(user, 'login_password_verified', 'user', user.id); return json(res, 200, { mfaRequired: true, sessionToken: token, message: 'MFA doğrulaması gerekli. Doğrulayıcı uygulamanızdaki 6 haneli kodu girin.' });
     }
     if (method === 'POST' && pathname === '/api/auth/mfa/verify') {
-      const body = await readBody(req); const session = sessions.get(body.sessionToken); if (!session || !session.mfaPending || String(body.code) !== '123456') return error(res, 401, 'MFA kodu geçersiz.', 'INVALID_MFA'); session.mfaPending = false; session.expiresAt = Date.now() + 8 * 60 * 60 * 1000; const user = db.users.find(item => item.id === session.userId); audit(user, 'login_completed', 'user', user.id); return json(res, 200, { token: body.sessionToken, user: { id: user.id, name: user.name, email: user.email, role: user.role, tenantId: user.tenantId } });
+      const key = clientKey(req); if (isRateLimited(key)) return error(res, 429, 'Çok fazla deneme. Daha sonra tekrar deneyin.', 'RATE_LIMITED');
+      const body = await readBody(req); const pendingToken = String(body.sessionToken || ''); const session = sessions.get(pendingToken);
+      if (!session || !session.mfaPending || session.expiresAt < Date.now()) return error(res, 401, 'MFA oturumu geçersiz veya süresi doldu.', 'INVALID_MFA');
+      if (!verifyMfaCode(body.code)) { recordFailure(key); session.mfaFailures += 1; if (session.mfaFailures >= 5) sessions.delete(pendingToken); return error(res, 401, 'MFA kodu geçersiz.', 'INVALID_MFA'); }
+      // Ara token'ı imha et, tam yetkili oturum için yeni token üret (token fixation önlemi)
+      sessions.delete(pendingToken); const token = crypto.randomBytes(32).toString('hex'); sessions.set(token, { userId: session.userId, mfaPending: false, expiresAt: Date.now() + 8 * 60 * 60 * 1000 });
+      const user = db.users.find(item => item.id === session.userId); if (!user) return error(res, 401, 'Kullanıcı bulunamadı.', 'INVALID_MFA'); audit(user, 'login_completed', 'user', user.id); return json(res, 200, { token, user: { id: user.id, name: user.name, email: user.email, role: user.role, tenantId: user.tenantId } });
     }
     if (method === 'POST' && pathname === '/api/auth/logout') { const user = actor(req); sessions.delete(bearer(req)); if (user) audit(user, 'logout', 'user', user.id); return json(res, 200, { ok: true }); }
 
     const publicMatch = pathname.match(/^\/api\/public\/machines\/([^/]+)\/summary$/); if (method === 'GET' && publicMatch) { const machine = db.machines.find(item => item.publicToken === publicMatch[1] && !item.qrRevokedAt); if (!machine) return error(res, 404, 'Makine pasaportu bulunamadı.', 'QR_NOT_FOUND'); audit(null, 'qr_scan', 'machine', machine.id); return json(res, 200, { machine: sanitizeMachine(machine), publicPolicy: { financialData: false, phone: false, fullSerial: false, privateNotes: false } }); }
-    const requestMatch = pathname.match(/^\/api\/public\/machines\/([^/]+)\/service-requests$/); if (method === 'POST' && requestMatch) { const machine = db.machines.find(item => item.publicToken === requestMatch[1] && !item.qrRevokedAt); if (!machine) return error(res, 404, 'Makine pasaportu bulunamadı.', 'QR_NOT_FOUND'); const body = await readBody(req); if (!body.description || String(body.description).trim().length < 8) return error(res, 422, 'Arıza açıklaması en az 8 karakter olmalıdır.', 'VALIDATION_ERROR'); const workOrder = { id: `MS-${crypto.randomInt(1000, 9999)}`, machineId: machine.id, tenantId: machine.tenantId, title: String(body.description).trim().slice(0, 120), issue: String(body.description).trim(), status: 'received', priority: body.priority === 'critical' ? 'critical' : 'normal', createdAt: now(), updatedAt: now(), assignedTo: null, requiredEvidence: { cause: true, action: true, parts: true, tests: true, meter: true, beforeAfterPhotos: true, customerSignature: true } }; db.workOrders.unshift(workOrder); db.workOrderEvents.unshift({ id: id('evt'), workOrderId: workOrder.id, fromStatus: null, toStatus: 'received', actorId: 'public', occurredAt: now(), note: 'QR kamu formundan oluşturuldu.' }); audit(null, 'public_service_request', 'workOrder', workOrder.id, { machineId: machine.id }); saveDb(); return json(res, 201, { workOrder: { id: workOrder.id, status: workOrder.status, machineId: workOrder.machineId } }); }
+    const requestMatch = pathname.match(/^\/api\/public\/machines\/([^/]+)\/service-requests$/); if (method === 'POST' && requestMatch) { const machine = db.machines.find(item => item.publicToken === requestMatch[1] && !item.qrRevokedAt); if (!machine) return error(res, 404, 'Makine pasaportu bulunamadı.', 'QR_NOT_FOUND'); const body = await readBody(req); if (!body.description || String(body.description).trim().length < 8) return error(res, 422, 'Arıza açıklaması en az 8 karakter olmalıdır.', 'VALIDATION_ERROR'); const workOrder = { id: `MS-${crypto.randomBytes(4).toString('hex').toUpperCase()}`, machineId: machine.id, tenantId: machine.tenantId, title: String(body.description).trim().slice(0, 120), issue: String(body.description).trim(), status: 'received', priority: body.priority === 'critical' ? 'critical' : 'normal', createdAt: now(), updatedAt: now(), assignedTo: null, requiredEvidence: { cause: true, action: true, parts: true, tests: true, meter: true, beforeAfterPhotos: true, customerSignature: true } }; db.workOrders.unshift(workOrder); db.workOrderEvents.unshift({ id: id('evt'), workOrderId: workOrder.id, fromStatus: null, toStatus: 'received', actorId: 'public', occurredAt: now(), note: 'QR kamu formundan oluşturuldu.' }); audit(null, 'public_service_request', 'workOrder', workOrder.id, { machineId: machine.id }); saveDb(); return json(res, 201, { workOrder: { id: workOrder.id, status: workOrder.status, machineId: workOrder.machineId } }); }
 
     if (method === 'GET' && pathname === '/api/me') { const user = requireAuth(req, res); if (!user) return; return json(res, 200, { user: { id: user.id, name: user.name, email: user.email, role: user.role, tenantId: user.tenantId } }); }
     if (method === 'GET' && pathname === '/api/portal/machines') { const user = requireAuth(req, res, ['customer_admin', 'customer_viewer', 'manager']); if (!user) return; const machines = db.machines.filter(item => sameTenant(user, item)); return json(res, 200, { machines: machines.map(item => sanitizeMachine(item, true)) }); }
@@ -102,7 +165,7 @@ async function router(req, res) {
     const rotateMatch = pathname.match(/^\/api\/admin\/machines\/([^/]+)\/qr\/rotate$/); if (method === 'POST' && rotateMatch) { const user = requireAuth(req, res, ['manager']); if (!user) return; const machine = db.machines.find(item => item.id === rotateMatch[1]); if (!machine) return error(res, 404, 'Makine bulunamadı.', 'NOT_FOUND'); const previous = machine.publicToken; machine.publicToken = publicToken(); machine.qrRevokedAt = null; audit(user, 'qr_token_rotated', 'machine', machine.id, { previousToken: previous, newToken: machine.publicToken }); saveDb(); return json(res, 200, { machine: sanitizeMachine(machine, true), revokedToken: previous }); }
     if (method === 'GET' && pathname === '/api/admin/audit') { const user = requireAuth(req, res, ['manager', 'finance']); if (!user) return; return json(res, 200, { events: db.audit.slice(0, 200) }); }
     return error(res, 404, 'Endpoint bulunamadı.', 'NOT_FOUND');
-  } catch (caught) { if (caught?.message === 'INVALID_JSON') return error(res, 400, 'Geçersiz JSON gövdesi.', 'INVALID_JSON'); console.error(caught); return error(res, 500, IS_PROD ? 'Sunucu hatası.' : caught.message, 'INTERNAL_ERROR'); }
+  } catch (caught) { if (caught?.message === 'INVALID_JSON') return error(res, 400, 'Geçersiz JSON gövdesi.', 'INVALID_JSON'); if (caught?.message === 'PAYLOAD_TOO_LARGE') return error(res, 413, 'İstek gövdesi çok büyük.', 'PAYLOAD_TOO_LARGE'); console.error(caught); return error(res, 500, IS_PROD ? 'Sunucu hatası.' : caught.message, 'INTERNAL_ERROR'); }
 }
 
 const server = http.createServer((req, res) => router(req, res));
