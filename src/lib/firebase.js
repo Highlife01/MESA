@@ -15,18 +15,38 @@ const config = {
 };
 
 export const isFirebaseConfigured = Boolean(config.apiKey && config.projectId && config.appId);
-const app = initializeApp(config, 'mesa-operations');
-export const auth = initializeAuth(app, { persistence: browserLocalPersistence });
-// A separate database prevents MESA rules from replacing the other site's rules.
-export const db = getFirestore(app, env.VITE_FIREBASE_DATABASE_ID || 'mesa');
 
-if (emulated) {
+// Initialization is guarded: a missing or invalid web config degrades to null
+// handles instead of crashing the whole bundle at import time.
+let app;
+try {
+  app = initializeApp(config, 'mesa-operations');
+} catch (error) {
+  console.warn('Firebase app initialization failed:', error?.code || error);
+  app = null;
+}
+
+function safeInit(initialize) {
+  try {
+    return initialize();
+  } catch (error) {
+    console.warn('Firebase service initialization failed:', error?.code || error);
+    return null;
+  }
+}
+
+// A separate database prevents MESA rules from replacing the other site's rules.
+export const auth = app ? safeInit(() => initializeAuth(app, { persistence: browserLocalPersistence })) : null;
+export const db = app ? safeInit(() => getFirestore(app, env.VITE_FIREBASE_DATABASE_ID || 'mesa')) : null;
+
+if (emulated && auth && db) {
   connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
   connectFirestoreEmulator(db, '127.0.0.1', 8080);
 }
 
 let sessionRequest;
 export async function ensureSession() {
+  if (!auth) throw new Error('Firebase auth is not configured');
   await auth.authStateReady();
   if (auth.currentUser) return auth.currentUser;
   if (!sessionRequest) {

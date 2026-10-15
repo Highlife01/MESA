@@ -1,7 +1,7 @@
 import js from '@eslint/js';
 
 export default [
-  { ignores: ['node_modules/**', 'dist/**', '.firebase/**', 'tmp/**', 'artifacts/**'] },
+  { ignores: ['node_modules/**', 'dist/**', '.firebase/**', 'tmp/**', 'artifacts/**', '**/node_modules/**', '**/dist/**'] },
   {
     files: ['src/**/*.{js,jsx}', 'scripts/**/*.js', '*config.js', 'tests/**/*.{js,jsx}', 'public/sw.js'],
     languageOptions: {

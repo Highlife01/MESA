@@ -461,6 +461,10 @@ export const MaintenanceCalculatorPage = () => {
         description="CAT, JCB, Hidromek, Komatsu ve Volvo iş makinalarınız için 250, 500, 1000 ve 2000 saat OEM filtre, orijinal yağ ve mobil servis bakım maliyetlerini anında şeffaf hesaplayın."
         canonical="/bakim-hesaplayici"
         keywords="iş makinası bakım maliyeti, CAT 320 bakım fiyatı, JCB 3CX 500 saat bakımı, Hidromek periyodik bakım kiti, mobil iş makinası servisi"
+        breadcrumbs={[
+          { name: 'Ana Sayfa', url: '/' },
+          { name: 'OEM Bakım Hesaplayıcı', url: '/bakim-hesaplayici' }
+        ]}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -736,11 +740,11 @@ export const MaintenanceCalculatorPage = () => {
                 </a>
 
                 <a
-                  href="tel:05344075585"
+                  href="tel:05335293674"
                   className="w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-2 border border-slate-200 transition"
                 >
                   <Phone className="w-4 h-4 text-red-600" />
-                  <span>Teknik Danışman: 0534 407 55 85</span>
+                  <span>Teknik Danışman: 0533 529 36 74</span>
                 </a>
               </div>
 

@@ -51,7 +51,8 @@ const seed = {
     { id: 'part_jcb_kit', sku: 'JCB-PS-320', name: 'JCB Powershift Kavrama Seti', stock: 3, minStock: 2, unitPrice: 18750, warrantyMonths: 12 }
   ],
   inventoryMovements: [],
-  audit: []
+  audit: [],
+  contactRequests: []
 };
 
 function loadDb() {
@@ -62,7 +63,7 @@ function saveDb() { fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2)); }
 function audit(actor, action, resource, resourceId, metadata = {}) { db.audit.unshift({ id: id('audit'), actorId: actor?.id || 'anonymous', actorRole: actor?.role || 'public', action, resource, resourceId, metadata, createdAt: now() }); saveDb(); }
 function readBody(req) { return new Promise((resolve, reject) => { let raw = ''; req.on('data', chunk => { raw += chunk; if (raw.length > 1024 * 1024) req.destroy(); }); req.on('end', () => { try { resolve(raw ? JSON.parse(raw) : {}); } catch { reject(new Error('INVALID_JSON')); } }); req.on('error', reject); }); }
 function bearer(req) { const match = String(req.headers.authorization || '').match(/^Bearer\s+(.+)$/i); return match?.[1] || ''; }
-function actor(req) { const session = sessions.get(bearer(req)); if (!session || session.expiresAt < Date.now()) return null; return db.users.find(user => user.id === session.userId && user.active) || null; }
+function actor(req) { const session = sessions.get(bearer(req)); if (!session || session.mfaPending || session.expiresAt < Date.now()) return null; return db.users.find(user => user.id === session.userId && user.active) || null; }
 function requireAuth(req, res, roles = []) { const user = actor(req); if (!user) { error(res, 401, 'Oturum gerekli.', 'AUTH_REQUIRED'); return null; } if (roles.length && !roles.includes(user.role) && user.role !== 'super_admin') { error(res, 403, 'Bu işlem için rol yetkiniz yok.', 'FORBIDDEN'); return null; } return user; }
 function sameTenant(user, record) { return user.role === 'super_admin' || user.tenantId === record.tenantId || (user.tenantId === 'mesa' && record.tenantId === 'tenant_abc'); }
 function sanitizeMachine(machine, detailed = false) { const base = { id: machine.id, publicToken: machine.publicToken, assetCode: machine.id, brand: machine.brand, model: machine.model, year: machine.year, currentHours: machine.currentHours, site: machine.site, status: machine.status, nextMaintenanceHours: machine.nextMaintenanceHours, lastServiceAt: machine.lastServiceAt }; return detailed ? { ...base, serialNumber: machine.serialNumber, locationVisibility: machine.locationVisibility, qrRevokedAt: machine.qrRevokedAt } : base; }
@@ -89,6 +90,15 @@ async function router(req, res) {
 
     const publicMatch = pathname.match(/^\/api\/public\/machines\/([^/]+)\/summary$/); if (method === 'GET' && publicMatch) { const machine = db.machines.find(item => item.publicToken === publicMatch[1] && !item.qrRevokedAt); if (!machine) return error(res, 404, 'Makine pasaportu bulunamadı.', 'QR_NOT_FOUND'); audit(null, 'qr_scan', 'machine', machine.id); return json(res, 200, { machine: sanitizeMachine(machine), publicPolicy: { financialData: false, phone: false, fullSerial: false, privateNotes: false } }); }
     const requestMatch = pathname.match(/^\/api\/public\/machines\/([^/]+)\/service-requests$/); if (method === 'POST' && requestMatch) { const machine = db.machines.find(item => item.publicToken === requestMatch[1] && !item.qrRevokedAt); if (!machine) return error(res, 404, 'Makine pasaportu bulunamadı.', 'QR_NOT_FOUND'); const body = await readBody(req); if (!body.description || String(body.description).trim().length < 8) return error(res, 422, 'Arıza açıklaması en az 8 karakter olmalıdır.', 'VALIDATION_ERROR'); const workOrder = { id: `MS-${crypto.randomInt(1000, 9999)}`, machineId: machine.id, tenantId: machine.tenantId, title: String(body.description).trim().slice(0, 120), issue: String(body.description).trim(), status: 'received', priority: body.priority === 'critical' ? 'critical' : 'normal', createdAt: now(), updatedAt: now(), assignedTo: null, requiredEvidence: { cause: true, action: true, parts: true, tests: true, meter: true, beforeAfterPhotos: true, customerSignature: true } }; db.workOrders.unshift(workOrder); db.workOrderEvents.unshift({ id: id('evt'), workOrderId: workOrder.id, fromStatus: null, toStatus: 'received', actorId: 'public', occurredAt: now(), note: 'QR kamu formundan oluşturuldu.' }); audit(null, 'public_service_request', 'workOrder', workOrder.id, { machineId: machine.id }); saveDb(); return json(res, 201, { workOrder: { id: workOrder.id, status: workOrder.status, machineId: workOrder.machineId } }); }
+    if (method === 'POST' && pathname === '/api/public/contact-requests') {
+      const body = await readBody(req);
+      const required = ['name', 'phone', 'machineType', 'location', 'message'];
+      if (required.some(field => !String(body[field] || '').trim())) return error(res, 422, 'Zorunlu iletişim alanlarını doldurun.', 'VALIDATION_ERROR');
+      const contactRequest = { id: id('contact'), name: String(body.name).trim().slice(0, 120), phone: String(body.phone).trim().slice(0, 40), company: String(body.company || '').trim().slice(0, 160), machineType: String(body.machineType).trim().slice(0, 160), location: String(body.location).trim().slice(0, 200), message: String(body.message).trim().slice(0, 2000), status: 'new', createdAt: now() };
+      if (!Array.isArray(db.contactRequests)) db.contactRequests = [];
+      db.contactRequests.unshift(contactRequest); audit(null, 'public_contact_request', 'contactRequest', contactRequest.id); saveDb();
+      return json(res, 201, { contactRequest: { id: contactRequest.id, status: contactRequest.status } });
+    }
 
     if (method === 'GET' && pathname === '/api/me') { const user = requireAuth(req, res); if (!user) return; return json(res, 200, { user: { id: user.id, name: user.name, email: user.email, role: user.role, tenantId: user.tenantId } }); }
     if (method === 'GET' && pathname === '/api/portal/machines') { const user = requireAuth(req, res, ['customer_admin', 'customer_viewer', 'manager']); if (!user) return; const machines = db.machines.filter(item => sameTenant(user, item)); return json(res, 200, { machines: machines.map(item => sanitizeMachine(item, true)) }); }

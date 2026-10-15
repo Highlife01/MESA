@@ -50,9 +50,11 @@ export function parseSavedCart(serialized) {
   });
 }
 
+// Cart lives in sessionStorage: tab-scoped, cleared when the browser closes,
+// never written to persistent localStorage.
 export function readSavedCart(storage) {
   try {
-    const target = storage ?? globalThis.localStorage;
+    const target = storage ?? globalThis.sessionStorage;
     if (!target) return { cart: [], error: '' };
     return { cart: parseSavedCart(target.getItem(CART_STORAGE_KEY)), error: '' };
   } catch {

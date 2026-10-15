@@ -18,6 +18,23 @@ export const GuidesPage = () => {
     return matchesCategory && matchesSearch;
   });
 
+  const guidesSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Mesa İş Makinaları Teknik Rehberler ve Bilgi Bankası',
+    numberOfItems: guidesData.length,
+    itemListElement: guidesData.map((g, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      item: {
+        '@type': 'TechArticle',
+        headline: g.title,
+        description: g.shortDesc,
+        url: `https://www.mesaismakineleri.com.tr/rehberler/${g.slug}`
+      }
+    }))
+  };
+
   return (
     <div className="bg-slate-50 text-slate-900 min-h-screen">
       <SEO
@@ -25,6 +42,11 @@ export const GuidesPage = () => {
         description="Ağır iş makinaları için hidrolik sistem bakımı, ISO 4406 yağ analizi, DPF rejenerasyonu, periyodik bakım çizelgeleri ve ekspertiz kılavuzları."
         canonical="/rehberler"
         keywords="iş makinası bakımı, hidrolik yağ kirliliği ISO 4406, DPF temizliği, ekskavatör kule boşluğu, telehandler zincir ayarı, Adana iş makinası rehberi"
+        schema={guidesSchema}
+        breadcrumbs={[
+          { name: 'Ana Sayfa', url: '/' },
+          { name: 'Teknik Rehberler', url: '/rehberler' }
+        ]}
       />
 
       {/* Hero Section */}
@@ -84,13 +106,13 @@ export const GuidesPage = () => {
             >
               <div className="relative h-48 overflow-hidden">
                 <img
-                  src={guide.heroImage || '/images/mesa-workshop.png'}
+                  src={guide.heroImage || '/images/mesa-workshop.webp'}
                   alt={guide.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   onError={(e) => {
                     e.currentTarget.onerror = null;
-                    e.currentTarget.src = '/images/mesa-workshop.png';
+                    e.currentTarget.src = '/images/mesa-workshop.webp';
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent" />

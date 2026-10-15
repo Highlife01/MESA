@@ -40,6 +40,31 @@ const CityLandingPage = lazy(() => import('./pages/CityLandingPage').then(m => (
 const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage').then(m => ({ default: m.AdminLoginPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
+const ROOT_SERVICE_SLUGS = [
+  'is-makinasi-tamiri',
+  'hidrolik-sistem-tamiri',
+  'teleskopik-yukleyici-tamiri',
+  'mobil-saha-servisi',
+  'hidrolik-hortum-pres',
+  'sanziman-diferansiyel',
+  'motor-arizalari',
+  'periyodik-bakim',
+  'elektronik-ariza-beyin-tamiri',
+  'kule-donus-cer-revizyonu',
+  'borwerk-delik-isleme-ve-kaynak',
+  'hidrolik-kirici-ve-atasman-bakimi',
+  'is-makinalari-servisi',
+  'mobil-teknik-servis',
+  'hidrolik-servis',
+  'hidrolik-silindir-tamiri',
+  'is-makinasi-ariza-tespiti',
+  'is-makinasi-bakim',
+  'teleskopik-yukleyici-servisi',
+  'forklift-servisi',
+  'ekskavator-servisi',
+  'kepce-loader-servisi'
+];
+
 // ── Loading Fallback (Resilient Branded Shell with Emergency Call CTA) ──
 function PageLoader() {
   const [showRetry, setShowRetry] = React.useState(false);
@@ -64,10 +89,10 @@ function PageLoader() {
         <div className="mt-5 pt-4 border-t border-slate-800 flex flex-col items-center gap-2 animate-fadeIn">
           <span className="text-[11px] text-slate-400">Yükleme geciktiyse doğrudan teknisyen hattımızı arayabilirsiniz:</span>
           <a
-            href="tel:05344075585"
+            href="tel:05335293674"
             className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-2 transition shadow-lg shadow-red-600/30"
           >
-            <span>7/24 Acil Çağrı: 0534 407 55 85</span>
+            <span>7/24 Acil Çağrı: 0533 529 36 74</span>
           </a>
           <button
             onClick={() => window.location.reload()}
@@ -124,18 +149,14 @@ export function App() {
                       <Route path="/sehirler" element={<PageTransition><CitiesHubPage /></PageTransition>} />
                       <Route path="/sehirler/:slug" element={<PageTransition><CityLandingPage /></PageTransition>} />
                       
-                      {/* Ulusal Hedefli Hizmet Sayfaları */}
-                      <Route path="/is-makinalari-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinalari-servisi" /></PageTransition>} />
-                      <Route path="/is-makinasi-tamiri" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-tamiri" /></PageTransition>} />
-                      <Route path="/mobil-teknik-servis" element={<PageTransition><ServiceDetailPage explicitSlug="mobil-teknik-servis" /></PageTransition>} />
-                      <Route path="/hidrolik-servis" element={<PageTransition><ServiceDetailPage explicitSlug="hidrolik-servis" /></PageTransition>} />
-                      <Route path="/hidrolik-silindir-tamiri" element={<PageTransition><ServiceDetailPage explicitSlug="hidrolik-silindir-tamiri" /></PageTransition>} />
-                      <Route path="/is-makinasi-ariza-tespiti" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-ariza-tespiti" /></PageTransition>} />
-                      <Route path="/is-makinasi-bakim" element={<PageTransition><ServiceDetailPage explicitSlug="is-makinasi-bakim" /></PageTransition>} />
-                      <Route path="/teleskopik-yukleyici-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="teleskopik-yukleyici-servisi" /></PageTransition>} />
-                      <Route path="/forklift-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="forklift-servisi" /></PageTransition>} />
-                      <Route path="/ekskavator-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="ekskavator-servisi" /></PageTransition>} />
-                      <Route path="/kepce-loader-servisi" element={<PageTransition><ServiceDetailPage explicitSlug="kepce-loader-servisi" /></PageTransition>} />
+                      {/* Ulusal Hedefli Kanonik Hizmet Sayfaları (22 Hizmet) */}
+                      {ROOT_SERVICE_SLUGS.map((slug) => (
+                        <Route
+                          key={slug}
+                          path={`/${slug}`}
+                          element={<PageTransition><ServiceDetailPage explicitSlug={slug} /></PageTransition>}
+                        />
+                      ))}
 
                       <Route path="/hizmetler" element={<PageTransition><ServicesPage /></PageTransition>} />
                       <Route path="/hizmetler/:slug" element={<PageTransition><ServiceDetailPage /></PageTransition>} />

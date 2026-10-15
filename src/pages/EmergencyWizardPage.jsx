@@ -87,6 +87,7 @@ export function EmergencyWizardPage() {
         title="7/24 Acil Arıza Bildirim Sihirbazı | MESA Mobil Servis"
         description="Şantiyenizdeki iş makinası arızasını 1 dakikada bildirin, en yakın nöbetçi mobil ekibimiz 30 dakikada yanınızda olsun."
         canonical="/ariza-bildir"
+        noindex={true}
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6">

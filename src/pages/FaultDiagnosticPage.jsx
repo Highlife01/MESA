@@ -63,6 +63,10 @@ export function FaultDiagnosticPage() {
         title="DTC Arıza Kodu Çözücü & AI Diagnostik Motoru | CAT, Komatsu, JCB, Hidromek"
         description="İş makinası arıza kodlarını (MID/CID/FMI, CA, P0087, E-041) anında çözün. Olası arıza sebepleri, saha test adımları ve 7/24 mobil servis desteği."
         canonical="/ariza-kodu-cozucu"
+        breadcrumbs={[
+          { name: 'Ana Sayfa', url: '/' },
+          { name: 'DTC Arıza Kodu Çözücü', url: '/ariza-kodu-cozucu' }
+        ]}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

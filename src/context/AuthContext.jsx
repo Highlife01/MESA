@@ -150,10 +150,12 @@ async function api(path, options = {}) {
 export const SESSION_TIMEOUT_MS_EXPORT = SESSION_TIMEOUT_MS;
 
 export const AuthProvider = ({ children }) => {
+  // Auth state lives in sessionStorage only: tab-scoped, cleared on browser
+  // close, never persisted to localStorage.
   const [user, setUser] = useState(() => {
     if (typeof window === 'undefined') return null;
     try {
-      const stored = window.sessionStorage.getItem(AUTH_USER_KEY) || window.localStorage.getItem(AUTH_USER_KEY);
+      const stored = window.sessionStorage.getItem(AUTH_USER_KEY);
       return stored ? JSON.parse(stored) : null;
     } catch {
       return null;
@@ -377,6 +379,7 @@ export const AuthProvider = ({ children }) => {
   const isFinance = user?.role === 'finance' || isSuperAdmin;
   const isWarehouse = user?.role === 'warehouse' || isSuperAdmin;
   const isCustomer = user?.role === 'customer_admin' || isSuperAdmin;
+  const isStaff = Boolean(isSuperAdmin || isTechnician || isFinance || isWarehouse || user?.role === 'staff' || user?.role === 'admin');
 
   const hasPermission = (permission) => {
     if (!user) return false;
@@ -388,12 +391,15 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        firebaseUser: user ? { uid: user.id || user.uid, email: user.email } : null,
+        loading: false,
         isAuthenticated: !!user,
         isSuperAdmin,
         isTechnician,
         isFinance,
         isWarehouse,
         isCustomer,
+        isStaff,
         hasPermission,
         login,
         switchDemoRole,

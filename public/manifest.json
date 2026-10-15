@@ -1,7 +1,8 @@
 {
-  "name": "MESA İş Makinaları ERP & Mobil Servis",
-  "short_name": "MESA ERP",
-  "description": "Adana ve Çukurova 7/24 Mobil İş Makinası, Hidrolik Revizyon ve ERP Yönetim Merkezi",
+  "name": "MESA İş Makinaları | Türkiye Geneli Teknik Servis & Mobil Saha",
+  "short_name": "MESA Servis",
+  "description": "Türkiye genelinde 81 ilde 7/24 yerinde mobil iş makinası tamiri, hidrolik pompa revizyonu, ekskavatör ve telehandler teknik servisi.",
+  "lang": "tr-TR",
   "start_url": "/",
   "id": "/",
   "display": "standalone",

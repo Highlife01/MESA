@@ -10,6 +10,32 @@ export const GuideDetailPage = () => {
   const guide = guidesData.find(g => g.slug === slug) || guidesData[0];
   const relatedService = servicesData.find(s => s.slug === guide.relatedServiceSlug);
 
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: guide.title,
+    description: guide.shortDesc,
+    image: guide.heroImage ? `https://www.mesaismakineleri.com.tr${guide.heroImage}` : 'https://www.mesaismakineleri.com.tr/images/mesa-workshop.webp',
+    author: {
+      '@type': 'Organization',
+      name: guide.author || 'Mesa İş Makinaları Mühendislik Ekibi',
+      url: 'https://www.mesaismakineleri.com.tr'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Mesa İş Makinaları',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.mesaismakineleri.com.tr/images/mesa-logo.png'
+      }
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://www.mesaismakineleri.com.tr/rehberler/${guide.slug}`
+    },
+    keywords: guide.tags.join(', ')
+  };
+
   return (
     <div className="bg-slate-50 text-slate-900 min-h-screen">
       <SEO
@@ -17,6 +43,14 @@ export const GuideDetailPage = () => {
         description={guide.shortDesc}
         canonical={`/rehberler/${guide.slug}`}
         keywords={guide.tags.join(', ')}
+        ogType="article"
+        ogImage={guide.heroImage}
+        schema={articleSchema}
+        breadcrumbs={[
+          { name: 'Ana Sayfa', url: '/' },
+          { name: 'Teknik Rehberler', url: '/rehberler' },
+          { name: guide.title, url: `/rehberler/${guide.slug}` }
+        ]}
       />
 
       {/* Breadcrumb & Navigation Header */}
@@ -57,12 +91,12 @@ export const GuideDetailPage = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="rounded-3xl overflow-hidden mb-10 border border-slate-200 max-h-96 shadow-md">
           <img
-            src={guide.heroImage || '/images/mesa-workshop.png'}
+            src={guide.heroImage || '/images/mesa-workshop.webp'}
             alt={guide.title}
             className="w-full h-full object-cover"
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = '/images/mesa-workshop.png';
+              e.currentTarget.src = '/images/mesa-workshop.webp';
             }}
           />
         </div>
@@ -107,7 +141,7 @@ export const GuideDetailPage = () => {
                 <p className="text-sm text-slate-600 max-w-xl">{relatedService.shortDesc}</p>
               </div>
               <Link
-                to={`/hizmetler/${relatedService.slug}`}
+                to={`/${relatedService.slug}`}
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-sm transition-all shrink-0 self-start sm:self-center shadow-lg shadow-red-600/20"
               >
                 <span>Hizmet Detayı & Fiyat</span>

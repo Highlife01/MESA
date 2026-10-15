@@ -93,6 +93,10 @@ export function PartsShopPage() {
         title="Orijinal İş Makinası Yedek Parça Satış & B2B Depo | CAT, Komatsu, JCB, Hidromek"
         description="Orijinal OEM filtreler, Parker 500 Bar hidrolik hortumlar, ana pompalar, Montabert kırıcı diyaframları ve Mobil hidrolik yağları. Adana merkez depodan aynı gün teslimat."
         canonical="/yedek-parca"
+        breadcrumbs={[
+          { name: 'Ana Sayfa', url: '/' },
+          { name: 'Orijinal Yedek Parça & B2B Depo', url: '/yedek-parca' }
+        ]}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

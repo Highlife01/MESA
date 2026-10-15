@@ -16,12 +16,31 @@ export function ServicesPage() {
     ? servicesData
     : servicesData.filter(s => s.category === selectedCategory);
 
+  const breadcrumbs = [
+    { name: 'Ana Sayfa', url: '/' },
+    { name: 'Hizmetlerimiz', url: '/hizmetler' }
+  ];
+
+  const servicesSchema = {
+    '@type': 'ItemList',
+    '@id': 'https://www.mesaismakineleri.com.tr/hizmetler#itemlist',
+    'name': 'MESA İş Makinaları Teknik Servis ve Hidrolik Revizyon Hizmetleri',
+    'itemListElement': servicesData.map((s, idx) => ({
+      '@type': 'ListItem',
+      'position': idx + 1,
+      'name': s.title,
+      'url': `https://www.mesaismakineleri.com.tr/${s.slug}`
+    }))
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 py-12">
       <SEO 
-        title="Türkiye İş Makinası Tamiri & Hidrolik Servis Hizmetlerimiz"
+        title="Türkiye İş Makinası Tamiri & Hidrolik Servis Hizmetlerimiz | MESA"
         description="Ekskavatör, loder, bekoloder, Manitou telehandler, hidrolik pompa, şanzıman ve motor revizyon hizmetlerimiz. Türkiye genelinde 7/24 mobil servis ve saha müdahalesi."
         canonical="/hizmetler"
+        schema={servicesSchema}
+        breadcrumbs={breadcrumbs}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -69,13 +88,13 @@ export function ServicesPage() {
             >
               <div className="h-48 relative overflow-hidden bg-slate-900">
                 <img 
-                  src={service.heroImage || '/images/mesa-workshop.png'} 
+                  src={service.heroImage || '/images/mesa-workshop.webp'} 
                   alt={service.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
                   loading="lazy"
                   onError={(e) => {
                     e.currentTarget.onerror = null;
-                    e.currentTarget.src = '/images/mesa-workshop.png';
+                    e.currentTarget.src = '/images/mesa-workshop.webp';
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
@@ -112,7 +131,7 @@ export function ServicesPage() {
                     {service.warranty}
                   </span>
                   <Link 
-                    to={`/hizmetler/${service.slug}`}
+                    to={`/${service.slug}`}
                     className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold transition flex items-center space-x-1"
                   >
                     <span>İncele</span>

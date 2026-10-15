@@ -50,11 +50,14 @@ beforeEach(() => {
   mocks.session.mockReset();
   mocks.session.mockResolvedValue({ uid: 'owner' });
   const values = new Map();
-  vi.stubGlobal('localStorage', {
+  const storageStub = {
     getItem: key => values.get(key) ?? null,
     setItem: (key, value) => values.set(key, String(value)),
+    removeItem: key => values.delete(key),
     clear: () => values.clear(),
-  });
+  };
+  // Cart and security state now live in sessionStorage
+  vi.stubGlobal('sessionStorage', storageStub);
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
@@ -99,7 +102,7 @@ describe('operation provider persistence and access', () => {
   });
 
   it('restores a cart after remount and retains it when a write fails', async () => {
-    localStorage.setItem(CART_STORAGE_KEY, '[{"id":"PRT-101","quantity":2}]');
+    sessionStorage.setItem(CART_STORAGE_KEY, '[{"id":"PRT-101","quantity":2}]');
     mount();
     expect(operations.cart[0].quantity).toBe(2);
     mocks.setDoc.mockRejectedValue({ code: 'permission-denied' });
@@ -111,12 +114,12 @@ describe('operation provider persistence and access', () => {
     });
     expect(error.message).toContain('yetkiniz');
     expect(operations.cart[0].quantity).toBe(2);
-    expect(JSON.parse(localStorage.getItem(CART_STORAGE_KEY))).toEqual([{ id: 'PRT-101', quantity: 2 }]);
+    expect(JSON.parse(sessionStorage.getItem(CART_STORAGE_KEY))).toEqual([{ id: 'PRT-101', quantity: 2 }]);
     expect(operations.partsOrders).toEqual([]);
   });
 
   it('waits for write acknowledgement before completing an order and clearing submitted quantities', async () => {
-    localStorage.setItem(CART_STORAGE_KEY, '[{"id":"PRT-101","quantity":2}]');
+    sessionStorage.setItem(CART_STORAGE_KEY, '[{"id":"PRT-101","quantity":2}]');
     let acknowledge;
     mocks.setDoc.mockImplementation(() => new Promise(resolve => { acknowledge = resolve; }));
     mount();

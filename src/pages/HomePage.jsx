@@ -35,48 +35,54 @@ export function HomePage() {
     }
   ];
 
-  const jsonLdSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'AutoRepair',
-    'name': SITE_CONFIG.legalName,
-    'alternateName': SITE_CONFIG.siteName,
-    'image': SITE_CONFIG.logo,
-    'description': 'Türkiye genelinde 81 ilde şantiyede yerinde mobil iş makinası tamiri, hidrolik pompa, teleskopik yükleyici, şanzıman ve motor revizyon servisi.',
-    'address': {
-      '@type': 'PostalAddress',
-      'streetAddress': SITE_CONFIG.headquarters.street,
-      'addressLocality': SITE_CONFIG.headquarters.district,
-      'addressRegion': SITE_CONFIG.headquarters.city,
-      'postalCode': SITE_CONFIG.headquarters.postalCode,
-      'addressCountry': 'TR'
-    },
-    'geo': {
-      '@type': 'GeoCoordinates',
-      'latitude': SITE_CONFIG.headquarters.latitude,
-      'longitude': SITE_CONFIG.headquarters.longitude
-    },
-    'url': SITE_CONFIG.siteUrl,
-    'telephone': SITE_CONFIG.phoneRaw,
-    'email': SITE_CONFIG.email,
-    'priceRange': '₺₺',
-    'openingHoursSpecification': [
-      {
-        '@type': 'OpeningHoursSpecification',
-        'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-        'opens': '00:00',
-        'closes': '23:59'
+  const jsonLdSchema = [
+    {
+      '@type': 'Service',
+      '@id': `${SITE_CONFIG.siteUrl}/#main-service`,
+      'name': 'Türkiye Geneli Mobil İş Makinası Tamiri ve Hidrolik Revizyon Servisi',
+      'serviceType': 'Ağır İş Makinaları Mobil Teknik Servis, Hidrolik Pompa ve Silindir Revizyonu',
+      'provider': {
+        '@id': `${SITE_CONFIG.siteUrl}/#organization`
+      },
+      'areaServed': {
+        '@type': 'Country',
+        'name': 'Turkey'
+      },
+      'hasOfferCatalog': {
+        '@type': 'OfferCatalog',
+        'name': 'MESA İş Makinaları Teknik Servis Kataloğu',
+        'itemListElement': servicesData.slice(0, 8).map((s) => ({
+          '@type': 'Offer',
+          'itemOffered': {
+            '@type': 'Service',
+            'name': s.title,
+            'url': `${SITE_CONFIG.siteUrl}/${s.slug}`
+          }
+        }))
       }
-    ]
-  };
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${SITE_CONFIG.siteUrl}/#faq`,
+      'mainEntity': homeFaqs.map((faq) => ({
+        '@type': 'Question',
+        'name': faq.q,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': faq.a
+        }
+      }))
+    }
+  ];
 
   const getServicePhoto = (service) => {
     if (service.slug === 'hidrolik-sistem-tamiri' || service.id === 'hidrolik-sistem-tamiri') {
-      return '/images/service-hydraulics.jpg';
+      return '/images/service-hydraulics.webp';
     }
     if (service.slug === 'is-makinasi-tamiri' || service.id === 'is-makinasi-tamiri') {
-      return '/images/mesa-excavator-hero.png';
+      return '/images/mesa-excavator-hero.webp';
     }
-    return service.heroImage || '/images/mesa-workshop.png';
+    return service.heroImage || '/images/mesa-workshop.webp';
   };
 
   return (
@@ -84,72 +90,76 @@ export function HomePage() {
       <SEO 
         title="MESA İş Makinaları | Türkiye Geneli Teknik Servis & Hidrolik"
         description="Türkiye genelinde şantiyede 7/24 yerinde mobil iş makinası tamiri, hidrolik sistem revizyonu, ekskavatör, forklift ve teleskopik yükleyici teknik servisi. 7/24 Acil Çağrı: 0533 529 36 74."
-        keywords="iş makinaları servisi, türkiye geneli iş makinası tamiri, mobil iş makinası servisi, hidrolik servis, hidrolik sistem tamiri, iş makinası bakım onarım, ekskavatör servisi, forklift servisi, teleskopik yükleyici servisi"
+        keywords="iş makinaları servisi, türkiye geneli iş makinası tamiri, mobil iş makinası servisi, hidrolik servis, hidrolik sistem tamiri, iş makinası bakım onarım, ekskavatör servisi, forklift servisi, teleskopik yükleyici servisi, manitou servisi, cat tamiri, jcb servisi"
         canonical="/"
         schema={jsonLdSchema}
       />
 
       {/* ─────────────────────────────────────────────────────────────
-          1. HERO SECTION: Bright, Powerful & Trustworthy Engineering
-          Featuring: /images/mesa-excavator-hero.png
+          1. HERO SECTION: High-Contrast Cinematic Industrial Showcase
+          Featuring: /images/mesa-excavator-hero.webp
       ───────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50 to-slate-100 min-h-[600px] lg:min-h-[680px] flex items-center border-b border-slate-200">
+      <section className="relative overflow-hidden bg-slate-950 min-h-[640px] lg:min-h-[720px] flex items-center border-b border-slate-800">
         
-        {/* Background Excavator in Quarry with clean illumination */}
+        {/* High-Contrast Background Excavator with Boosted Vibrance */}
         <div 
-          className="absolute inset-0 bg-cover bg-center lg:bg-right bg-no-repeat pointer-events-none opacity-25 lg:opacity-35"
-          style={{ backgroundImage: `url('/images/mesa-excavator-hero.png')` }}
+          className="absolute inset-0 bg-cover bg-[position:68%_center] lg:bg-right bg-no-repeat pointer-events-none opacity-65 lg:opacity-95 contrast-[1.12] saturate-[1.15] brightness-[1.02] scale-[1.01] transition-transform duration-700"
+          style={{ backgroundImage: `url('/images/mesa-excavator-hero.webp')` }}
           role="img"
-          aria-label="Mesa İş Makinaları ağır paletli ekskavatör"
+          aria-label="Mesa İş Makinaları ağır paletli ekskavatör şantiye sahası"
         />
 
-        {/* Clean Light Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-slate-50 lg:hidden" />
-        <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-white via-white/90 via-60% to-transparent" />
+        {/* Tailored Cinematic Contrast Gradients — keeps left text razor-sharp while letting the excavator shine on the right */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/75 to-slate-950/95 lg:hidden" />
+        <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-slate-950/95 via-slate-950/80 via-48% to-slate-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-slate-950/35 pointer-events-none" />
+        {/* Warm Golden-Hour Rim Glow on Right */}
+        <div className="absolute -top-24 right-0 w-[520px] h-[520px] bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 left-1/3 w-[420px] h-[420px] bg-red-600/15 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-24 relative z-10 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-22 relative z-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
-            {/* Left 7 Cols: Typography, Crisp Contrast & Red CTA */}
+            {/* Left 7 Cols: High-Contrast Typography & Signature Red CTA */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               
               {/* Emergency Radar Pill */}
-              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-bold tracking-wider uppercase shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-red-500/15 border border-red-500/40 text-red-300 text-xs font-extrabold tracking-wider uppercase shadow-lg shadow-red-950/40 backdrop-blur-md">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
                 <span>TÜRKİYE GENELİ 7/24 MOBİL TEKNİK SERVİS & HİDROLİK</span>
               </div>
 
               {/* Dominant Headline with H1 */}
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-slate-900">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.06] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)]">
                 <span>Türkiye Geneli</span>
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-rose-600 to-red-500">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-red-500 to-rose-500">
                   İş Makinaları Teknik Servis
                 </span>
               </h1>
 
               {/* Value Proposition */}
-              <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                Ekskavatör, loder, bekoloder ve teleskopik yükleyiciler için <strong className="text-slate-900 font-bold">5 tam donanımlı mobil araçla</strong> yerinde müdahale, 500 Bar hidrolik hortum presi ve <strong className="text-red-600 font-bold">12 ay resmi servis garantisi</strong>.
+              <p className="text-sm sm:text-base lg:text-lg text-slate-200 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal drop-shadow-xs">
+                Ekskavatör, loder, bekoloder ve teleskopik yükleyiciler için <strong className="text-white font-extrabold">5 tam donanımlı mobil araçla</strong> yerinde müdahale, 500 Bar hidrolik hortum presi ve <strong className="text-amber-400 font-extrabold">12 ay resmi servis garantisi</strong>.
               </p>
 
-              {/* Action Buttons: Red Primary & Steel Secondary */}
+              {/* Action Buttons: Red Primary & High-Contrast Glass Secondary */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3.5 pt-2">
                 
                 {/* 1. Request Service (Signature MESA Red) */}
                 <Link 
                   to="/ariza-bildir"
-                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-sm shadow-xl shadow-red-600/30 border border-red-500 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-sm shadow-2xl shadow-red-600/40 border border-red-400/50 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
                 >
                   <ShieldAlert className="w-5 h-5 text-white" />
                   <span>7/24 Acil Arıza Bildir</span>
                   <ArrowUpRight className="w-4 h-4 text-white" />
                 </Link>
 
-                {/* 2. Direct Call (Crisp White Card) */}
+                {/* 2. Direct Call (Crisp High-Contrast Button) */}
                 <a 
                   href="tel:05335293674"
-                  className="px-7 py-4 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 hover:border-slate-400 text-slate-900 font-bold text-sm flex items-center justify-center gap-2.5 transition shadow-xs"
+                  className="px-7 py-4 rounded-xl bg-white hover:bg-amber-50 border border-white text-slate-950 font-black text-sm flex items-center justify-center gap-2.5 transition shadow-xl shadow-black/30"
                 >
                   <Phone className="w-4 h-4 text-red-600" />
                   <span>0533 529 36 74 Usta Çağır</span>
@@ -158,114 +168,134 @@ export function HomePage() {
                 {/* 3. Tracking */}
                 <Link
                   to="/servis-takip"
-                  className="px-5 py-4 rounded-xl border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 font-semibold text-sm flex items-center justify-center gap-1.5 transition shadow-xs"
+                  className="px-5 py-4 rounded-xl border border-slate-600/80 hover:border-amber-400/70 text-slate-100 hover:text-white bg-slate-900/75 hover:bg-slate-900 font-bold text-sm flex items-center justify-center gap-1.5 transition backdrop-blur-md shadow-lg"
                 >
                   <span>Servis Takibi</span>
-                  <ArrowRight className="w-4 h-4 text-red-600" />
+                  <ArrowRight className="w-4 h-4 text-amber-400" />
                 </Link>
               </div>
 
               {/* DTC Fault Diagnostic Banner */}
-              <div className="pt-1 flex items-center justify-center lg:justify-start gap-2 text-xs text-slate-600">
-                <span className="flex items-center gap-1 text-red-600 font-bold">
+              <div className="pt-1 flex items-center justify-center lg:justify-start gap-2 text-xs text-slate-300">
+                <span className="flex items-center gap-1 text-amber-400 font-bold">
                   <Cpu className="w-3.5 h-3.5" /> DTC Arıza Kodu:
                 </span>
                 <span>Makinenizin arıza kodunu anında çözün</span>
-                <Link to="/ariza-kodu-cozucu" className="text-red-600 hover:text-red-700 hover:underline font-bold inline-flex items-center">
+                <Link to="/ariza-kodu-cozucu" className="text-amber-400 hover:text-amber-300 hover:underline font-bold inline-flex items-center">
                   Çözücüye Git <ArrowRight className="w-3 h-3 ml-0.5" />
                 </Link>
               </div>
 
               {/* Stats */}
-              <div className="pt-6 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center lg:text-left">
-                <div className="p-3.5 rounded-xl bg-white/90 border border-slate-200 shadow-xs">
-                  <div className="text-2xl sm:text-3xl font-black text-slate-900">18+</div>
-                  <div className="text-xs text-slate-500 font-medium mt-0.5">Donanımlı Mobil Araç</div>
+              <div className="pt-6 border-t border-slate-800/90 grid grid-cols-2 sm:grid-cols-4 gap-3.5 text-center lg:text-left">
+                <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-700/80 hover:border-amber-500/50 backdrop-blur-md shadow-lg transition">
+                  <div className="text-2xl sm:text-3xl font-black text-amber-400">5 Filo</div>
+                  <div className="text-xs text-slate-300 font-medium mt-0.5">Donanımlı Mobil Araç</div>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white/90 border border-slate-200 shadow-xs">
-                  <div className="text-2xl sm:text-3xl font-black text-slate-900">30 Dk</div>
-                  <div className="text-xs text-slate-500 font-medium mt-0.5">Ortalama Varış Süresi</div>
+                <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-700/80 hover:border-amber-500/50 backdrop-blur-md shadow-lg transition">
+                  <div className="text-2xl sm:text-3xl font-black text-white">30 Dk</div>
+                  <div className="text-xs text-slate-300 font-medium mt-0.5">Ortalama Varış Süresi</div>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white/90 border border-slate-200 shadow-xs">
-                  <div className="text-2xl sm:text-3xl font-black text-slate-900">450 Bar</div>
-                  <div className="text-xs text-slate-500 font-medium mt-0.5">Dinamik Test Tezgahı</div>
+                <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-700/80 hover:border-amber-500/50 backdrop-blur-md shadow-lg transition">
+                  <div className="text-2xl sm:text-3xl font-black text-red-400">450 Bar</div>
+                  <div className="text-xs text-slate-300 font-medium mt-0.5">Dinamik Test Tezgahı</div>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white/90 border border-slate-200 shadow-xs">
-                  <div className="text-2xl sm:text-3xl font-black text-slate-900">12 Ay</div>
-                  <div className="text-xs text-slate-500 font-medium mt-0.5">Yazılı Servis Garantisi</div>
+                <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-700/80 hover:border-amber-500/50 backdrop-blur-md shadow-lg transition">
+                  <div className="text-2xl sm:text-3xl font-black text-emerald-400">12 Ay</div>
+                  <div className="text-xs text-slate-300 font-medium mt-0.5">Yazılı Servis Garantisi</div>
                 </div>
               </div>
 
             </div>
 
-            {/* Right 5 Cols: Live Telemetry Panel */}
+            {/* Right 5 Cols: High-Contrast Visual Showcase Card + Live Telemetry HUD */}
             <div className="lg:col-span-5">
-              <div className="bg-white/95 border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-xl backdrop-blur-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-36 h-36 bg-red-500/5 rounded-full blur-2xl pointer-events-none" />
-
-                <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
-                  <div>
-                    <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest block">CANLI SAHA TELEMETRİ</span>
-                    <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
-                      <span>Nöbetçi Mobil Ekipler</span>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">5/5 Aktif</span>
-                    </h3>
+              <div className="rounded-3xl border-2 border-amber-500/40 bg-slate-900/85 shadow-[0_25px_70px_-15px_rgba(220,38,38,0.35)] backdrop-blur-xl overflow-hidden relative group">
+                
+                {/* Direct High-Contrast Hero Image Showcase */}
+                <div className="relative h-56 sm:h-64 overflow-hidden">
+                  <img
+                    src="/images/mesa-excavator-hero.webp"
+                    alt="MESA İş Makinaları 7/24 Ağır Hizmet Ekskavatör ve Hidrolik Saha Servisi"
+                    width="1200"
+                    height="630"
+                    fetchPriority="high"
+                    className="w-full h-full object-cover object-right contrast-[1.15] saturate-[1.18] brightness-[1.03] group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                  
+                  {/* Top Floating Badges on Image */}
+                  <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between gap-2">
+                    <span className="px-3 py-1 rounded-full bg-slate-950/85 border border-amber-400/50 text-amber-300 text-[11px] font-black tracking-wide uppercase backdrop-blur-md shadow-lg">
+                      ⚡ 450 Bar Hidrolik Test & Revizyon
+                    </span>
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-500/90 text-slate-950 text-[11px] font-black flex items-center gap-1.5 shadow-lg">
+                      <span className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />
+                      5/5 Filo Aktif
+                    </span>
                   </div>
-                  <span className="flex h-2.5 w-2.5 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
-                  </span>
+
+                  {/* Bottom Image Caption */}
+                  <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
+                    <div>
+                      <span className="text-[10px] font-extrabold text-amber-400 uppercase tracking-widest block">CANLI SAHA TELEMETRİ</span>
+                      <h2 className="text-base sm:text-lg font-black text-white drop-shadow-md">
+                        Nöbetçi Mobil Servis Ekiplerimiz
+                      </h2>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-3 text-xs">
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                {/* Compact Telemetry List */}
+                <div className="p-5 space-y-2.5 text-xs bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+                  <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 flex items-center justify-between transition">
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 rounded-lg bg-white text-slate-800 border border-slate-200 flex items-center justify-center font-bold shadow-xs shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-red-600/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-black shadow-xs shrink-0">
                         01
                       </div>
                       <div>
-                        <div className="font-bold text-slate-900">Seyhan & Yüreğir Hattı</div>
-                        <div className="text-slate-500 text-[11px]">Mobil Ekip 01 (Ford Transit 4x4 • Mehmet Usta)</div>
+                        <div className="font-bold text-white">Seyhan & Yüreğir Hattı</div>
+                        <div className="text-slate-400 text-[11px]">Mobil Ekip 01 (Ford Transit 4x4 • Mehmet Usta)</div>
                       </div>
                     </div>
-                    <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded font-bold shrink-0 text-[11px]">Müsait • 14 Dk</span>
+                    <span className="text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-bold shrink-0 text-[11px]">Müsait • 14 Dk</span>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                  <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 flex items-center justify-between transition">
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 rounded-lg bg-white text-slate-800 border border-slate-200 flex items-center justify-center font-bold shadow-xs shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-red-600/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-black shadow-xs shrink-0">
                         02
                       </div>
                       <div>
-                        <div className="font-bold text-slate-900">Ceyhan & Yumurtalık Sanayi</div>
-                        <div className="text-slate-500 text-[11px]">Mobil Ekip 02 (Iveco Daily • Ahmet Usta)</div>
+                        <div className="font-bold text-white">Ceyhan & Yumurtalık Sanayi</div>
+                        <div className="text-slate-400 text-[11px]">Mobil Ekip 02 (Iveco Daily • Ahmet Usta)</div>
                       </div>
                     </div>
-                    <span className="text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded font-bold shrink-0 text-[11px]">Görevde • Şantiyede</span>
+                    <span className="text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-1 rounded-lg font-bold shrink-0 text-[11px]">Görevde • Şantiyede</span>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                  <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 flex items-center justify-between transition">
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 rounded-lg bg-white text-slate-800 border border-slate-200 flex items-center justify-center font-bold shadow-xs shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-red-600/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-black shadow-xs shrink-0">
                         03
                       </div>
                       <div>
-                        <div className="font-bold text-slate-900">Tarsus & Mersin Liman Hattı</div>
-                        <div className="text-slate-500 text-[11px]">Mobil Ekip 03 (Renault Master • Can Usta)</div>
+                        <div className="font-bold text-white">Tarsus & Mersin Liman Hattı</div>
+                        <div className="text-slate-400 text-[11px]">Mobil Ekip 03 (Renault Master • Can Usta)</div>
                       </div>
                     </div>
-                    <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded font-bold shrink-0 text-[11px]">Müsait • 20 Dk</span>
+                    <span className="text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-bold shrink-0 text-[11px]">Müsait • 20 Dk</span>
                   </div>
-                </div>
 
-                <div className="mt-5 pt-4 border-t border-slate-100">
-                  <a 
-                    href="tel:05335293674" 
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs flex items-center justify-center space-x-2 transition shadow-lg shadow-red-600/25"
-                  >
-                    <Phone className="w-4 h-4" />
-                    <span>Hemen En Yakın Mobil Servisi Çağır (0533 529 36 74)</span>
-                  </a>
+                  <div className="pt-2">
+                    <a 
+                      href="tel:05335293674" 
+                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-xs flex items-center justify-center space-x-2 transition shadow-lg shadow-red-600/30"
+                    >
+                      <Phone className="w-4 h-4" />
+                      <span>Hemen En Yakın Mobil Servisi Çağır (0533 529 36 74)</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -394,7 +424,7 @@ export function HomePage() {
                   loading="lazy"
                   onError={(e) => {
                     e.currentTarget.onerror = null;
-                    e.currentTarget.src = '/images/mesa-workshop.png';
+                    e.currentTarget.src = '/images/mesa-workshop.webp';
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-80" />
@@ -422,7 +452,7 @@ export function HomePage() {
                     🛡️ {service.warranty}
                   </span>
                   <Link 
-                    to={`/hizmetler/${service.slug}`}
+                    to={`/${service.slug}`}
                     className="font-bold text-red-600 hover:text-red-700 flex items-center group-hover:underline"
                   >
                     Detay →
@@ -436,7 +466,7 @@ export function HomePage() {
 
       {/* ─────────────────────────────────────────────────────────────
           5. WORKSHOP & TECHNICAL CAPABILITIES SHOWCASE
-          Featuring /images/mesa-workshop.png
+          Featuring /images/mesa-workshop.webp
       ───────────────────────────────────────────────────────────── */}
       <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto">
         <div className="bg-gradient-to-br from-[#10141e] to-[#0c0f17] text-white rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl">
@@ -445,13 +475,13 @@ export function HomePage() {
             {/* Workshop Photo */}
             <div className="lg:col-span-6 relative h-72 lg:h-[480px] overflow-hidden">
               <img 
-                src="/images/mesa-workshop.png" 
+                src="/images/mesa-workshop.webp" 
                 alt="Mesa İş Makinaları Atölye ve Hidrolik Pompa Revizyonu"
                 className="w-full h-full object-cover"
                 loading="lazy"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/images/mesa-excavator-hero.png';
+                  e.currentTarget.src = '/images/mesa-excavator-hero.webp';
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#10141e] hidden lg:block" />

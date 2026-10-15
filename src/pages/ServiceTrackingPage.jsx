@@ -97,6 +97,7 @@ export function ServiceTrackingPage() {
         title="Canlı Servis & Mobil Araç Takip Ekranı | MESA"
         description="Mesa İş Makinaları takip kodunuz ile servis aracınızın şantiyenize varışını ve arıza onarım aşamalarını canlı izleyin."
         canonical="/servis-takip"
+        noindex={true}
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6">

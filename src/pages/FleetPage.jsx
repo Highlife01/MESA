@@ -14,9 +14,9 @@ export const FleetPage = () => {
       eta: '25 - 35 dk',
       nearestVan: '01 MSA 01 - Ford Transit 4x4 (Mobil Atölye 1)',
       tech: 'Mehmet Usta (Baş Teknisyen - 18 Yıl Tecrübe)',
-      phone: '05344075585',
+      phone: '05335293674',
       status: 'Nöbetçi / Çıkışa Hazır',
-      hotline: '0534 407 55 85',
+      hotline: '0533 529 36 74',
       equipment: ['Finn-Power P20 Mobil Hortum Presi', 'CAT ET & JCB Diagnostik Laptop', 'Kaeser Vidalı Kompresör', '600 Bar Manometre'],
       notes: 'BOTAŞ, Toros Tarım ve Ceyhan Petrokimya sahalarına acil servis geçiş kartı mevcut.'
     },
@@ -27,9 +27,9 @@ export const FleetPage = () => {
       eta: '15 - 20 dk',
       nearestVan: '01 MSA 02 - Iveco Daily Yüksek Tavan (Mobil Atölye 2)',
       tech: 'Ahmet Usta (Powershift & Hidrolik Uzmanı)',
-      phone: '05344075585',
+      phone: '05335293674',
       status: 'Nöbetçi / Çıkışa Hazır',
-      hotline: '0534 407 55 85',
+      hotline: '0533 529 36 74',
       equipment: ['Araç İçi Tesviye Tezgahı', 'Tüm Markalar İçin ECU Test Seti', '500 Lt Hidrolik Yağ Tankı', '12 kW Dizel Jeneratör'],
       notes: 'Hacı Sabancı OSB ve Seyhan Metal Sanayi sahasına 15 dakikada yerinde varış garantisi.'
     },
@@ -40,9 +40,9 @@ export const FleetPage = () => {
       eta: '30 - 45 dk',
       nearestVan: '01 MSA 03 - Renault Master Ağır Mobil Atölye',
       tech: 'Can Usta (Liman Ekipmanları & Reach Stacker Uzmanı)',
-      phone: '05344075585',
+      phone: '05335293674',
       status: 'Nöbetçi / Çıkışa Hazır',
-      hotline: '0534 407 55 85',
+      hotline: '0533 529 36 74',
       equipment: ['Liman Vinçleri CAN-Bus Teşhis Kiti', 'Mobil Hortum Presi', 'Termal Kaçak Dedektörü', 'Pnömatik Bijon Tabancaları'],
       notes: 'MIP Mersin Uluslararası Limanı ve Tarsus Organize Sanayi sahasında kesintisiz 7/24 nöbet.'
     },
@@ -53,9 +53,9 @@ export const FleetPage = () => {
       eta: '35 - 50 dk',
       nearestVan: '01 MSA 06 - MAN TGE 4x4 Ağır Saha Servisi',
       tech: 'Salih Usta (Paletli Ekskavatör & Ağır Motor Uzmanı)',
-      phone: '05344075585',
+      phone: '05335293674',
       status: 'Nöbetçi / Çıkışa Hazır',
-      hotline: '0534 407 55 85',
+      hotline: '0533 529 36 74',
       equipment: ['Seyyar Borwerk Pim Delik İşleme', 'Lincoln Gazaltı Kaynak Ünitesi', 'Mobil Azot Tüpleri', 'Ağır Hizmet Kilit Beşikleri'],
       notes: 'Çamurlu maden yolları ve dik taş ocağı rampalarına özel kilitli 4x4 çekiş donanımı.'
     },
@@ -66,9 +66,9 @@ export const FleetPage = () => {
       eta: '45 - 60 dk',
       nearestVan: '01 MSA 08 - Ford Ranger 4x4 Hızlı Müdahale',
       tech: 'Burak Usta (ECU Teşhis & Common Rail Enjektör)',
-      phone: '05344075585',
+      phone: '05335293674',
       status: 'Nöbetçi / Çıkışa Hazır',
-      hotline: '0534 407 55 85',
+      hotline: '0533 529 36 74',
       equipment: ['Mobil Hortum Presi', 'Bosch Common Rail Teşhis Kiti', 'Dijital Debimetre', '24V Hızlı Akü Takviye'],
       notes: 'İskenderun Liman bölgesi ve sanayi tesislerine Otoyol üzerinden ekspres servis.'
     },
@@ -79,9 +79,9 @@ export const FleetPage = () => {
       eta: '35 - 45 dk',
       nearestVan: '01 MSA 04 - Isuzu D-Max 4x4 Gezici Servis',
       tech: 'Mustafa Usta (Mobil Torna & Hidrolik Revizyon)',
-      phone: '05344075585',
+      phone: '05335293674',
       status: 'Nöbetçi / Çıkışa Hazır',
-      hotline: '0534 407 55 85',
+      hotline: '0533 529 36 74',
       equipment: ['Yerinde Hortum İmalatı', 'Komatsu & Volvo Teşhis Yazılımları', 'Vidalı Kompresör', 'Manuel Hidrolik Test Pompası'],
       notes: 'Osmaniye Demir Çelik OSB fabrikalarına ve lojistik antrepolara hızlı müdahale.'
     }
@@ -146,6 +146,10 @@ export const FleetPage = () => {
         description="Adana, Mersin, Hatay, Osmaniye ve tüm Çukurova'ya 45 dakikada ulaşan 5 tam donanımlı mobil servis aracı, araç içi hortum presi ve arıza tespit teknolojisi."
         canonical="/filo"
         keywords="mobil servis aracı iş makinası, gezici servis adana, yerinde hortum presi, şantiye acil servis, mersin iş makinası servisi"
+        breadcrumbs={[
+          { name: 'Ana Sayfa', url: '/' },
+          { name: 'Mobil Servis Filosu', url: '/filo' }
+        ]}
       />
 
       {/* Hero Section */}

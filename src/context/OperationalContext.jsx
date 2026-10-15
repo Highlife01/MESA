@@ -1,24 +1,39 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { AUDIT_EVENT_NAME } from '../lib/security';
+import { useAuth } from './AuthContext';
+import { db, isFirebaseConfigured, ensureSession } from '../lib/firebase';
+import {
+  collection,
+  doc,
+  query,
+  where,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
+import {
+  CART_STORAGE_KEY,
+  readSavedCart,
+  saveCart,
+  buildEmergencyJob,
+  buildPartsOrder,
+  createRecordCode,
+  jobStatusPatch,
+  signaturePatch,
+  assertOperationRole,
+  friendlyOperationError,
+} from '../lib/operations';
 
 const OperationalContext = createContext();
 
-const safeGetStorage = (key, fallback) => {
-  if (typeof window === 'undefined') return fallback;
+const getCartStorage = () => {
+  if (typeof window === 'undefined') return undefined;
   try {
-    const item = window.localStorage.getItem(key);
-    return item ? JSON.parse(item) : fallback;
+    return window.sessionStorage;
   } catch {
-    return fallback;
-  }
-};
-
-const safeSetStorage = (key, value) => {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  } catch (e) {
-    console.warn(`[MESA Storage] Failed to persist ${key}:`, e);
+    return undefined;
   }
 };
 
@@ -304,28 +319,63 @@ const DEFAULT_PARTS_ORDERS = [
 ];
 
 export const OperationalProvider = ({ children }) => {
-  // 1. Machines Fleet State
-  const [machines, setMachines] = useState(() => safeGetStorage('mesa_machines', DEFAULT_MACHINES));
-  const [revokedTokens, setRevokedTokens] = useState(() => safeGetStorage('mesa_revoked_tokens', []));
+  const { firebaseUser, isStaff, isSuperAdmin } = useAuth() || {};
 
-  // 2. Live Active Jobs Queue
-  const [liveJobs, setLiveJobs] = useState(() => safeGetStorage('mesa_live_jobs', DEFAULT_LIVE_JOBS));
+  // 1. Machines Fleet State (Pure in-memory state)
+  const [machines, setMachines] = useState(DEFAULT_MACHINES);
+  const [revokedTokens, setRevokedTokens] = useState([]);
 
-  // 3. Inventory & Double-Entry Movements
-  const [inventoryItems, setInventoryItems] = useState(() => safeGetStorage('mesa_inventory_items', DEFAULT_INVENTORY_ITEMS));
-  const [inventoryMovements, setInventoryMovements] = useState(() => safeGetStorage('mesa_inventory_movements', DEFAULT_INVENTORY_MOVEMENTS));
+  // 2. Live Active Jobs Queue (Firestore Realtime / In-memory fallback)
+  const [liveJobs, setLiveJobs] = useState(() => (isFirebaseConfigured ? [] : DEFAULT_LIVE_JOBS));
 
-  // 4. Audit Log
-  const [auditLogs, setAuditLogs] = useState(() => safeGetStorage('mesa_audit_logs', DEFAULT_AUDIT_LOGS));
+  // 3. Inventory & Double-Entry Movements (Pure in-memory state)
+  const [inventoryItems, setInventoryItems] = useState(DEFAULT_INVENTORY_ITEMS);
+  const [inventoryMovements, setInventoryMovements] = useState(DEFAULT_INVENTORY_MOVEMENTS);
 
-  // 5. Cart for B2B Spare Parts
-  const [cart, setCart] = useState(() => safeGetStorage('mesa_cart', []));
+  // 4. Audit Log (Pure in-memory state)
+  const [auditLogs, setAuditLogs] = useState(DEFAULT_AUDIT_LOGS);
 
-  // 6. B2B Parts Orders
-  const [partsOrders, setPartsOrders] = useState(() => safeGetStorage('mesa_parts_orders', DEFAULT_PARTS_ORDERS));
+  // 5. Cart for B2B Spare Parts (Scoped to cart storage)
+  const [cart, setCart] = useState(() => {
+    const storage = getCartStorage();
+    if (storage) {
+      const raw = storage.getItem(CART_STORAGE_KEY);
+      if (raw) {
+        return readSavedCart(storage).cart;
+      }
+    }
+    return [];
+  });
 
-  // 7. Global Toast Notification
+  // 6. B2B Parts Orders (Firestore Realtime / In-memory fallback)
+  const [partsOrders, setPartsOrders] = useState(() => (isFirebaseConfigured ? [] : DEFAULT_PARTS_ORDERS));
+
+  // 7. Data Error & Toast
+  const [dataError, setDataError] = useState('');
   const [activeToast, setActiveToast] = useState(null);
+
+  // Eski oturumlardan kalan hassas localStorage anahtarlarını proaktif temizle
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const legacyKeys = [
+        'mesa_machines',
+        'mesa_live_jobs',
+        'mesa_audit_logs',
+        'mesa_inventory_items',
+        'mesa_inventory_movements',
+        'mesa_parts_orders',
+        'mesa_revoked_tokens',
+        'mesa_cart'
+      ];
+      legacyKeys.forEach(k => {
+        window.localStorage?.removeItem(k);
+        window.sessionStorage?.removeItem(k);
+      });
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   // Security module audit bridge: lib/security.js olaylarını state zincirine aktar
   useEffect(() => {
@@ -337,15 +387,108 @@ export const OperationalProvider = ({ children }) => {
     return () => window.removeEventListener(AUDIT_EVENT_NAME, handler);
   }, []);
 
-  // Sync to Storage
-  useEffect(() => safeSetStorage('mesa_machines', machines), [machines]);
-  useEffect(() => safeSetStorage('mesa_revoked_tokens', revokedTokens), [revokedTokens]);
-  useEffect(() => safeSetStorage('mesa_live_jobs', liveJobs), [liveJobs]);
-  useEffect(() => safeSetStorage('mesa_inventory_items', inventoryItems), [inventoryItems]);
-  useEffect(() => safeSetStorage('mesa_inventory_movements', inventoryMovements), [inventoryMovements]);
-  useEffect(() => safeSetStorage('mesa_audit_logs', auditLogs), [auditLogs]);
-  useEffect(() => safeSetStorage('mesa_cart', cart), [cart]);
-  useEffect(() => safeSetStorage('mesa_parts_orders', partsOrders), [partsOrders]);
+  // Realtime Firestore synchronization for jobs and parts orders
+  useEffect(() => {
+    if (!isFirebaseConfigured || !db) return undefined;
+
+    let active = true;
+    let unsubJobs = null;
+    let unsubOrders = null;
+
+    // Immediately clear data on mount or identity change
+    setLiveJobs([]);
+    setPartsOrders([]);
+    setDataError('');
+
+    const isStaffMember = Boolean(isStaff || isSuperAdmin);
+    const userUid = firebaseUser?.uid;
+
+    if (!isStaffMember && !userUid) {
+      return undefined;
+    }
+
+    const qJobs = isStaffMember
+      ? collection(db, 'mesaJobs')
+      : query(collection(db, 'mesaJobs'), where('ownerUid', '==', userUid));
+
+    const qOrders = isStaffMember
+      ? collection(db, 'mesaPartsOrders')
+      : query(collection(db, 'mesaPartsOrders'), where('ownerUid', '==', userUid));
+
+    const stopAll = (friendlyMsg) => {
+      if (!active) return;
+      active = false;
+      if (unsubJobs) {
+        try { unsubJobs(); } catch { }
+        unsubJobs = null;
+      }
+      if (unsubOrders) {
+        try { unsubOrders(); } catch { }
+        unsubOrders = null;
+      }
+      setLiveJobs([]);
+      setPartsOrders([]);
+      if (friendlyMsg) {
+        setDataError(friendlyMsg);
+      }
+    };
+
+    unsubJobs = onSnapshot(
+      qJobs,
+      { includeMetadataChanges: true },
+      (snap) => {
+        if (!active) return;
+        if (snap.metadata?.hasPendingWrites || snap.metadata?.fromCache) {
+          setLiveJobs([]);
+          return;
+        }
+        const records = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setLiveJobs(records);
+        setDataError('');
+      },
+      (err) => {
+        stopAll(friendlyOperationError(err).message);
+      }
+    );
+
+    unsubOrders = onSnapshot(
+      qOrders,
+      { includeMetadataChanges: true },
+      (snap) => {
+        if (!active) return;
+        if (snap.metadata?.hasPendingWrites || snap.metadata?.fromCache) {
+          setPartsOrders([]);
+          return;
+        }
+        const records = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setPartsOrders(records);
+        setDataError('');
+      },
+      (err) => {
+        stopAll(friendlyOperationError(err).message);
+      }
+    );
+
+    return () => {
+      active = false;
+      if (unsubJobs) {
+        try { unsubJobs(); } catch { }
+        unsubJobs = null;
+      }
+      if (unsubOrders) {
+        try { unsubOrders(); } catch { }
+        unsubOrders = null;
+      }
+    };
+  }, [firebaseUser?.uid, isStaff, isSuperAdmin]);
+
+  // Sync cart only to dedicated cart storage
+  useEffect(() => {
+    const storage = getCartStorage();
+    if (storage) {
+      saveCart(cart, storage);
+    }
+  }, [cart]);
 
   // Toast Helper
   const showToast = (msg, type = 'success') => {
@@ -482,7 +625,17 @@ export const OperationalProvider = ({ children }) => {
   };
 
   // Create Emergency Request
-  const createEmergencyJob = (jobData) => {
+  const createEmergencyJob = async (jobData) => {
+    if (isFirebaseConfigured && db) {
+      const sessionUser = await ensureSession().catch(() => firebaseUser);
+      const ownerUid = sessionUser?.uid || firebaseUser?.uid;
+      const code = createRecordCode('MS');
+      const payload = buildEmergencyJob(jobData, ownerUid, code, serverTimestamp());
+      await setDoc(doc(db, 'mesaJobs', code), payload);
+      showToast(`Yeni Arıza Çağrısı Alındı: ${code}`);
+      return payload;
+    }
+
     const newCode = 'MS-' + Math.floor(1000 + Math.random() * 9000);
     const newJob = {
       id: newCode,
@@ -530,7 +683,20 @@ export const OperationalProvider = ({ children }) => {
   };
 
   // State Machine transition for Work Order (with completion gate enforcement)
-  const transitionWorkOrderStatus = (idOrCode, newStatus, meta = {}) => {
+  const transitionWorkOrderStatus = async (idOrCode, newStatus, meta = {}) => {
+    assertOperationRole(isStaff, isSuperAdmin, false);
+
+    if (isFirebaseConfigured && db) {
+      const stepIndex = typeof meta === 'number' ? meta : meta?.stepIndex;
+      const patch = jobStatusPatch(newStatus, stepIndex);
+      await updateDoc(doc(db, 'mesaJobs', idOrCode), {
+        ...patch,
+        updatedAt: serverTimestamp(),
+      });
+      showToast(`${idOrCode} durumu güncellendi: ${newStatus}`);
+      return { success: true };
+    }
+
     const actor = meta.actor || 'Teknisyen';
     const note = meta.note || `Durum: ${newStatus}`;
 
@@ -597,12 +763,26 @@ export const OperationalProvider = ({ children }) => {
     return { success: true };
   };
 
+  const updateJobStatus = transitionWorkOrderStatus;
+
   const updateOrderStatus = (idOrCode, newStatus, stepIndex) => {
-    transitionWorkOrderStatus(idOrCode, newStatus, { stepIndex });
+    return transitionWorkOrderStatus(idOrCode, newStatus, { stepIndex });
   };
 
   // Record Signature
-  const recordSignature = (idOrCode, sigData, actorName = 'Teknisyen') => {
+  const recordSignature = async (idOrCode, sigData, actorName = 'Teknisyen') => {
+    assertOperationRole(isStaff, isSuperAdmin, false);
+
+    if (isFirebaseConfigured && db) {
+      const patch = signaturePatch(sigData);
+      await updateDoc(doc(db, 'mesaJobs', idOrCode), {
+        ...patch,
+        updatedAt: serverTimestamp(),
+      });
+      showToast(`${idOrCode} nolu iş emri dijital olarak imzalandı ve kapatıldı!`);
+      return { success: true };
+    }
+
     setLiveJobs(prev => prev.map(job => {
       if (job.id === idOrCode || job.code === idOrCode) {
         return {
@@ -631,7 +811,15 @@ export const OperationalProvider = ({ children }) => {
   };
 
   // Delete Job
-  const deleteJob = (idOrCode) => {
+  const deleteJob = async (idOrCode) => {
+    assertOperationRole(isStaff, isSuperAdmin, true);
+
+    if (isFirebaseConfigured && db) {
+      await deleteDoc(doc(db, 'mesaJobs', idOrCode));
+      showToast(`${idOrCode} nolu iş emri silindi.`);
+      return;
+    }
+
     setLiveJobs(prev => prev.filter(job => job.id !== idOrCode && job.code !== idOrCode));
     addAuditLog({
       actorName: 'Süper Admin',
@@ -734,7 +922,45 @@ export const OperationalProvider = ({ children }) => {
     return cart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || item.qty || 0), 0);
   }, [cart]);
 
-  const createPartsOrder = (orderData) => {
+  const createPartsOrder = async (orderData) => {
+    if (isFirebaseConfigured && db) {
+      const sessionUser = await ensureSession().catch(() => firebaseUser);
+      const ownerUid = sessionUser?.uid || firebaseUser?.uid;
+      if (!ownerUid) throw new Error('Oturum doğrulanamadı.');
+      const orderCode = createRecordCode('SP');
+      const submittedCart = [...cart];
+      const orderPayload = buildPartsOrder(
+        orderData,
+        submittedCart,
+        ownerUid,
+        orderCode,
+        serverTimestamp()
+      );
+      try {
+        await setDoc(doc(db, 'mesaPartsOrders', orderCode), orderPayload);
+      } catch (err) {
+        throw friendlyOperationError(err);
+      }
+      setCart(prevCart => {
+        const submittedMap = new Map(submittedCart.map(i => [i.id, i.quantity]));
+        const nextCart = [];
+        for (const item of prevCart) {
+          const submittedQty = submittedMap.get(item.id) || 0;
+          const remaining = (item.quantity || item.qty || 0) - submittedQty;
+          if (remaining > 0) {
+            nextCart.push({ ...item, quantity: remaining });
+          }
+        }
+        const storage = getCartStorage();
+        if (storage) {
+          saveCart(nextCart, storage);
+        }
+        return nextCart;
+      });
+      showToast(`Sipariş ${orderCode} başarıyla oluşturuldu!`);
+      return orderPayload;
+    }
+
     const orderCode = 'SP-' + Math.floor(1000 + Math.random() * 9000);
     const newOrder = {
       orderCode,
@@ -762,12 +988,27 @@ export const OperationalProvider = ({ children }) => {
     return newOrder;
   };
 
-  const deletePartsOrder = (orderCode) => {
+  const deletePartsOrder = async (orderCode) => {
+    assertOperationRole(isStaff, isSuperAdmin, true);
+    if (isFirebaseConfigured && db) {
+      await deleteDoc(doc(db, 'mesaPartsOrders', orderCode));
+      showToast(`${orderCode} nolu sipariş silindi.`);
+      return;
+    }
     setPartsOrders(prev => prev.filter(o => o.orderCode !== orderCode));
     showToast(`${orderCode} nolu sipariş silindi.`);
   };
 
-  const updatePartsOrderStatus = (orderCode, newStatus) => {
+  const updatePartsOrderStatus = async (orderCode, newStatus) => {
+    assertOperationRole(isStaff, isSuperAdmin, false);
+    if (isFirebaseConfigured && db) {
+      await updateDoc(doc(db, 'mesaPartsOrders', orderCode), {
+        status: newStatus,
+        updatedAt: serverTimestamp(),
+      });
+      showToast(`${orderCode} nolu sipariş durumu güncellendi: ${newStatus}`);
+      return;
+    }
     setPartsOrders(prev => prev.map(o => o.orderCode === orderCode ? { ...o, status: newStatus } : o));
     showToast(`${orderCode} nolu sipariş durumu güncellendi: ${newStatus}`);
   };
@@ -791,13 +1032,14 @@ export const OperationalProvider = ({ children }) => {
         activeOrders: liveJobs,
         createEmergencyJob,
         addEmergencyOrder: createEmergencyJob,
-        updateJobStatus: transitionWorkOrderStatus,
+        updateJobStatus,
         updateOrderStatus,
         transitionWorkOrderStatus,
         addWorkOrderEvidence,
         recordSignature,
         deleteJob,
         unreadAlertsCount,
+        dataError,
 
         // Inventory & Double-Entry Ledger
         inventoryItems,

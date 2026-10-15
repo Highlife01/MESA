@@ -6,12 +6,34 @@ import { brandsData } from '../data/brandsData';
 import { BrandLogo } from '../components/BrandLogos';
 
 export function BrandsPage() {
+  const brandsSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Mesa İş Makinaları Desteklenen İş Makinası Markaları',
+    description: 'JCB, Caterpillar (CAT), Hidromek, Komatsu, Volvo, Manitou, Merlo ve Bobcat iş makinelerine lisanslı diagnostik ve garantili tamir servisi.',
+    numberOfItems: brandsData.length,
+    itemListElement: brandsData.map((b, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      item: {
+        '@type': 'Brand',
+        name: b.name,
+        description: b.desc,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 py-12">
       <SEO 
         title="Desteklenen İş Makinası Markaları & Diagnostik Teşhis"
         description="JCB, Caterpillar (CAT), Hidromek, Komatsu, Volvo, Manitou, Merlo ve Bobcat iş makinelerine yetkili seviyesinde lisanslı diagnostik ve garantili tamir servisi."
         canonical="/markalar"
+        schema={brandsSchema}
+        breadcrumbs={[
+          { name: 'Ana Sayfa', url: '/' },
+          { name: 'Desteklenen Markalar', url: '/markalar' }
+        ]}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -48,7 +70,7 @@ export function BrandsPage() {
                     </div>
                     <div>
                       <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">{brand.origin}</span>
-                      <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">{brand.name}</h3>
+                      <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">{brand.name}</h2>
                     </div>
                   </div>
                   <span className="px-3 py-1 rounded-full bg-slate-900 text-amber-400 text-xs font-bold flex items-center shrink-0">
@@ -76,11 +98,11 @@ export function BrandsPage() {
 
               <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                 <a 
-                  href={`tel:05325550128`}
+                  href="tel:05335293674"
                   className="inline-flex items-center space-x-1 text-xs font-bold text-slate-700 hover:text-amber-600 transition"
                 >
                   <Phone className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Teknik Danışmanlık: 0532 555 01 28</span>
+                  <span>Teknik Danışmanlık: 0533 529 36 74</span>
                 </a>
 
                 <Link 

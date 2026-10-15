@@ -22,10 +22,12 @@ const SESSION_ACTIVITY_KEY = 'mesa_last_activity';
 // ─────────────────────────────────────────────
 // Sliding-window rate limiter (login, QR talep, dosya yükleme)
 // ─────────────────────────────────────────────
+// Security state uses sessionStorage only: tab-scoped, wiped on browser close,
+// never persisted. Real enforcement stays server-side (see header note).
 const safeRead = (key, fallback) => {
     if (typeof window === 'undefined') return fallback;
     try {
-        const raw = window.localStorage.getItem(key);
+        const raw = window.sessionStorage.getItem(key);
         return raw ? JSON.parse(raw) : fallback;
     } catch {
         return fallback;
@@ -35,7 +37,7 @@ const safeRead = (key, fallback) => {
 const safeWrite = (key, value) => {
     if (typeof window === 'undefined') return;
     try {
-        window.localStorage.setItem(key, JSON.stringify(value));
+        window.sessionStorage.setItem(key, JSON.stringify(value));
     } catch { /* kota dolu — sessizce devam */ }
 };
 

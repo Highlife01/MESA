@@ -8,7 +8,7 @@ export const guidesData = [
     readTime: '6 Dk Okuma',
     publishDate: 'Eylül 2026',
     author: 'Mesa Teknik Mühendislik Kurulu',
-    heroImage: '/images/service-hydraulics.jpg',
+    heroImage: '/images/service-hydraulics.webp',
     tags: ['Hidrolik Pompa', 'ISO 4406', 'Yağ Analizi', 'Kawasaki', 'Rexroth'],
     summary: 'Ağır iş makinelerinde hidrolik pompa, valf ve silindir revizyonlarının ana sebebi mekanik yorulma değil, mikroskobik yağ kirliliğidir. Bu rehberde şantiyelerde uygulanabilir koruyucu adımları sıralıyoruz.',
     content: [
@@ -42,7 +42,7 @@ export const guidesData = [
     readTime: '8 Dk Okuma',
     publishDate: 'Eylül 2026',
     author: 'Mesa Saha Operasyon Birimi',
-    heroImage: '/images/service-maintenance.jpg',
+    heroImage: '/images/service-maintenance.webp',
     tags: ['Periyodik Bakım', '250 Saat', '500 Saat', 'Filtre Değişimi', 'Gresleme'],
     summary: 'Planlı bakım maliyeti, şantiyede plansız duran bir makinenin yarattığı iş kaybının sadece %5\'i kadardır. İşte uzman teknisyenlerimizin uyguladığı saat kademeli bakım protokolü.',
     content: [
@@ -83,7 +83,7 @@ export const guidesData = [
     readTime: '7 Dk Okuma',
     publishDate: 'Eylül 2026',
     author: 'Mesa Elektronik Teşhis Laboratuvarı',
-    heroImage: '/images/service-diesel-engine.jpg',
+    heroImage: '/images/service-diesel-engine.webp',
     tags: ['DPF Rejenerasyon', 'AdBlue', 'SCR', 'Stage V', 'Tier 4'],
     summary: 'Yeni nesil iş makinelerinde en sık yaşanan duruşların başında DPF kurum doluluğu ve AdBlue kristalleşmesi gelir. Makine gücünün %40 oranında düşmesini (derate) önleme yöntemleri.',
     content: [
@@ -116,7 +116,7 @@ export const guidesData = [
     readTime: '5 Dk Okuma',
     publishDate: 'Eylül 2026',
     author: 'Mesa Mekanik Revizyon Atölyesi',
-    heroImage: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-transmission.webp',
     tags: ['Kule Rulmanı', 'Cer Dişlisi', 'Ekskavatör', 'Komparatör', 'Boşluk Ölçümü'],
     summary: 'Kule dönüş bilyasındaki milimetrik bir aşınma, kepçe ucunda onlarca santimetrelik kontrolsüz salınıma neden olur. Kule boşluğunun şantiyede doğru ölçüm metodolojisi.',
     content: [
@@ -140,7 +140,7 @@ export const guidesData = [
     readTime: '9 Dk Okuma',
     publishDate: 'Eylül 2026',
     author: 'Mesa Baş Denetçi & Ekspertiz Ekibi',
-    heroImage: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/mesa-excavator-hero.webp',
     tags: ['Ekspertiz', 'İkinci El', 'Hidrolik Basınç Testi', 'Şasi Çatlağı', 'Ekskavatör'],
     summary: 'İkinci el bir iş makinası satın alırken yapılacak 1 saatlik profesyonel ekspertiz, sizi 500.000 TL\'yi aşabilecek gizli revizyon masraflarından kurtarır.',
     content: [
@@ -168,7 +168,7 @@ export const guidesData = [
     readTime: '6 Dk Okuma',
     publishDate: 'Eylül 2026',
     author: 'Mesa Teknik Kimya ve Yağlama Kurulu',
-    heroImage: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-hydraulics.webp',
     tags: ['Hidrolik Yağ', 'ISO VG 46', 'ISO VG 68', 'Hararet', 'Yağ Soğutucu'],
     summary: 'Çukurova bölgesi yaz aylarında Türkiye\'nin en yüksek çevre sıcaklıklarına ulaşır. Doğru viskozitede hidrolik yağ kullanılmadığında pompalar kavitasyonla aşınır.',
     content: [

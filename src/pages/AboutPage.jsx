@@ -33,6 +33,10 @@ export const AboutPage = () => {
         description="2008'den bu yana Adana ve Çukurova genelinde 2.500 m² kapalı atölye, 10 ton vinç, 450 bar test standı ve 5 mobil servis aracıyla hizmet veren lider iş makinası revizyon merkezi."
         canonical="/hakkimizda"
         keywords="mesa iş makinaları hakkında, adana iş makinası servisi kurumsal, iş makinası atölyesi adana, hidrolik test standı, mobil servis filosu"
+        breadcrumbs={[
+          { name: 'Ana Sayfa', url: '/' },
+          { name: 'Kurumsal ve Atölye Altyapımız', url: '/hakkimizda' }
+        ]}
       />
 
       {/* Hero Section */}
@@ -100,9 +104,12 @@ export const AboutPage = () => {
 
           <div className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-xl">
             <img
-              src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80"
-              alt="Mesa İş Makinaları Atölye"
+              src="/images/mesa-workshop.webp"
+              alt="Mesa İş Makinaları Adana Merkez Entegre Servis Tesisi"
               className="w-full h-full object-cover"
+              loading="lazy"
+              width="800"
+              height="600"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200 shadow-lg">

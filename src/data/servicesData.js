@@ -8,7 +8,7 @@ export const servicesData = [
     category: 'Mekanik & Revizyon',
     duration: '1 - 3 Gün',
     warranty: '12 Ay / 2.000 Saat Garanti',
-    heroImage: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/mesa-excavator-hero.webp',
     content: `Mesa İş Makinaları olarak şantiyelerinizin durmaması için ağır iş makinelerinin komple mekanik, aktarma ve hidrolik revizyonunu uluslararası OEM toleranslarında gerçekleştiriyoruz. Caterpillar, JCB, Hidromek, Komatsu, Volvo ve Liebherr gibi sektör lideri markaların paletli ve lastikli ekskavatörleri, bekoloderleri, loderleri ve dozerleri uzman kadromuz tarafından incelenir.
 
 Gelişmiş arıza tespit donanımları (Electronic Technician, ServiceMaster, H-Diag vb.) ile makinelerinizin elektronik kontrol üniteleri (ECU), hidrolik basınç haritaları ve motor çalışma parametreleri incelenerek sıfır hata toleransıyla revizyon planı oluşturulur. Atölyemizde 10 ton gezer vinç, 450 bar dinamik test standı ve seyyar borwerk delik işleme tezgahları ile tüm operasyon tek çatı altında tamamlanır.`,
@@ -61,7 +61,7 @@ Gelişmiş arıza tespit donanımları (Electronic Technician, ServiceMaster, H-
     category: 'Hidrolik Sistemler',
     duration: 'Aynı Gün / 24 Saat',
     warranty: '12 Ay Garanti',
-    heroImage: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-hydraulics.webp',
     content: `İş makinelerinin kalbi hidrolik sistemlerdir. Mesa İş Makinaları bünyesindeki modern hidrolik test istasyonumuzda; Kawasaki K3V/K5V/K7V serisi, Bosch Rexroth A8VO/A10VO/A11VO, Parker, Danfoss ve Eaton değişken debili eğik plakalı pistonlu pompalar sıfır toleransla revize edilir.
 
 Rotary grup, piston pabucu, plaka, distribütör aynası ve tahrik şaftı değişimlerinin ardından pompalar dinamik test standımıza bağlanır. 450 Bar tepe basıncında debi verimliliği, kavitasyon riski ve iç kaçak (drenaj) testlerinden geçirilerek grafiksel test sertifikası ile teslim edilir.`,
@@ -110,7 +110,7 @@ Rotary grup, piston pabucu, plaka, distribütör aynası ve tahrik şaftı deği
     category: 'Telehandler & Vinç',
     duration: 'Aynı Gün / 48 Saat',
     warranty: '12 Ay Garanti',
-    heroImage: '/images/service-telehandler.jpg',
+    heroImage: '/images/service-telehandler.webp',
     content: `İnşaat, endüstriyel tesis montajı ve tarım sektörünün vazgeçilmezi olan teleskopik yükleyiciler (telehandler), yüksek irtifada ağır yük kaldırdığı için en yüksek güvenlik standartlarını gerektirir. Mesa İş Makinaları; Manitou (MT, MT-X serisi), JCB Loadall, Merlo Panoramic, Dieci ve Magni telehandler makinelerinin yetkin özel servisidir.
 
 Teleskopik bom uzatma ve toplama zincirlerinin gergi kontrolleri, aşınma takozları (kaydırıcı pabuçlar), hidrostatik şanzımanlar, 4 tekerlek yönlendirme (yengeç yürüyüş) açı kalibrasyonları ve en önemlisi Yük Moment Göstergesi (LMI) emniyet sensörleri uzman teknisyenlerimizce kalibre edilir.`,
@@ -159,7 +159,7 @@ Teleskopik bom uzatma ve toplama zincirlerinin gergi kontrolleri, aşınma takoz
     category: 'Mobil Servis',
     duration: '45 Dk Ortalama Varış',
     warranty: 'Yerinde Müdahale Garantisi',
-    heroImage: '/images/service-mobile-fleet.jpg',
+    heroImage: '/images/service-mobile-fleet.webp',
     content: `Şantiyede duran her iş makinası, doğrudan proje gecikmesi ve yüksek finansal kayıp demektir. Mesa İş Makinaları 7/24 Gezici Mobil Servis Filosu; şantiyenizin bulunduğu lokasyona (maden sahası, taş ocağı, tünel, otoyol veya liman) en kısa sürede ulaşarak arızayı yerinde çözer.
 
 Mobil servis araçlarımız sıradan bir arıza aracı değildir; araç içinde Kaeser vidalı dizel kompresör, Finn-Power mobil hidrolik hortum sıkma presi, jeneratörlü inverter gazaltı/ark kaynak makineleri, orijinal teşhis bilgisayarları ve zengin acil sarfiyat stoğu barındıran yürüyen bir atölyedir.`,
@@ -208,7 +208,7 @@ Mobil servis araçlarımız sıradan bir arıza aracı değildir; araç içinde 
     category: 'Hortum & Bağlantı',
     duration: '30 - 60 Dakika',
     warranty: 'Yüksek Basınç Sızdırmazlık Garantisi',
-    heroImage: '/images/service-hydraulic-hose.jpg',
+    heroImage: '/images/service-hydraulic-hose.webp',
     content: `Şantiye operasyonlarının en sık karşılaştığı plansız duruş sebebi, yüksek basınç altında çalışan hidrolik hortumların patlaması veya rakor bağlantılarından sızdırmasıdır. Mesa İş Makinaları, şantiyenizden hortumu söküp sanayiye götürme derdini ortadan kaldırır.
 
 Mobil araçlarımızda bulunan Finn-Power yüksek hassasiyetli hidrolik hortum sıkma presleri ve geniş rakor stoğu (BSP, JIC, ORFS, Komatsu Flanş, CAT Flanş, Metrik) sayesinde; 1/4 inçten 2 inçe kadar 1SN, 2SN, 4SP ve 4SH 4 telli spiral yüksek basınç hortumları şantiye sahasında dakikalar içinde üretilir ve makineye montajı yapılır.`,
@@ -257,7 +257,7 @@ Mobil araçlarımızda bulunan Finn-Power yüksek hassasiyetli hidrolik hortum s
     category: 'Güç Aktarımı',
     duration: '2 - 4 Gün',
     warranty: '12 Ay Garanti',
-    heroImage: '/images/service-transmission.jpg',
+    heroImage: '/images/service-transmission.webp',
     content: `Ağır iş makinelerinde motor gücünün tekerleklere veya yürüyüş cerlerine kayıpsız aktarılması; şanzıman, tork konvertörü ve diferansiyel dişli gruplarının kusursuz çalışmasına bağlıdır. Mesa İş Makinaları; ZF (WG serisi), Dana Spicer, Carraro ve Allison otomatik/powershift şanzımanların yetkin revizyon merkezidir.
 
 Şanzıman iç debriyaj balataları, piston segmanları, selenoid valf gövdeleri, ayna-mahruti dişlileri ve planet taşıyıcılar orijinal yedek parçalarla yenilenir. Revizyon sonrasında şanzıman kontrol ünitesi (TCU) kalibrasyonu yapılarak vites geçişleri pürüzsüz hale getirilir.`,
@@ -306,7 +306,7 @@ Mobil araçlarımızda bulunan Finn-Power yüksek hassasiyetli hidrolik hortum s
     category: 'Motor & Güç',
     duration: '3 - 5 Gün',
     warranty: '12 Ay / 2.000 Saat Garanti',
-    heroImage: '/images/service-diesel-engine.jpg',
+    heroImage: '/images/service-diesel-engine.webp',
     content: `Şantiye koşullarında yüksek toz, aşırı sıcaklık ve sürekli ağır yük altında çalışan dizel motorlar, en üst seviye uzmanlık gerektirir. Mesa İş Makinaları; Caterpillar (C4.4, C7, C9, C13), Perkins (1104, 1106 serisi), Isuzu (4HK1, 6HK1), Cummins (QSB, QSC, QSL) ve Volvo Penta motorların rektifiye ve revizyon merkezidir.
 
 Gelişmiş motor revizyon atölyemizde; silindir bloğu honlama, krank mili taşlama ve çatlak testi, silindir kapağı basınç testi, supap yuvası alıştırma ve OEM piston-gömlek montajı sıfır toleransla yapılır. Common-Rail yüksek basınç pompaları ve piezo enjektörler test edilerek emisyon ve yakıt optimizasyonu sağlanır.`,
@@ -355,7 +355,7 @@ Gelişmiş motor revizyon atölyemizde; silindir bloğu honlama, krank mili taş
     category: 'Koruyucu Bakım',
     duration: '2 - 4 Saat',
     warranty: 'Orijinal Filtre & Yağ Garantisi',
-    heroImage: '/images/service-maintenance.jpg',
+    heroImage: '/images/service-maintenance.webp',
     content: `Ağır iş makinelerinin kullanım ömrünü uzatmanın ve büyük arıza maliyetlerinin önüne geçmenin tek yolu, tavizsiz koruyucu periyodik bakımdır. Mesa İş Makinaları; şantiyelerinizde 250, 500, 1000 ve 2000 saatlik fabrika standartlarında periyodik bakım paketleri sunar.
 
 Tüm bakımlarda motor yağı, hidrolik yağı, şanzıman ve cer yağları vakumlu kapalı devre sistemlerle tahliye edilir; OEM standartlarında onaylı filtreler takılır. Ayrıca alınan yağ numuneleri spektrometrik laboratuvar analizine tabi tutularak bakır, demir, krom, kurşun ve silisyum gibi aşınma metalleri ölçülür, henüz arıza meydana gelmeden önleyici rapor sunulur.`,
@@ -404,7 +404,7 @@ Tüm bakımlarda motor yağı, hidrolik yağı, şanzıman ve cer yağları vaku
     category: 'Elektronik & Diagnostik',
     duration: '24 - 48 Saat',
     warranty: '12 Ay Elektronik Garanti',
-    heroImage: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/mesa-workshop.webp',
     content: `Modern iş makineleri, karmaşık mikrodenetleyiciler ve sensör ağlarıyla yönetilir. Bir kablo kopukluğu, voltaj dalgalanması veya beyin arızası yüz tonluk bir makineyi anında kilitleyebilir. Mesa İş Makinaları bünyesindeki Elektronik Kart ve Beyin Onarım Laboratuvarı; en zorlu elektronik arızaları çözer.
 
 Caterpillar A4/A5 ECM, JCB LiveLink ve ECU, Hidromek Opera kontrol ünitesi, Komatsu controller ve Volvo V-ECU beyinleri lehimleme istasyonlarımızda mikroçip seviyesinde onarılır. Şantiye sahasında ise osiloskop ve CAN-Bus analizörleri ile tesisat kopuklukları dakikalar içinde tespit edilir.`,
@@ -453,7 +453,7 @@ Caterpillar A4/A5 ECM, JCB LiveLink ve ECU, Hidromek Opera kontrol ünitesi, Kom
     category: 'Yürüyüş & Dönüş',
     duration: '2 - 3 Gün',
     warranty: '12 Ay Garanti',
-    heroImage: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-transmission.webp',
     content: `Ağır tonajlı paletli ekskavatörlerde üst yapının 360 derece dönmesini sağlayan kule çember dişlisi ve makinayı yürüten nihai cer redüktörleri, en yüksek mekanik gerilime maruz kalan kısımlardır. Mesa İş Makinaları; kule dönüş ve yürüyüş sistemlerinde uzmanlaşmıştır.
 
 Kule bilyası eksenel boşluk ölçümü, kule fren balataları, planet dişli kademeleri ve mekanik ayna keçeleri sıfırlanır. Ayrıca palet gergi silindirleri, istikamet tekerleri, alt/üst yürüyüş makaraları ve palet pabuçları şantiye sahasında hidrolik sökme preslerimizle onarılır.`,
@@ -502,7 +502,7 @@ Kule bilyası eksenel boşluk ölçümü, kule fren balataları, planet dişli k
     category: 'Talaşlı İmalat',
     duration: 'Aynı Gün (4 - 8 Saat)',
     warranty: 'Sıfır Boşluk Tolerans Garantisi',
-    heroImage: '/images/service-borwerk.jpg',
+    heroImage: '/images/service-borwerk.webp',
     content: `Zamanla aşınan, ovallaşen veya çatlayan bom, arm, kova ve şasi bağlantı kulaklarını atölyeye taşımak büyük vinçler ve günler süren nakliye masrafı gerektirir. Mesa İş Makinaları, taşınabilir (seyyar) borwerk delik işleme makinelerini doğrudan şantiyenize getirir.
 
 Bozulmuş delik yuvalarına otomatik döner gazaltı kaynak robotu ile dolgu yapılır; ardından karbür elmas uçlu seyyar borwerk milimiz delik merkezine lazerle hizalanarak fabrika ölçüsünde mikron toleransla honlanır. Orijinal burç ve sertleştirilmiş pimler çakılarak sıfır boşlukla iş teslim edilir.`,
@@ -551,7 +551,7 @@ Bozulmuş delik yuvalarına otomatik döner gazaltı kaynak robotu ile dolgu yap
     category: 'Ataşman & Kırıcı',
     duration: 'Aynı Gün / 24 Saat',
     warranty: 'Vuruntu & Sızdırmazlık Garantisi',
-    heroImage: '/images/service-hydraulic-breaker.jpg',
+    heroImage: '/images/service-hydraulic-breaker.webp',
     content: `Taş ocakları, yol yarma ve yıkım projelerinin en ağır darbe yükünü çeken hidrolik kırıcılar, dakikada 400 ila 1000 darbe vurarak çalışır. Mesa İş Makinaları; Montabert, Rammer, Soosan, Furukawa, Epiroc (Atlas Copco) ve MTB kırıcıların Adana ve Çukurova bölgesindeki yetkin revizyon merkezidir.
 
 Kırıcı ana gövde bağlantı saplamaları (tie-rod), piston ve silindir vuruntu yüzeyleri, alt/üst kama burçları ve darbe sönümleyici poliüretan takozlar yenilenir. Azot akümülatörlerine yüksek saflıkta N2 gazı basılarak kırıcı darbe gücü fabrika nominal değerine çıkarılır.`,
@@ -600,7 +600,7 @@ Kırıcı ana gövde bağlantı saplamaları (tie-rod), piston ve silindir vurun
     category: 'Ulusal Teknik Servis',
     duration: 'Aynı Gün / 24 Saat',
     warranty: '12 Ay / 2.000 Saat Garanti',
-    heroImage: '/images/mesa-excavator-hero.png',
+    heroImage: '/images/mesa-excavator-hero.webp',
     content: `MESA İş Makinaları, Türkiye genelinde inşaat, madencilik, altyapı ve taş ocağı şantiyelerinde çalışan tüm ağır iş makinelerine 7/24 mobil teknik servis desteği sunar. Tam donanımlı gezici servis araçlarımız, arıza tespiti ve acil müdahale donanımlarıyla şantiyenize doğrudan intikal eder.
 
 Mekanik aşınmalar, motor ve aktarma organları revizyonu, yürüyüş takımları (cer dişlisi, palet gergi, istikamet tekeri) onarımı ve periyodik ağır hizmet bakımları OEM standartlarında gerçekleştirilir.`,
@@ -649,7 +649,7 @@ Mekanik aşınmalar, motor ve aktarma organları revizyonu, yürüyüş takımla
     category: 'Mobil Servis',
     duration: 'Acil Çağrı / 30-90 Dk',
     warranty: '12 Ay Servis Güvencesi',
-    heroImage: '/images/mesa-workshop.png',
+    heroImage: '/images/mesa-workshop.webp',
     content: `İş makinası arızalandığında makineyi atölyeye taşımak yüksek nakliye maliyeti ve ciddi iş kaybı demektir. MESA Mobil Teknik Servis birimi; jeneratör, kompresör, seyyar kaynak makinesi, hidrolik hortum presi ve arıza tespit cihazlarıyla donatılmış araçlarıyla tam bir seyyar atölye gibi şantiyenize gelir.
 
 Hidrolik patlak hortum değişimi, kumanda valfi kaçakları, marş ve şarj dinamosu arızaları, enjektör problemleri ve yürüyüş takımı onarımları sahada anında çözülür.`,
@@ -698,7 +698,7 @@ Hidrolik patlak hortum değişimi, kumanda valfi kaçakları, marş ve şarj din
     category: 'Hidrolik Sistemler',
     duration: '1 - 2 Gün',
     warranty: '12 Ay Resmi Test Garantisi',
-    heroImage: '/images/mesa-workshop.png',
+    heroImage: '/images/mesa-workshop.webp',
     content: `Ağır iş makinelerinde gücün kaynağı hidrolik sistemlerdir. MESA Hidrolik Servis Merkezi, Kawasaki, Bosch Rexroth, Parker, Sauer Danfoss, Eaton ve Komatsu marka eğik plakalı pistonlu pompaların komple revizyonunu gerçekleştirir.
 
 Rotary grup, piston pabucu, dağıtıcı plaka ve şaft yenilemeleri sonrası pompalar 450 Bar dinamik test standımızda yük altında test edilir. İç drenaj kaçakları, debi kararlılığı ve basınç tepkileri bilgisayar çıktısıyla belgelenir.`,
@@ -743,7 +743,7 @@ Rotary grup, piston pabucu, dağıtıcı plaka ve şaft yenilemeleri sonrası po
     category: 'Hidrolik Sistemler',
     duration: 'Aynı Gün / 24 Saat',
     warranty: '12 Ay Sızdırmazlık Garantisi',
-    heroImage: '/images/mesa-workshop.png',
+    heroImage: '/images/mesa-workshop.webp',
     content: `Ekskavatör bom silindirleri, loder kova pistonları ve teleskopik yükleyici bom pistonları şantiye ortamında darbe, taş çarpması ve toz nedeniyle rod çizilmeleri ve keçe aşınmalarına maruz kalır.
 
 MESA Hidrolik Silindir Servisimizde, 4 metre boya kadar silindir boruları seyyar ve sabit honlama tezgahlarımızda işlenir. Eğrilmiş kromlu miller doğrultulur veya sert krom kaplı yeni millerle değiştirilir. Ağır hizmet poliüretan ve PTFE keçe setleri monte edilerek sıfır kaçak garantisi sağlanır.`,
@@ -788,7 +788,7 @@ MESA Hidrolik Silindir Servisimizde, 4 metre boya kadar silindir boruları seyya
     category: 'Diagnostik & Beyin',
     duration: '1 - 3 Saat',
     warranty: 'Doğru Teşhis Garantisi',
-    heroImage: '/images/mesa-excavator-hero.png',
+    heroImage: '/images/mesa-excavator-hero.webp',
     content: `Modern iş makineleri karmaşık CAN-bus elektronik ağları ve dijital kontrol üniteleriyle yönetilir. Gereksiz parça değişimlerini önlemenin tek yolu doğru elektronik diagnostiktir.
 
 MESA uzman teknisyenleri; Caterpillar Electronic Technician (ET), JCB ServiceMaster, Volvo Tech Tool, Hidromek H-Diag ve Cummins Insite orijinal teşhis cihazları ile makinenize bağlanır. Sensör canlı verileri, enjektör dengeleme testleri, DPF/SCR emisyon parametreleri ve hidrolik solenoid basınç kalibrasyonları şantiyede eksiksiz yapılır.`,
@@ -833,7 +833,7 @@ MESA uzman teknisyenleri; Caterpillar Electronic Technician (ET), JCB ServiceMas
     category: 'Periyodik Bakım',
     duration: '3 - 6 Saat',
     warranty: 'Resmi Servis Kayıtlı',
-    heroImage: '/images/mesa-excavator-hero.png',
+    heroImage: '/images/mesa-excavator-hero.webp',
     content: `Ağır iş makinelerinin arızalanmasını önlemenin ve ikinci el değerini korumanın en ekonomik yolu düzenli periyodik bakımdır. MESA İş Makinaları, şantiyenizin çalışma temposunu aksatmadan mesai dışı veya vardiya aralarında periyodik bakım hizmeti sunar.
 
 Motor yağı, hidrolik sistem yağı, şanzıman ve cer dişlisi yağları üretici OEM onaylı viskozitelerle yenilenir. Donaldson, Baldwin ve Mann marka ağır hizmet hava, yakıt, su ayırıcı ve hidrolik filtreleri takılır. 150 nokta kontrol formuyla makinenin tüm aşınmaları önceden raporlanır.`,
@@ -878,7 +878,7 @@ Motor yağı, hidrolik sistem yağı, şanzıman ve cer dişlisi yağları üret
     category: 'Teleskopik Yükleyici',
     duration: '1 - 2 Gün',
     warranty: '12 Ay Garanti',
-    heroImage: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-telehandler.webp',
     content: `Şantiyelerin vazgeçilmezi olan teleskopik yükleyiciler (telehandler), yüksek irtifada ağır yük kaldırdıkları için güvenlik sistemleri kusursuz çalışmalıdır. MESA İş Makinaları; Manitou MT/MLT, JCB Loadall 535/540, Merlo Panoramic/Roto ve Dieci makinelerin uzman servis merkezidir.
 
 İç içe geçen bom teleskop kızak pabuçları (aşınma takozları), bom uzatma ve geri çekme zincirleri, oransal joystick kumandaları ve devrilme önleyici moment kontrol (LMI) sensörleri fabrika toleranslarında kalibre edilir.`,
@@ -923,7 +923,7 @@ Motor yağı, hidrolik sistem yağı, şanzıman ve cer dişlisi yağları üret
     category: 'Forklift & Depo',
     duration: 'Aynı Gün / 24 Saat',
     warranty: '12 Ay Garanti',
-    heroImage: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-telehandler.webp',
     content: `Fabrika, antrepo, liman ve lojistik merkezlerin yük taşıma operasyonlarında forkliftlerin durması sevkiyatı felç eder. MESA İş Makinaları; Linde, Toyota, Clark, Komatsu, Hyster, Yale, Jungheinrich ve Heli marka forkliftlerin tüm mekanik, hidrolik ve yürüyüş aksamlarına yerinde servis sağlar.
 
 Dubleks ve tripleks asansör mast rulmanları, asansör kaldırma zincirleri, tilt silindirleri sızdırmazlığı, tork konvertör revizyonu ve dingil bilyaları fabrika toleranslarında yenilenir.`,
@@ -968,7 +968,7 @@ Dubleks ve tripleks asansör mast rulmanları, asansör kaldırma zincirleri, ti
     category: 'Ekskavatör',
     duration: '1 - 3 Gün',
     warranty: '12 Ay / 2.000 Saat Garanti',
-    heroImage: '/images/mesa-excavator-hero.png',
+    heroImage: '/images/mesa-excavator-hero.webp',
     content: `Şantiyelerin en ağır yükünü taşıyan paletli ve lastikli ekskavatörler, zorlu kaya ve hafriyat şartlarında yüksek dayanıklılık gerektirir. MESA Ekskavatör Servis Departmanı; Caterpillar 320/336, Komatsu PC200/PC390, Hidromek HMK220/HMK300, Volvo EC210/EC380 ve Hitachi Zaxis ekskavatörlerde derin uzmanlığa sahiptir.
 
 Kule dönüş bilyaları, cer redüktör dişlileri, bom-arm çatlaklarının gazaltı kaynakla takviyesi, seyyar borwerk delik işleme tezgahıyla ovalleşen pim yuvalarının honlanması ve ana hidrolik dağıtıcı revizyonu garantili olarak yapılır.`,
@@ -1013,7 +1013,7 @@ Kule dönüş bilyaları, cer redüktör dişlileri, bom-arm çatlaklarının ga
     category: 'Yükleyici & Loder',
     duration: '1 - 2 Gün',
     warranty: '12 Ay Garanti',
-    heroImage: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/images/service-transmission.webp',
     content: `İnşaatların belkemiği kazıcı yükleyiciler (bekoloder - JCB 3CX/4CX, Hidromek 102B/102S, CAT 428/432) ve taş ocaklarının lastikli loderleri (CAT 950/966, Komatsu WA380/WA470, Volvo L120/L220) ağır çekiş ve tork altında çalışır.
 
 MESA Kepçe ve Loder Servisi; ZF ve Carraro powershift şanzıman revizyonu, aks ve diferansiyel ayna-mahruti ayarları, bel kırma orta mafsal rulman boşlukları, ıslak fren diskleri ve hidrostatik direksiyon sistemlerini orijinal toleranslarda yeniler.`,

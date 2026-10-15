@@ -6,6 +6,9 @@ import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Building, ShieldCheck, 
 export const ContactPage = () => {
   const [formState, setFormState] = useState({ name: '', phone: '', company: '', machineType: '', location: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const apiBase = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '');
 
   const branches = [
     {
@@ -34,9 +37,28 @@ export const ContactPage = () => {
     }
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitError('');
+    if (!apiBase) {
+      setSubmitError('İletişim servisi şu anda yapılandırılmamış. Lütfen 0533 529 36 74 numarasını arayın.');
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`${apiBase}/api/public/contact-requests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formState)
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload?.error?.message || 'Talep gönderilemedi.');
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(error.message || 'Talep gönderilemedi. Lütfen tekrar deneyin.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -46,6 +68,10 @@ export const ContactPage = () => {
         description="MESA İş Makinaları Adana merkezli operasyonu ile Türkiye genelinde mobil servis, saha tamiri ve hidrolik sistem destekleri sunar. 7/24 Acil Çağrı Hattı: 0533 529 36 74."
         canonical="/iletisim"
         keywords="iş makinası servisi iletişim, mobil servis iletişim, adana iş makinası tamiri telefon, Türkiye genelinde saha servis, yeşiloba metal sanayi mesa"
+        breadcrumbs={[
+          { name: 'Ana Sayfa', url: '/' },
+          { name: 'İletişim ve Servis Talebi', url: '/iletisim' }
+        ]}
       />
 
       {/* Header */}
@@ -87,6 +113,7 @@ export const ContactPage = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {submitError && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{submitError}</div>}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1.5">Yetkili Adı Soyadı *</label>
@@ -165,7 +192,7 @@ export const ContactPage = () => {
                   className="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-sm shadow-xl shadow-red-600/20 transition-all flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Teknik Servis Talebini Gönder</span>
+                  <span>{isSubmitting ? 'Gönderiliyor...' : 'Teknik Servis Talebini Gönder'}</span>
                 </button>
               </form>
             )}

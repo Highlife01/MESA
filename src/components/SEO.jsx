@@ -11,7 +11,8 @@ export function SEO({
   schema = null,
   jsonLd = null,
   breadcrumbs = null,
-  geo = null
+  geo = null,
+  noindex = false
 }) {
   useEffect(() => {
     const fullTitle = title 
@@ -31,10 +32,31 @@ export function SEO({
       element.setAttribute('content', content || '');
     };
 
+    const setLink = (rel, href, extraAttrs = {}) => {
+      const selectorParts = [`link[rel="${rel}"]`];
+      Object.entries(extraAttrs).forEach(([k, v]) => {
+        selectorParts.push(`[${k}="${v}"]`);
+      });
+      const selector = selectorParts.join('');
+      let el = document.querySelector(selector);
+      if (!el) {
+        el = document.createElement('link');
+        el.setAttribute('rel', rel);
+        Object.entries(extraAttrs).forEach(([k, v]) => el.setAttribute(k, v));
+        document.head.appendChild(el);
+      }
+      el.setAttribute('href', href);
+    };
+
     setMeta('description', description);
     setMeta('keywords', keywords);
     setMeta('author', SITE_CONFIG.legalName);
-    setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    setMeta(
+      'robots',
+      noindex
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+    );
 
     // GEO & Local SEO Meta Tags
     const geoRegion = geo?.region || SITE_CONFIG.headquarters.geoRegion || 'TR-01';
@@ -49,34 +71,47 @@ export function SEO({
     setMeta('coverage', 'Turkey');
     setMeta('distribution', 'Global');
 
+    // Resolve absolute OG image URL
+    const resolvedOgImage = ogImage
+      ? (ogImage.startsWith('http') ? ogImage : `${SITE_CONFIG.siteUrl}${ogImage.startsWith('/') ? ogImage : `/${ogImage}`}`)
+      : SITE_CONFIG.ogImage;
+
+    // Normalize Canonical URL
+    let cleanPath = canonical;
+    if (!cleanPath && typeof window !== 'undefined') {
+      cleanPath = window.location.pathname || '/';
+    }
+    if (!cleanPath.startsWith('/')) {
+      cleanPath = `/${cleanPath}`;
+    }
+    if (cleanPath.length > 1 && cleanPath.endsWith('/')) {
+      cleanPath = cleanPath.slice(0, -1);
+    }
+    const fullUrl = cleanPath === '/' ? `${SITE_CONFIG.siteUrl}/` : `${SITE_CONFIG.siteUrl}${cleanPath}`;
+
     // Open Graph
     setMeta('og:title', fullTitle, true);
     setMeta('og:description', description, true);
     setMeta('og:type', ogType, true);
     setMeta('og:site_name', SITE_CONFIG.siteName, true);
     setMeta('og:locale', 'tr_TR', true);
-    setMeta('og:image', ogImage, true);
-
-    const fullUrl = canonical 
-      ? `${SITE_CONFIG.siteUrl}${canonical.startsWith('/') ? canonical : `/${canonical}`}` 
-      : (typeof window !== 'undefined' ? window.location.href : SITE_CONFIG.siteUrl);
-      
+    setMeta('og:image', resolvedOgImage, true);
+    setMeta('og:image:alt', fullTitle, true);
     setMeta('og:url', fullUrl, true);
 
     // Twitter Card
     setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:title', fullTitle);
     setMeta('twitter:description', description);
-    setMeta('twitter:image', ogImage);
+    setMeta('twitter:image', resolvedOgImage);
+    setMeta('twitter:image:alt', fullTitle);
 
-    // Canonical
-    let linkCanonical = document.querySelector('link[rel="canonical"]');
-    if (!linkCanonical) {
-      linkCanonical = document.createElement('link');
-      linkCanonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(linkCanonical);
+    // Canonical & Hreflang
+    setLink('canonical', fullUrl);
+    if (!noindex) {
+      setLink('alternate', fullUrl, { hreflang: 'tr' });
+      setLink('alternate', fullUrl, { hreflang: 'x-default' });
     }
-    linkCanonical.setAttribute('href', fullUrl);
 
     // Structured Data JSON-LD
     let scriptEl = document.getElementById('page-structured-data');
@@ -84,17 +119,37 @@ export function SEO({
     // Build combined graph schema
     const graph = [];
     
-    // Organization / LocalBusiness Schema (Always include HQ & Turkey areaServed)
+    // 1. Organization / LocalBusiness Schema (Always include HQ & Turkey areaServed)
     graph.push({
       '@type': ['LocalBusiness', 'HomeAndConstructionBusiness', 'AutoRepair'],
       '@id': `${SITE_CONFIG.siteUrl}/#organization`,
       'name': SITE_CONFIG.legalName,
       'alternateName': SITE_CONFIG.siteName,
       'url': SITE_CONFIG.siteUrl,
-      'logo': SITE_CONFIG.logo,
+      'logo': {
+        '@type': 'ImageObject',
+        'url': SITE_CONFIG.logo
+      },
       'image': SITE_CONFIG.ogImage,
       'telephone': SITE_CONFIG.phoneRaw,
       'email': SITE_CONFIG.email,
+      'sameAs': Object.values(SITE_CONFIG.social || {}),
+      'contactPoint': [
+        {
+          '@type': 'ContactPoint',
+          'telephone': SITE_CONFIG.phoneRaw,
+          'contactType': 'customer service',
+          'areaServed': 'TR',
+          'availableLanguage': ['Turkish', 'English', 'Arabic'],
+          'contactOption': 'TollFree',
+          'hoursAvailable': {
+            '@type': 'OpeningHoursSpecification',
+            'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            'opens': '00:00',
+            'closes': '23:59'
+          }
+        }
+      ],
       'address': {
         '@type': 'PostalAddress',
         'streetAddress': SITE_CONFIG.headquarters.street,
@@ -127,29 +182,66 @@ export function SEO({
       'priceRange': '₺₺'
     });
 
-    // Add breadcrumb list schema if provided
-    if (breadcrumbs && Array.isArray(breadcrumbs) && breadcrumbs.length > 0) {
+    // 2. WebSite Schema
+    graph.push({
+      '@type': 'WebSite',
+      '@id': `${SITE_CONFIG.siteUrl}/#website`,
+      'url': SITE_CONFIG.siteUrl,
+      'name': SITE_CONFIG.siteName,
+      'inLanguage': 'tr-TR',
+      'publisher': {
+        '@id': `${SITE_CONFIG.siteUrl}/#organization`
+      }
+    });
+
+    // 3. WebPage Schema
+    graph.push({
+      '@type': 'WebPage',
+      '@id': `${fullUrl}#webpage`,
+      'url': fullUrl,
+      'name': fullTitle,
+      'description': description,
+      'inLanguage': 'tr-TR',
+      'isPartOf': {
+        '@id': `${SITE_CONFIG.siteUrl}/#website`
+      },
+      'about': {
+        '@id': `${SITE_CONFIG.siteUrl}/#organization`
+      }
+    });
+
+    // Extract page-specific items
+    const activeSchema = schema || jsonLd;
+    const customItems = [];
+    if (activeSchema) {
+      if (Array.isArray(activeSchema)) {
+        customItems.push(...activeSchema);
+      } else if (activeSchema['@graph'] && Array.isArray(activeSchema['@graph'])) {
+        customItems.push(...activeSchema['@graph']);
+      } else {
+        const { '@context': _ctx, ...rest } = activeSchema;
+        customItems.push(rest);
+      }
+    }
+
+    const hasCustomBreadcrumb = customItems.some(item => item && item['@type'] === 'BreadcrumbList');
+
+    // Add breadcrumb list schema if provided and not already in customItems
+    if (!hasCustomBreadcrumb && breadcrumbs && Array.isArray(breadcrumbs) && breadcrumbs.length > 0) {
       graph.push({
         '@type': 'BreadcrumbList',
+        '@id': `${fullUrl}#breadcrumb`,
         'itemListElement': breadcrumbs.map((b, index) => ({
           '@type': 'ListItem',
           'position': index + 1,
           'name': b.name,
-          'item': b.url ? `${SITE_CONFIG.siteUrl}${b.url.startsWith('/') ? b.url : `/${b.url}`}` : undefined
+          'item': b.url ? `${SITE_CONFIG.siteUrl}${b.url === '/' ? '' : (b.url.startsWith('/') ? b.url : `/${b.url}`)}` : undefined
         }))
       });
     }
 
-    // Add page specific schema if provided (supports schema, jsonLd, array, or @graph)
-    const activeSchema = schema || jsonLd;
-    if (activeSchema) {
-      if (Array.isArray(activeSchema)) {
-        graph.push(...activeSchema);
-      } else if (activeSchema['@graph'] && Array.isArray(activeSchema['@graph'])) {
-        graph.push(...activeSchema['@graph']);
-      } else {
-        graph.push(activeSchema);
-      }
+    if (customItems.length > 0) {
+      graph.push(...customItems);
     }
 
     if (!scriptEl) {
@@ -164,7 +256,8 @@ export function SEO({
       '@graph': graph
     });
 
-  }, [title, description, keywords, canonical, ogType, ogImage, schema, jsonLd, breadcrumbs, geo]);
+  }, [title, description, keywords, canonical, ogType, ogImage, schema, jsonLd, breadcrumbs, geo, noindex]);
 
   return null;
 }
+

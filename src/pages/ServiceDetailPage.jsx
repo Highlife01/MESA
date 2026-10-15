@@ -30,17 +30,19 @@ export function ServiceDetailPage({ explicitSlug }) {
     );
   }
 
-  const otherServices = servicesData.filter(s => s.slug !== slug).slice(0, 4);
+  const otherServices = servicesData.filter(s => s.slug !== service.slug).slice(0, 4);
 
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : `/hizmetler/${service.slug}`;
-  const canonicalUrl = currentPath.startsWith('/hizmetler/') ? currentPath : (currentPath.length > 1 ? currentPath : `/hizmetler/${service.slug}`);
+  // Tek kanonik URL standardı: tüm hizmet sayfaları kök /:slug adresine kanoniklenir
+  const canonicalUrl = `/${service.slug}`;
 
   const serviceJsonLd = {
     '@type': 'Service',
+    '@id': `https://www.mesaismakineleri.com.tr${canonicalUrl}#service`,
     'name': service.title,
     'serviceType': service.category,
     'provider': {
       '@type': 'LocalBusiness',
+      '@id': 'https://www.mesaismakineleri.com.tr/#organization',
       'name': 'MESA İş Makinaları',
       'telephone': '+905335293674'
     },
@@ -48,12 +50,14 @@ export function ServiceDetailPage({ explicitSlug }) {
       '@type': 'Country',
       'name': 'Turkey'
     },
-    'description': service.shortDesc
+    'description': service.shortDesc,
+    'url': `https://www.mesaismakineleri.com.tr${canonicalUrl}`
   };
 
   // Add FAQ Schema if available
   const faqSchema = service.faqs && service.faqs.length > 0 ? {
     '@type': 'FAQPage',
+    '@id': `https://www.mesaismakineleri.com.tr${canonicalUrl}#faq`,
     'mainEntity': service.faqs.map(f => ({
       '@type': 'Question',
       'name': f.q,
@@ -73,9 +77,10 @@ export function ServiceDetailPage({ explicitSlug }) {
   return (
     <div className="min-h-screen bg-slate-50 py-10">
       <SEO 
-        title={`${service.title} | Türkiye MESA Servisi`}
-        description={`${service.shortDesc} Türkiye genelinde 7/24 yerinde teknik müdahale, ${service.warranty}. 0533 529 36 74.`}
+        title={`${service.title} | MESA Türkiye Servisi`}
+        description={`${service.shortDesc} Türkiye genelinde 7/24 yerinde teknik servis, ${service.warranty}.`}
         canonical={canonicalUrl}
+        ogImage={service.heroImage || '/images/mesa-excavator-hero-og.jpg'}
         schema={faqSchema ? [serviceJsonLd, faqSchema] : serviceJsonLd}
         breadcrumbs={breadcrumbsList}
       />
@@ -93,12 +98,12 @@ export function ServiceDetailPage({ explicitSlug }) {
         {/* Hero Banner */}
         <div className="relative rounded-3xl overflow-hidden bg-slate-950 text-white mb-10 shadow-xl">
           <img 
-            src={service.heroImage || '/images/mesa-workshop.png'} 
+            src={service.heroImage || '/images/mesa-workshop.webp'} 
             alt={service.title}
             className="w-full h-72 sm:h-96 object-cover opacity-35"
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = '/images/mesa-workshop.png';
+              e.currentTarget.src = '/images/mesa-workshop.webp';
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
@@ -220,7 +225,7 @@ export function ServiceDetailPage({ explicitSlug }) {
                 </div>
                 <div className="flex justify-between py-2 border-b border-slate-50">
                   <span className="text-slate-500">Kapsama:</span>
-                  <span className="font-bold text-slate-900">Çukurova Bölgesi (Adana, Mersin, vb.)</span>
+                  <span className="font-bold text-slate-900">Türkiye Geneli (81 İl Şantiye)</span>
                 </div>
               </div>
 
@@ -262,7 +267,7 @@ export function ServiceDetailPage({ explicitSlug }) {
                   {otherServices.map(os => (
                     <Link
                       key={os.slug}
-                      to={`/hizmetler/${os.slug}`}
+                      to={`/${os.slug}`}
                       className="block py-1 text-xs text-slate-700 hover:text-amber-600 truncate transition font-medium"
                     >
                       • {os.title}

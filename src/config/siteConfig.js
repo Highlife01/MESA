@@ -4,8 +4,9 @@ export const SITE_CONFIG = {
   legalName: 'Mesa İş Makinaları San. ve Tic. Ltd. Şti.',
   siteUrl: 'https://www.mesaismakineleri.com.tr',
   defaultDomain: 'www.mesaismakineleri.com.tr',
-  ogImage: 'https://www.mesaismakineleri.com.tr/images/mesa-excavator-hero.png',
+  ogImage: 'https://www.mesaismakineleri.com.tr/images/mesa-excavator-hero-og.jpg',
   logo: 'https://www.mesaismakineleri.com.tr/images/mesa-logo.png',
+  logoWebp: '/images/mesa-logo.webp',
   phone: '0533 529 36 74',
   phoneRaw: '+905335293674',
   whatsapp: '0534 407 55 85',
@@ -35,8 +36,9 @@ export const SITE_CONFIG = {
   },
 
   defaultMeta: {
-    title: 'MESA İŞ MAKİNALARI | Türkiye Geneli 7/24 Mobil Teknik Servis & Hidrolik',
-    description: 'Türkiye genelinde 81 ilde şantiyede yerinde mobil iş makinası tamiri, hidrolik sistem revizyonu, teleskopik yükleyici, ekskavatör ve forklift servisi. 7/24 Acil Çağrı: 0533 529 36 74.',
-    keywords: 'iş makinaları servisi, türkiye geneli iş makinası tamiri, mobil teknik servis, hidrolik servis, hidrolik pompa revizyonu, ekskavatör servisi, forklift tamiri, manitou servisi, cat tamiri, jcb servisi'
+    title: 'MESA İş Makinaları | Türkiye Geneli Teknik Servis & Hidrolik',
+    description: 'Türkiye genelinde şantiyede 7/24 yerinde mobil iş makinası tamiri, hidrolik sistem revizyonu, ekskavatör, forklift ve teleskopik yükleyici teknik servisi. 7/24 Acil Çağrı: 0533 529 36 74.',
+    keywords: 'iş makinaları servisi, türkiye geneli iş makinası tamiri, mobil iş makinası servisi, hidrolik servis, hidrolik sistem tamiri, iş makinası bakım onarım, ekskavatör servisi, forklift servisi, teleskopik yükleyici servisi, manitou servisi, cat tamiri, jcb servisi'
   }
 };
+
