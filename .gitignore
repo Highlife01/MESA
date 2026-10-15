@@ -6,6 +6,15 @@ dist-ssr
 .env
 .env.*
 !.env.example
+# Sunucu/Cloud Run sırları — asla commit etmeyin (örnek: .cloudrun.env.example.yaml)
+.cloudrun.env.yaml
+*.env.yaml
+!*.example.yaml
+# Firebase Admin / GCP servis hesabı anahtarları
+serviceAccount*.json
+*-service-account*.json
+*-firebase-adminsdk-*.json
+credentials*.json
 .DS_Store
 Thumbs.db
 tmp/

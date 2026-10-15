@@ -1,10 +1,15 @@
 import { initializeApp } from 'firebase/app';
-import { initializeAuth, browserLocalPersistence, connectAuthEmulator, signInAnonymously } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import {
+  initializeAuth, browserLocalPersistence, connectAuthEmulator, signInAnonymously,
+  signInWithEmailAndPassword, signOut, onIdTokenChanged
+} from 'firebase/auth';
 
-// Firebase web identifiers are public. Authorization is enforced by Auth and
-// Firestore rules; passwords and service-account keys never belong here.
+// Firebase web identifiers are public. Authorization is enforced by Auth custom
+// claims and Firestore rules; passwords and service-account keys never belong here.
 // The API key is provided via VITE_FIREBASE_API_KEY (.env) — never hardcode it.
+//
+// This module is loaded lazily (dynamic import) only on pages that need auth,
+// so ordinary visitors never download the Firebase SDK.
 const env = import.meta.env;
 const emulated = env.DEV && env.VITE_USE_FIREBASE_EMULATORS === 'true';
 const config = {
@@ -15,38 +20,24 @@ const config = {
 };
 
 export const isFirebaseConfigured = Boolean(config.apiKey && config.projectId && config.appId);
+export const firestoreDatabaseId = env.VITE_FIREBASE_DATABASE_ID || 'mesa';
 
-// Initialization is guarded: a missing or invalid web config degrades to null
-// handles instead of crashing the whole bundle at import time.
-let app;
-try {
+let app = null;
+let auth = null;
+
+// initializeAuth throws `auth/invalid-api-key` when the config is empty, so the
+// SDK is only initialised when a complete configuration is present.
+if (isFirebaseConfigured) {
   app = initializeApp(config, 'mesa-operations');
-} catch (error) {
-  console.warn('Firebase app initialization failed:', error?.code || error);
-  app = null;
+  auth = initializeAuth(app, { persistence: browserLocalPersistence });
+  if (emulated) connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
 }
 
-function safeInit(initialize) {
-  try {
-    return initialize();
-  } catch (error) {
-    console.warn('Firebase service initialization failed:', error?.code || error);
-    return null;
-  }
-}
-
-// A separate database prevents MESA rules from replacing the other site's rules.
-export const auth = app ? safeInit(() => initializeAuth(app, { persistence: browserLocalPersistence })) : null;
-export const db = app ? safeInit(() => getFirestore(app, env.VITE_FIREBASE_DATABASE_ID || 'mesa')) : null;
-
-if (emulated && auth && db) {
-  connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-  connectFirestoreEmulator(db, '127.0.0.1', 8080);
-}
+export { app, auth, signInWithEmailAndPassword, signOut, onIdTokenChanged };
 
 let sessionRequest;
 export async function ensureSession() {
-  if (!auth) throw new Error('Firebase auth is not configured');
+  if (!auth) throw new Error('FIREBASE_NOT_CONFIGURED');
   await auth.authStateReady();
   if (auth.currentUser) return auth.currentUser;
   if (!sessionRequest) {

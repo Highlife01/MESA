@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from '../router/Router';
 import { SEO } from '../components/SEO';
 import { useOperational } from '../context/OperationalContext';
-import { useAuth, SYSTEM_ACCOUNTS } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { DigitalSignatureModal } from '../components/DigitalSignatureModal';
 import { validateEvidenceFile } from '../lib/security';
 import {
@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 export function TechnicianPage() {
-  const { user, isTechnician, isSuperAdmin, switchDemoRole } = useAuth();
+  const { user, isTechnician, isSuperAdmin } = useAuth();
   const {
     activeOrders, transitionWorkOrderStatus, recordSignature,
     addWorkOrderEvidence, recordMeterReading, inventoryItems,
@@ -160,7 +160,7 @@ export function TechnicianPage() {
   if (!isTechnician && !isSuperAdmin) {
     return (
       <div className="min-h-[85vh] bg-slate-100 flex items-center justify-center p-4">
-        <SEO title="Personel Girişi Gerekli | MESA Servis" description="Saha teknisyeni mobil terminali yetkilendirmesi." />
+        <SEO title="Personel Girişi Gerekli | MESA Servis" description="Saha teknisyeni mobil terminali yetkilendirmesi." noindex />
         <div className="max-w-md w-full bg-white border border-slate-200 rounded-3xl p-8 shadow-xl text-center space-y-5 animate-fadeIn">
           <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto border border-amber-200">
             <Lock className="w-8 h-8" />
@@ -172,34 +172,12 @@ export function TechnicianPage() {
             </p>
           </div>
 
-          <div className="pt-2 border-t border-slate-100 space-y-2.5">
-            <button
-              onClick={() => switchDemoRole('technician')}
-              className="w-full py-3.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs rounded-xl shadow-lg shadow-red-600/20 transition flex items-center justify-center gap-2"
-            >
-              <User className="w-4 h-4" />
-              <span>Mehmet Usta Olarak Giriş Yap (Hızlı Personel Demo)</span>
-            </button>
-
-            <button
-              onClick={() => switchDemoRole('technician_ahmet')}
-              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2"
-            >
-              <Wrench className="w-4 h-4 text-amber-600" />
-              <span>Ahmet Usta (Hidrolik Uzmanı) Olarak Giriş</span>
-            </button>
-
-            <button
-              onClick={() => switchDemoRole('super_admin')}
-              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>Süper Admin (Root) Yetkisiyle Aç</span>
-            </button>
-          </div>
-
-          <Link to="/admin" className="text-xs text-slate-400 hover:text-slate-600 font-medium block">
-            Giriş Sayfasına Git
+          <Link
+            to="/admin?next=%2Fteknisyen"
+            className="w-full py-3.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs rounded-xl shadow-lg shadow-red-600/20 transition flex items-center justify-center gap-2"
+          >
+            <User className="w-4 h-4" />
+            <span>Personel Girişi Yap</span>
           </Link>
         </div>
       </div>
@@ -212,6 +190,7 @@ export function TechnicianPage() {
         title="Saha Teknisyen Mobil Terminali (PWA) | MESA"
         description="Mesa İş Makinaları saha ustaları iş emri, telematik sayaç, fotoğraf kanıtı, yedek parça kaydı ve dijital imza ekranı."
         canonical="/teknisyen"
+        noindex
       />
 
       <div className="w-full max-w-xl bg-white border border-slate-200 rounded-[2rem] p-5 sm:p-7 shadow-xl space-y-5">

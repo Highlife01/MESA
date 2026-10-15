@@ -36,33 +36,8 @@ export function DashboardPage() {
   } = useOperational();
   const { user, isSuperAdmin, isFinance, hasPermission, logout } = useAuth();
 
-  // Route Guard: Deny unauthenticated access
-  if (!user || !isSuperAdmin) {
-    return (
-      <div className="min-h-[85vh] flex items-center justify-center px-4 py-16 bg-slate-100">
-        <SEO
-          title="Erişim Kısıtlandı | MESA ERP"
-          description="MESA ERP Operasyon Merkezi için Süper Admin girişi zorunludur."
-        />
-        <div className="max-w-md w-full bg-white border border-red-200 rounded-3xl p-8 text-center shadow-xl animate-fadeIn">
-          <div className="w-16 h-16 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-5 border border-red-200">
-            <Lock className="w-8 h-8" />
-          </div>
-          <h2 className="text-2xl font-black text-slate-900">Erişim Kısıtlandı</h2>
-          <p className="text-xs text-slate-600 mt-2 mb-6 leading-relaxed">
-            MESA Telematik & ERP Operasyon Merkezi yalnızca yetkili Süper Admin oturumuyla görüntülenebilir.
-          </p>
-          <Link
-            to="/admin"
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 transition-all border border-red-500/40"
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span>Süper Admin Girişine Git</span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  // Erişim kontrolü App.jsx içindeki <RequireStaff access="admin"> sarmalayıcısında yapılır.
+  // (Buradaki erken `return`, hook'lardan önce çalıştığı için giriş/çıkışta React hatasına yol açıyordu.)
 
   // Interactive UI States
   const [filterStatus, setFilterStatus] = useState('Tümü');
@@ -253,7 +228,7 @@ export function DashboardPage() {
       exportTimestamp: new Date().toISOString(),
       superAdmin: {
         name: user?.name || 'Yönetici',
-        email: user?.email || 'cebrailkara@gmail.com',
+        email: user?.email || '—',
         role: 'Süper Admin (Root)'
       },
       activeOrders,
@@ -320,7 +295,9 @@ export function DashboardPage() {
       location: newJobForm.location,
       assignedTechnician: newJobForm.tech,
       vehicle: newJobForm.vehicle,
-      etaMinutes: Number(newJobForm.eta) || 25
+      etaMinutes: Number(newJobForm.eta) || 25,
+      actorName: user?.name || 'Süper Admin',
+      actorRole: user?.role || 'super_admin'
     });
     setNewJobModalOpen(false);
     setNewJobForm({
@@ -562,6 +539,7 @@ export function DashboardPage() {
         title="MESA ERP & Telematik Canlı Operasyon Merkezi"
         description="Mesa İş Makinaları 7/24 filo yönetimi, telematik arıza takip ve saha servis yönetim merkezi."
         canonical="/panel"
+        noindex
       />
 
       {/* Top Header */}
@@ -601,7 +579,7 @@ export function DashboardPage() {
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
-                  <span className="font-mono text-red-600 font-bold">{user?.email || 'cebrailkara@gmail.com'}</span> • Mobil filo, iş makinası revizyonları, çek ve kasa muhasebesi tam senkronize.
+                  <span className="font-mono text-red-600 font-bold">{user?.email || '—'}</span> • Mobil filo, iş makinası revizyonları, çek ve kasa muhasebesi tam senkronize.
                 </p>
               </div>
             </div>

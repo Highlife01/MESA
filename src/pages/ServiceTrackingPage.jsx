@@ -49,11 +49,14 @@ export function ServiceTrackingPage() {
         location: matchedEmergency.location,
         issue: matchedEmergency.issue,
         status: matchedEmergency.status,
-        technician: matchedEmergency.assignedTechnician || 'Mehmet Usta (Baş Teknisyen)',
-        vehicle: matchedEmergency.vehicle || '01 MSA 01 (Ford Transit Mobil Atölye)',
-        eta: matchedEmergency.status === 'Tamamlandı' ? 'Teslim Edildi' : `${matchedEmergency.etaMinutes || 20} Dakika`,
+        technician: matchedEmergency.assignedTechnician || 'Atama bekleniyor',
+        vehicle: matchedEmergency.vehicle || 'Atama bekleniyor',
+        eta: matchedEmergency.status === 'Tamamlandı'
+          ? 'Teslim Edildi'
+          : (matchedEmergency.etaMinutes ? `${matchedEmergency.etaMinutes} Dakika` : 'Ekibimiz sizi arayacak'),
         stage: matchedEmergency.status === 'Tamamlandı' ? 4 : 
-               matchedEmergency.status === 'Onarımda' || matchedEmergency.status === 'Teşhiste' || matchedEmergency.status === 'Şantiyede' ? 3 : 2,
+               matchedEmergency.status === 'Onarımda' || matchedEmergency.status === 'Teşhiste' || matchedEmergency.status === 'Şantiyede' ? 3 :
+               matchedEmergency.status === 'Talep Alındı' ? 1 : 2,
         hasSignature: matchedEmergency.status === 'Tamamlandı' || !!matchedEmergency.supervisorSignature
       });
       return;
