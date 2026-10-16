@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Router, Routes, Route, Link } from './router/Router';
+import { Router, Routes, Route, Link, useLocation } from './router/Router';
 import { LanguageProvider } from './context/LanguageContext';
 import { OperationalProvider, useOperational } from './context/OperationalContext';
 import { AuthProvider } from './context/AuthContext';
@@ -127,15 +127,31 @@ function FloatingCartButton() {
   );
 }
 
+function SiteChrome({ children }) {
+  const { pathname } = useLocation();
+  const workspace = pathname === '/panel' || pathname === '/teknisyen';
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-red-600 selection:text-white">
+      {!workspace && <Navbar />}
+      <main className="flex-1">{children}</main>
+      {!workspace && <Footer />}
+      {!workspace && <MobileStickyCTA />}
+      {!workspace && <FloatingEmergencyButton />}
+      {!workspace && <FloatingCartButton />}
+      {!workspace && <WhatsAppWidget />}
+      <ScrollToTop />
+    </div>
+  );
+}
+
 export function App() {
   return (
     <LanguageProvider>
       <AuthProvider>
         <OperationalProvider>
           <Router>
-            <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-red-600 selection:text-white">
-              <Navbar />
-              <main className="flex-1">
+            <SiteChrome>
                 <ErrorBoundary>
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
@@ -181,14 +197,7 @@ export function App() {
                     </Routes>
                   </Suspense>
                 </ErrorBoundary>
-              </main>
-              <Footer />
-              <MobileStickyCTA />
-              <FloatingEmergencyButton />
-              <FloatingCartButton />
-              <WhatsAppWidget />
-              <ScrollToTop />
-            </div>
+            </SiteChrome>
           </Router>
         </OperationalProvider>
       </AuthProvider>

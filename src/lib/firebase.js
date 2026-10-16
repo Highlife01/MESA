@@ -10,17 +10,16 @@ import {
 //
 // This module is loaded lazily (dynamic import) only on pages that need auth,
 // so ordinary visitors never download the Firebase SDK.
-const env = import.meta.env;
-const emulated = env.DEV && env.VITE_USE_FIREBASE_EMULATORS === 'true';
+const emulated = import.meta.env.DEV && import.meta.env.VITE_USE_FIREBASE_EMULATORS === 'true';
 const config = {
-  apiKey: env.VITE_FIREBASE_API_KEY || '',
-  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || '',
-  projectId: emulated ? 'demo-mesa' : (env.VITE_FIREBASE_PROJECT_ID || ''),
-  appId: env.VITE_FIREBASE_APP_ID || '',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
+  projectId: emulated ? 'demo-mesa' : (import.meta.env.VITE_FIREBASE_PROJECT_ID || ''),
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '',
 };
 
 export const isFirebaseConfigured = Boolean(config.apiKey && config.projectId && config.appId);
-export const firestoreDatabaseId = env.VITE_FIREBASE_DATABASE_ID || 'mesa';
+export const firestoreDatabaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID || 'mesa';
 
 let app = null;
 let auth = null;

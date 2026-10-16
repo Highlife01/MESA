@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Zap, Activity, Clock, MapPin, Trash2, CheckCircle2, 
-  ChevronRight, Wallet, Eye, Package 
+  ChevronRight, Wallet, Eye, Package, UserRound, Search, X
 } from 'lucide-react';
 import { Link } from '../../../router/Router';
 import { DonutChart } from '../widgets/DonutChart';
@@ -21,7 +21,9 @@ export function OperationsTab({
   setNewJobModalOpen,
   setActiveTab,
   setFinanceSubTab,
-  isSuperAdmin
+  isSuperAdmin,
+  searchQuery,
+  setSearchQuery
 }) {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 animate-fadeIn">
@@ -29,24 +31,43 @@ export function OperationsTab({
       <div className="xl:col-span-8 bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
         {/* Filter & Subheader */}
         <div className="p-5 border-b border-slate-100 bg-slate-50/60">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
                 <Zap className="w-4 h-4 text-red-600" />
                 Canlı Saha Görevleri
               </h3>
               <p className="text-[11px] text-slate-500 mt-0.5">
-                {filteredOrders.length} iş emri listeleniyor • Detay ve yönetim için karta tıklayınız
+                {filteredOrders.length} iş emri listeleniyor • Karta tıklayınca detay açılır
               </p>
             </div>
 
+            <div className="flex items-center bg-white border border-slate-200 rounded-xl px-3 py-1.5 gap-2 w-full sm:w-64 focus-within:border-red-500">
+              <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Müşteri, arıza, teknisyen..."
+                aria-label="Saha görevlerinde ara"
+                className="bg-transparent text-xs text-slate-900 placeholder:text-slate-400 outline-none w-full font-medium"
+              />
+              {searchQuery && (
+                <button type="button" onClick={() => setSearchQuery('')} aria-label="Aramayı temizle" className="text-slate-400 hover:text-slate-700">
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          </div>
+
             {/* Filter Pills */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {['Tümü', 'Mobil Ekip Yolda', 'Şantiyede', 'Tamamlandı'].map(st => (
+            <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1">
+              {['Tümü', 'Atandı', 'Mobil Ekip Yolda', 'Şantiyede', 'Teşhiste', 'Onarımda', 'Tamamlandı'].map(st => (
                 <button
                   key={st}
                   onClick={() => setFilterStatus(st)}
-                  className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all duration-200 ${
+                  className={`shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all duration-200 ${
                     filterStatus === st
                       ? 'bg-red-600 text-white shadow-sm'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
@@ -101,6 +122,12 @@ export function OperationsTab({
                           {order.customer}
                         </h4>
                         <p className="text-[11px] text-slate-600 truncate">{order.machine}</p>
+                        {order.issue && <p className="text-[11px] text-slate-800 mt-1 line-clamp-2">{order.issue}</p>}
+                        {order.assignedTechnician && (
+                          <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+                            <UserRound className="w-3 h-3 text-slate-400" /> {order.assignedTechnician}
+                          </p>
+                        )}
                         <div className="flex items-center gap-3 mt-1.5 text-[10px] text-slate-500">
                           <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-red-600" />{order.location}</span>
                           <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-slate-400" />{order.createdAt}</span>
@@ -140,7 +167,7 @@ export function OperationsTab({
                             e.stopPropagation();
                             updateOrderStatus(order.id || order.code, nextStatus);
                           }}
-                          className="px-3 py-1.5 bg-slate-100 hover:bg-red-600 hover:text-white text-slate-700 rounded-lg text-[10px] font-bold transition-all duration-200 whitespace-nowrap border border-slate-200"
+                          className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[11px] font-bold transition-all duration-200 whitespace-nowrap"
                         >
                           {nextLabel} →
                         </button>

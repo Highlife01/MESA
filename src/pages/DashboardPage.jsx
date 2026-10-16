@@ -4,8 +4,8 @@ import { SEO } from '../components/SEO';
 import { useOperational } from '../context/OperationalContext';
 import { useAuth } from '../context/AuthContext';
 import {
-  Activity, Truck, Package, Crown, Radio, QrCode, Download, LogOut,
-  Banknote, Wallet, Landmark, Receipt, ArrowUpRight, ShieldCheck, Lock
+  Activity, Truck, Package, Crown,
+  Banknote, Wallet, Landmark, Receipt, ArrowUpRight, ShieldCheck
 } from 'lucide-react';
 
 // Subcomponents & Widgets
@@ -474,7 +474,9 @@ export function DashboardPage() {
         (o.id || o.code || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (o.customer || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (o.machine || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (o.location || '').toLowerCase().includes(searchQuery.toLowerCase());
+        (o.location || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (o.issue || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (o.assignedTechnician || '').toLowerCase().includes(searchQuery.toLowerCase());
       return matchStatus && matchSearch;
     });
   }, [activeOrders, filterStatus, searchQuery]);
@@ -554,78 +556,16 @@ export function DashboardPage() {
         setActiveTab={setActiveTab}
         setSelectedJobModal={setSelectedJobModal}
         setNewJobModalOpen={setNewJobModalOpen}
+        logout={logout}
+        onEmergency={() => setEmergencyModalOpen(true)}
+        onQr={() => setQrModalOpen(true)}
+        onExport={handleExportJson}
       />
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        {/* Super Admin Command Banner */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-56 h-56 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-red-600/20 shrink-0 border border-red-500/30">
-                <Crown className="w-7 h-7" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-lg font-black text-slate-900 tracking-tight">
-                    Süper Admin: {user?.name || 'Cebrail Kara'}
-                  </h2>
-                  <span className="px-2.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black uppercase tracking-wider shadow-sm">
-                    ROOT / TAM YETKİ
-                  </span>
-                  <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Aktif Oturum
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 mt-1">
-                  <span className="font-mono text-red-600 font-bold">{user?.email || '—'}</span> • Mobil filo, iş makinası revizyonları, çek ve kasa muhasebesi tam senkronize.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
-              <button
-                onClick={() => setEmergencyModalOpen(true)}
-                className="px-4 py-2.5 rounded-xl bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 text-xs font-bold flex items-center gap-2 transition shadow-sm"
-                title="Tüm filoya acil çağrı gönder"
-              >
-                <Radio className="w-3.5 h-3.5 text-red-600 animate-pulse" />
-                <span>Filo Alarmı</span>
-              </button>
-
-              <button
-                onClick={() => setQrModalOpen(true)}
-                className="px-4 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-bold flex items-center gap-2 transition shadow-xs"
-                title="Şantiye makinasına yapıştırılacak akıllı QR kabin/bom etiketi üret"
-              >
-                <QrCode className="w-3.5 h-3.5 text-amber-600" />
-                <span>Makina QR Etiketi</span>
-              </button>
-
-              <button
-                onClick={handleExportJson}
-                className="px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700 hover:text-slate-900 text-xs font-bold flex items-center gap-2 transition"
-                title="Sistem ERP ve Muhasebe veritabanı yedeğini JSON olarak indir"
-              >
-                <Download className="w-3.5 h-3.5 text-slate-500" />
-                <span>Verileri İndir (JSON)</span>
-              </button>
-
-              <button
-                onClick={logout}
-                className="px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 hover:bg-red-50 hover:border-red-200 text-slate-600 hover:text-red-600 text-xs font-bold flex items-center gap-1.5 transition ml-auto lg:ml-0"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Çıkış</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
         {/* KPI Summary Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="group bg-white border border-slate-200 p-5 rounded-2xl hover:border-red-500/50 hover:shadow-md transition-all duration-300 shadow-sm">
+          <button type="button" onClick={() => setActiveTab('operations')} className="group text-left bg-white border border-slate-200 p-5 rounded-2xl hover:border-red-500/50 hover:shadow-md transition-all duration-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Aktif Saha Görevleri</span>
               <div className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-600">
@@ -643,9 +583,9 @@ export function DashboardPage() {
               </div>
               <Sparkline data={sparkData.jobs} color="#dc2626" />
             </div>
-          </div>
+          </button>
 
-          <div className="group bg-white border border-slate-200 p-5 rounded-2xl hover:border-emerald-500/50 hover:shadow-md transition-all duration-300 shadow-sm">
+          <button type="button" onClick={() => { setActiveTab('finance'); setFinanceSubTab('cash'); }} className="group text-left bg-white border border-slate-200 p-5 rounded-2xl hover:border-emerald-500/50 hover:shadow-md transition-all duration-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Nakit Kasa Bakiyesi</span>
               <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
@@ -663,9 +603,9 @@ export function DashboardPage() {
               </div>
               <Sparkline data={[240, 290, 310, 340, 380, 410, totalCashBalance / 1000]} color="#16a34a" />
             </div>
-          </div>
+          </button>
 
-          <div className="group bg-white border border-slate-200 p-5 rounded-2xl hover:border-blue-500/50 hover:shadow-md transition-all duration-300 shadow-sm">
+          <button type="button" onClick={() => { setActiveTab('finance'); setFinanceSubTab('cheques'); }} className="group text-left bg-white border border-slate-200 p-5 rounded-2xl hover:border-blue-500/50 hover:shadow-md transition-all duration-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Alınan Çekler</span>
               <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
@@ -683,9 +623,9 @@ export function DashboardPage() {
               </div>
               <Sparkline data={[800, 1100, 950, 1400, 1680, totalChequesCombined / 1000]} color="#2563eb" />
             </div>
-          </div>
+          </button>
 
-          <div className="group bg-white border border-slate-200 p-5 rounded-2xl hover:border-purple-500/50 hover:shadow-md transition-all duration-300 shadow-sm">
+          <button type="button" onClick={() => { setActiveTab('finance'); setFinanceSubTab('banks'); }} className="group text-left bg-white border border-slate-200 p-5 rounded-2xl hover:border-purple-500/50 hover:shadow-md transition-all duration-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-600">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Banka Mevduatları</span>
               <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600">
@@ -703,29 +643,34 @@ export function DashboardPage() {
               </div>
               <Sparkline data={[2.1, 2.5, 2.8, 3.1, 3.3, totalBankBalances / 1000000]} color="#9333ea" />
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-1.5 p-1.5 bg-white border border-slate-200 rounded-2xl w-fit flex-wrap shadow-sm">
+        <div>
+        <div role="tablist" aria-label="Panel bölümleri" className="flex items-center gap-1.5 p-1.5 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-x-auto">
           {[
-            { id: 'operations', label: 'Saha Operasyonları', icon: Activity, count: activeOrders.length },
-            { id: 'finance', label: 'Muhasebe & Finans', icon: Wallet, highlight: true, count: cheques.filter(c => c.status !== 'Tahsil Edildi').length, restricted: !isFinance },
-            { id: 'fleet', label: 'Filo Telematik', icon: Truck, count: fleetVehicles.length + extraTechs.length },
-            { id: 'parts', label: 'Yedek Parça Siparişleri', icon: Package, count: partsOrders.length },
-            { id: 'audit', label: 'Denetim Merkezi', icon: ShieldCheck, count: auditLogs.length },
-            { id: 'admin', label: 'Süper Admin Yönetimi', icon: Crown },
+            { id: 'operations', label: 'Saha', full: 'Saha Operasyonları', icon: Activity, count: activeOrders.length },
+            { id: 'finance', label: 'Finans', full: 'Muhasebe & Finans', icon: Wallet, count: cheques.filter(c => c.status !== 'Tahsil Edildi').length, restricted: !isFinance },
+            { id: 'fleet', label: 'Filo', full: 'Filo Telematik', icon: Truck, count: fleetVehicles.length + extraTechs.length },
+            { id: 'parts', label: 'Parça', full: 'Yedek Parça Siparişleri', icon: Package, count: partsOrders.length },
+            { id: 'audit', label: 'Denetim', full: 'Denetim Merkezi', icon: ShieldCheck, count: auditLogs.length },
+            { id: 'admin', label: 'Yönetim', full: 'Süper Admin Yönetimi', icon: Crown },
           ].filter(tab => !tab.restricted).map(tab => (
             <button
               key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${activeTab === tab.id
+              className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${activeTab === tab.id
                 ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-md shadow-red-600/30'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
             >
               <tab.icon className="w-3.5 h-3.5" />
-              <span>{tab.label}</span>
+              <span className="sm:hidden">{tab.label}</span>
+              <span className="hidden sm:inline">{tab.full}</span>
               {tab.count !== undefined && (
                 <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${activeTab === tab.id ? 'bg-black/20 text-white' : 'bg-slate-100 text-slate-600'
                   }`}>
@@ -735,6 +680,7 @@ export function DashboardPage() {
             </button>
           ))}
         </div>
+        </div>
 
         {/* Tab 1: Operations */}
         {activeTab === 'operations' && (
@@ -743,6 +689,8 @@ export function DashboardPage() {
             activeOrders={activeOrders}
             filterStatus={filterStatus}
             setFilterStatus={setFilterStatus}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
             stats={stats}
             getStatusStyle={getStatusStyle}
             getNextStatus={getNextStatus}
