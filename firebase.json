@@ -1,4 +1,8 @@
 {
+  "firestore": {
+    "database": "mesa",
+    "rules": "firestore.rules"
+  },
   "hosting": {
     "site": "mesaismak",
     "public": "dist",

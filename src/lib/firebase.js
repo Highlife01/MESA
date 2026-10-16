@@ -19,7 +19,13 @@ const config = {
 };
 
 export const isFirebaseConfigured = Boolean(config.apiKey && config.projectId && config.appId);
-export const firestoreDatabaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID || 'mesa';
+// The Firebase project is shared with other sites. MESA data must live only in its
+// own named Firestore database; the project's "(default)" database belongs to others.
+const DEDICATED_DATABASE_ID = 'mesa';
+export const firestoreDatabaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID || DEDICATED_DATABASE_ID;
+if (!emulated && firestoreDatabaseId === '(default)') {
+  throw new Error('VITE_FIREBASE_DATABASE_ID must name the dedicated MESA database, not "(default)".');
+}
 
 let app = null;
 let auth = null;
