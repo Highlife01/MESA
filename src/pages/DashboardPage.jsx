@@ -32,7 +32,7 @@ import { MachineQrModal } from '../components/dashboard/modals/MachineQrModal';
 export function DashboardPage() {
   const {
     activeOrders, partsOrders, updateOrderStatus, updatePartsOrderStatus, unreadAlertsCount,
-    liveJobs, createEmergencyJob, deleteJob, deletePartsOrder, showToast, auditLogs
+    liveJobs, createEmergencyJob, deleteJob, deletePartsOrder, showToast, auditLogs, dataError
   } = useOperational();
   const { user, isSuperAdmin, isFinance, hasPermission, logout } = useAuth();
 
@@ -142,7 +142,7 @@ export function DashboardPage() {
     { id: 'NK-106', date: '11.09.2026 15:40', type: 'in', category: 'Şantiye Peşin Tahsilat', client: 'Baraj İnşaat Ltd.', amount: 19800, desc: 'Manitou MT-X 1440 Teleskopik Bom Silindir Tamiri' }
   ]);
 
-  const [bankAccounts] = useState([
+  const [bankAccounts, setBankAccounts] = useState([
     { id: 'garanti', name: 'Garanti BBVA - Adana Çarşı Şubesi', type: 'Ticari TL Hesabı', iban: 'TR42 0006 2000 1234 5678 9000 01', balance: 1450000 },
     { id: 'ziraat', name: 'Ziraat Bankası - Seyhan Şubesi', type: 'Kurumsal TL Hesabı', iban: 'TR18 0001 0000 9876 5432 1000 02', balance: 980500 },
     { id: 'isbank', name: 'Türkiye İş Bankası - Adana Şubesi', type: 'Şirket Ana Hesabı', iban: 'TR85 0006 4000 5555 4444 3333 03', balance: 640000 },
@@ -281,24 +281,33 @@ export function DashboardPage() {
     if (showToast) showToast(`🚨 SÜPER ADMİN: Acil Çağrı Mobil Servis Araçlarına İletildi!`);
   };
 
-  const handleCreateJob = (e) => {
+  const reportFailure = (promise) => Promise.resolve(promise).then(
+    () => true,
+    (error) => { if (showToast) showToast(error?.message || 'İşlem tamamlanamadı.', 'error'); return false; }
+  );
+
+  const handleCreateJob = async (e) => {
     e.preventDefault();
     if (!newJobForm.customer || !newJobForm.issue) {
       if (showToast) showToast('Lütfen müşteri adı ve arıza açıklamasını doldurunuz.', 'error');
       return;
     }
-    const created = createEmergencyJob({
-      customer: newJobForm.customer,
-      phone: newJobForm.phone || '0533 000 0000',
-      machine: newJobForm.machine,
-      issue: newJobForm.issue,
-      location: newJobForm.location,
-      assignedTechnician: newJobForm.tech,
-      vehicle: newJobForm.vehicle,
-      etaMinutes: Number(newJobForm.eta) || 25,
-      actorName: user?.name || 'Süper Admin',
-      actorRole: user?.role || 'super_admin'
-    });
+    let created;
+    const ok = await reportFailure((async () => {
+      created = await createEmergencyJob({
+        customer: newJobForm.customer,
+        phone: newJobForm.phone || '0533 000 0000',
+        machine: newJobForm.machine,
+        issue: newJobForm.issue,
+        location: newJobForm.location,
+        assignedTechnician: newJobForm.tech,
+        vehicle: newJobForm.vehicle,
+        etaMinutes: Number(newJobForm.eta) || 25,
+        actorName: user?.name || 'Süper Admin',
+        actorRole: user?.role || 'super_admin'
+      });
+    })());
+    if (!ok) return;
     setNewJobModalOpen(false);
     setNewJobForm({
       customer: '', phone: '', machine: 'CAT 320D Paletli Ekskavatör',
@@ -434,12 +443,14 @@ export function DashboardPage() {
   const handleExecuteDelete = () => {
     if (!deleteConfirmModal) return;
     if (deleteConfirmModal.type === 'job') {
-      deleteJob(deleteConfirmModal.id);
-      if (selectedJobModal?.id === deleteConfirmModal.id || selectedJobModal?.code === deleteConfirmModal.id) {
-        setSelectedJobModal(null);
-      }
+      const jobId = deleteConfirmModal.id;
+      reportFailure(deleteJob(jobId)).then((ok) => {
+        if (ok && (selectedJobModal?.id === jobId || selectedJobModal?.code === jobId)) {
+          setSelectedJobModal(null);
+        }
+      });
     } else if (deleteConfirmModal.type === 'part') {
-      deletePartsOrder(deleteConfirmModal.id);
+      reportFailure(deletePartsOrder(deleteConfirmModal.id));
     } else if (deleteConfirmModal.type === 'cheque') {
       setCheques(prev => prev.filter(c => c.id !== deleteConfirmModal.id));
       if (showToast) showToast(`${deleteConfirmModal.id} nolu çek sistemden silindi.`);
@@ -563,6 +574,11 @@ export function DashboardPage() {
       />
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        {dataError && (
+          <div role="alert" className="bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold rounded-2xl p-4">
+            Canlı veri bağlantısı: {dataError}
+          </div>
+        )}
         {/* KPI Summary Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <button type="button" onClick={() => setActiveTab('operations')} className="group text-left bg-white border border-slate-200 p-5 rounded-2xl hover:border-red-500/50 hover:shadow-md transition-all duration-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600">
@@ -697,7 +713,7 @@ export function DashboardPage() {
             getNextStatusLabel={getNextStatusLabel}
             setSelectedJobModal={setSelectedJobModal}
             setDeleteConfirmModal={setDeleteConfirmModal}
-            updateOrderStatus={updateOrderStatus}
+            updateOrderStatus={(...args) => reportFailure(updateOrderStatus(...args))}
             setNewJobModalOpen={setNewJobModalOpen}
             setActiveTab={setActiveTab}
             setFinanceSubTab={setFinanceSubTab}
@@ -750,7 +766,7 @@ export function DashboardPage() {
           <PartsTab
             partsOrders={partsOrders}
             isSuperAdmin={isSuperAdmin}
-            updatePartsOrderStatus={updatePartsOrderStatus}
+            updatePartsOrderStatus={(...args) => reportFailure(updatePartsOrderStatus(...args))}
             setDeleteConfirmModal={setDeleteConfirmModal}
           />
         )}
@@ -784,8 +800,9 @@ export function DashboardPage() {
           title: `${j.id || j.code} - ${j.customer}`
         })}
         onStatusUpdate={(id, next) => {
-          updateOrderStatus(id, next);
-          setSelectedJobModal(prev => prev ? { ...prev, status: next } : null);
+          reportFailure(updateOrderStatus(id, next)).then((ok) => {
+            if (ok) setSelectedJobModal(prev => prev ? { ...prev, status: next } : null);
+          });
         }}
         getStatusStyle={getStatusStyle}
         getNextStatus={getNextStatus}

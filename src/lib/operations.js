@@ -64,7 +64,7 @@ export function readSavedCart(storage) {
 
 export function saveCart(cart, storage) {
   try {
-    const target = storage ?? globalThis.localStorage;
+    const target = storage ?? globalThis.sessionStorage;
     if (!target) return false;
     target.setItem(CART_STORAGE_KEY, JSON.stringify(cart.map(({ id, quantity }) => ({ id, quantity }))));
     return true;

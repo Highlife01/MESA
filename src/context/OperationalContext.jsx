@@ -1,28 +1,60 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useCallback, useContext, useState, useEffect, useMemo } from 'react';
 import { AUDIT_EVENT_NAME } from '../lib/security';
-import { partsCatalogData } from '../data/partsCatalogData';
-
-const PARTS_CATALOG = new Map(partsCatalogData.map(part => [part.id, part]));
+import { useAuth } from './AuthContext';
+import { cloudConfigured, loadCloud } from '../lib/cloud';
+import {
+  readSavedCart,
+  saveCart,
+  buildEmergencyJob,
+  buildPartsOrder,
+  createRecordCode,
+  jobStatusPatch,
+  signaturePatch,
+  assertOperationRole,
+  friendlyOperationError,
+  canonicalCartItem,
+} from '../lib/operations';
 
 const OperationalContext = createContext();
 
-const safeGetStorage = (key, fallback) => {
-  if (typeof window === 'undefined') return fallback;
+// Cart is tab-scoped (sessionStorage); all other operational data lives in Firestore
+// (jobs, parts orders) or in memory. Nothing is written to localStorage.
+const getCartStorage = () => {
+  if (typeof window === 'undefined') return undefined;
   try {
-    const item = window.localStorage.getItem(key);
-    return item ? JSON.parse(item) : fallback;
+    return window.sessionStorage;
   } catch {
-    return fallback;
+    return undefined;
   }
 };
 
-const safeSetStorage = (key, value) => {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  } catch (e) {
-    console.warn(`[MESA Storage] Failed to persist ${key}:`, e);
-  }
+const toDate = (value) => (value && typeof value.toDate === 'function' ? value.toDate() : null);
+
+// A caller-supplied code is honoured only when it already has the Firestore-rule format.
+const recordCodeOr = (prefix, candidate) => (
+  new RegExp(`^${prefix}-[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$`).test(candidate || '')
+    ? candidate
+    : createRecordCode(prefix)
+);
+
+const normalizeJob = (record) => {
+  const created = toDate(record.createdAt);
+  return {
+    ...record,
+    createdAt: created
+      ? created.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+      : record.createdAt,
+    createdAtISO: created ? created.toISOString() : null,
+    partsRaw: record.partsUsed || [],
+    partsUsed: (record.partsUsed || []).map(part => (
+      typeof part === 'string' ? part : `${part.name} (${part.qty} Adet)`
+    )),
+  };
+};
+
+const normalizeOrder = (record) => {
+  const created = toDate(record.createdAt);
+  return { ...record, createdAt: created ? created.toISOString() : record.createdAt };
 };
 
 // Kriptografik olarak güvenli rastgele hex (Math.random tahmin edilebilir ve çakışabilir)
@@ -317,28 +349,55 @@ const DEFAULT_PARTS_ORDERS = [
 ];
 
 export const OperationalProvider = ({ children }) => {
-  // 1. Machines Fleet State
-  const [machines, setMachines] = useState(() => safeGetStorage('mesa_machines', DEFAULT_MACHINES));
-  const [revokedTokens, setRevokedTokens] = useState(() => safeGetStorage('mesa_revoked_tokens', []));
+  const { isStaff, isSuperAdmin } = useAuth();
+  const staffAccess = Boolean(isStaff || isSuperAdmin);
 
-  // 2. Live Active Jobs Queue
-  const [liveJobs, setLiveJobs] = useState(() => safeGetStorage('mesa_live_jobs', DEFAULT_LIVE_JOBS));
+  // 1. Machines Fleet State (in-memory)
+  const [machines, setMachines] = useState(DEFAULT_MACHINES);
+  const [revokedTokens, setRevokedTokens] = useState([]);
 
-  // 3. Inventory & Double-Entry Movements
-  const [inventoryItems, setInventoryItems] = useState(() => safeGetStorage('mesa_inventory_items', DEFAULT_INVENTORY_ITEMS));
-  const [inventoryMovements, setInventoryMovements] = useState(() => safeGetStorage('mesa_inventory_movements', DEFAULT_INVENTORY_MOVEMENTS));
+  // 2. Live Active Jobs Queue (Firestore realtime; demo data only when Firebase is not configured)
+  const [liveJobs, setLiveJobs] = useState(() => (cloudConfigured ? [] : DEFAULT_LIVE_JOBS));
+  // Session-only job details that the Firestore schema does not store (evidence, meter, history)
+  const [jobExtras, setJobExtras] = useState({});
 
-  // 4. Audit Log
-  const [auditLogs, setAuditLogs] = useState(() => safeGetStorage('mesa_audit_logs', DEFAULT_AUDIT_LOGS));
+  // 3. Inventory & Double-Entry Movements (in-memory)
+  const [inventoryItems, setInventoryItems] = useState(DEFAULT_INVENTORY_ITEMS);
+  const [inventoryMovements, setInventoryMovements] = useState(DEFAULT_INVENTORY_MOVEMENTS);
 
-  // 5. Cart for B2B Spare Parts
-  const [cart, setCart] = useState(() => safeGetStorage('mesa_cart', []));
+  // 4. Audit Log (in-memory)
+  const [auditLogs, setAuditLogs] = useState(DEFAULT_AUDIT_LOGS);
 
-  // 6. B2B Parts Orders
-  const [partsOrders, setPartsOrders] = useState(() => safeGetStorage('mesa_parts_orders', DEFAULT_PARTS_ORDERS));
+  // 5. Cart for B2B Spare Parts (tab-scoped sessionStorage)
+  const [cart, setCart] = useState(() => {
+    const storage = getCartStorage();
+    return storage ? readSavedCart(storage).cart : [];
+  });
 
-  // 7. Global Toast Notification
+  // 6. B2B Parts Orders (Firestore realtime; demo data only when Firebase is not configured)
+  const [partsOrders, setPartsOrders] = useState(() => (cloudConfigured ? [] : DEFAULT_PARTS_ORDERS));
+
+  // 7. Cloud connection, data error & toast
+  const [cloud, setCloud] = useState(null);
+  const [cloudUid, setCloudUid] = useState(null);
+  const [dataError, setDataError] = useState('');
   const [activeToast, setActiveToast] = useState(null);
+
+  const ensureCloud = useCallback(async () => {
+    const loaded = await loadCloud();
+    if (loaded) setCloud(loaded);
+    return loaded;
+  }, []);
+
+  // Staff always need live data; customers load it when they create or track a request.
+  useEffect(() => {
+    if (staffAccess && cloudConfigured) ensureCloud().catch(() => setDataError('Bulut bağlantısı kurulamadı.'));
+  }, [staffAccess, ensureCloud]);
+
+  useEffect(() => {
+    if (!cloud?.auth) return undefined;
+    return cloud.onIdTokenChanged(cloud.auth, (user) => setCloudUid(user?.uid ?? null));
+  }, [cloud]);
 
   // Security module audit bridge: lib/security.js olaylarını state zincirine aktar
   useEffect(() => {
@@ -350,15 +409,65 @@ export const OperationalProvider = ({ children }) => {
     return () => window.removeEventListener(AUDIT_EVENT_NAME, handler);
   }, []);
 
-  // Sync to Storage
-  useEffect(() => safeSetStorage('mesa_machines', machines), [machines]);
-  useEffect(() => safeSetStorage('mesa_revoked_tokens', revokedTokens), [revokedTokens]);
-  useEffect(() => safeSetStorage('mesa_live_jobs', liveJobs), [liveJobs]);
-  useEffect(() => safeSetStorage('mesa_inventory_items', inventoryItems), [inventoryItems]);
-  useEffect(() => safeSetStorage('mesa_inventory_movements', inventoryMovements), [inventoryMovements]);
-  useEffect(() => safeSetStorage('mesa_audit_logs', auditLogs), [auditLogs]);
-  useEffect(() => safeSetStorage('mesa_cart', cart), [cart]);
-  useEffect(() => safeSetStorage('mesa_parts_orders', partsOrders), [partsOrders]);
+  // Realtime Firestore synchronization: staff see everything, customers only their own records
+  useEffect(() => {
+    if (!cloud) return undefined;
+    setLiveJobs([]);
+    setPartsOrders([]);
+    setDataError('');
+    if (!cloudUid) return undefined;
+
+    const { db, fs } = cloud;
+    const scope = (name) => (staffAccess
+      ? fs.collection(db, name)
+      : fs.query(fs.collection(db, name), fs.where('ownerUid', '==', cloudUid)));
+
+    let active = true;
+    const unsubscribers = [];
+    const stopAll = (message) => {
+      if (!active) return;
+      active = false;
+      unsubscribers.forEach(stop => { try { stop(); } catch { /* already stopped */ } });
+      setLiveJobs([]);
+      setPartsOrders([]);
+      setDataError(message);
+    };
+    const watch = (name, apply) => {
+      unsubscribers.push(fs.onSnapshot(
+        scope(name),
+        { includeMetadataChanges: true },
+        (snap) => {
+          if (!active || snap.metadata?.hasPendingWrites || snap.metadata?.fromCache) return;
+          apply(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+          setDataError('');
+        },
+        (error) => stopAll(friendlyOperationError(error).message)
+      ));
+    };
+    watch('mesaJobs', records => setLiveJobs(records.map(normalizeJob)));
+    watch('mesaPartsOrders', records => setPartsOrders(records.map(normalizeOrder)));
+
+    return () => {
+      active = false;
+      unsubscribers.forEach(stop => { try { stop(); } catch { /* already stopped */ } });
+    };
+  }, [cloud, cloudUid, staffAccess]);
+
+  useEffect(() => {
+    const storage = getCartStorage();
+    if (storage) saveCart(cart, storage);
+  }, [cart]);
+
+  const jobsWithExtras = useMemo(() => liveJobs.map(job => {
+    const extra = jobExtras[job.code || job.id];
+    if (!extra) return job;
+    const { extraParts = [], ...details } = extra;
+    return {
+      ...job,
+      ...details,
+      partsUsed: [...(job.partsUsed || []), ...extraParts.map(part => `${part.name} (${part.qty} Adet)`)],
+    };
+  }), [liveJobs, jobExtras]);
 
   // Toast Helper
   const showToast = (msg, type = 'success') => {
@@ -457,6 +566,29 @@ export const OperationalProvider = ({ children }) => {
     showToast(`${machineId} sayacı güncellendi: ${numericHours} saat`);
   };
 
+  // Updates session-only job details (cloud mode) or the in-memory job (demo mode)
+  const patchLocalJob = (code, update) => {
+    if (cloudConfigured) {
+      setJobExtras(prev => ({ ...prev, [code]: { ...prev[code], ...update(prev[code] || {}) } }));
+    } else {
+      setLiveJobs(prev => prev.map(job => (
+        job.code === code || job.id === code ? { ...job, ...update(job) } : job
+      )));
+    }
+  };
+
+  // Runs a Firestore write with the signed-in session and maps failures to friendly errors
+  const withCloud = async (operation) => {
+    try {
+      const loaded = await ensureCloud();
+      if (!loaded) throw new Error('Bulut bağlantısı yapılandırılmamış.');
+      return await operation(loaded);
+    } catch (error) {
+      const friendly = friendlyOperationError(error);
+      throw friendly;
+    }
+  };
+
   // ============ WORK ORDERS & EVIDENCE ============
 
   // Add photo/test evidence to a work order
@@ -470,15 +602,7 @@ export const OperationalProvider = ({ children }) => {
       timestamp: new Date().toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
     };
 
-    setLiveJobs(prev => prev.map(job => {
-      if (job.code === orderCode || job.id === orderCode) {
-        return {
-          ...job,
-          evidence: [...(job.evidence || []), newEvidence]
-        };
-      }
-      return job;
-    }));
+    patchLocalJob(orderCode, base => ({ evidence: [...(base.evidence || []), newEvidence] }));
 
     addAuditLog({
       actorName,
@@ -496,7 +620,32 @@ export const OperationalProvider = ({ children }) => {
   // Create Emergency Request
   // Müşteri tarafından oluşturulan taleplerde teknisyen/ETA UYDURULMAZ: talep
   // "Talep Alındı" aşamasında başlar. Personel paneli atama yaparsa "Atandı" olur.
-  const createEmergencyJob = (jobData) => {
+  const createEmergencyJob = async (jobData) => {
+    if (cloudConfigured) {
+      return withCloud(async ({ db, fs, ensureSession }) => {
+        const session = await ensureSession();
+        const code = recordCodeOr('MS', jobData.code);
+        const payload = buildEmergencyJob(jobData, session.uid, code, fs.serverTimestamp());
+        const ref = fs.doc(db, 'mesaJobs', code);
+        await fs.setDoc(ref, payload);
+        if (staffAccess && jobData.assignedTechnician) {
+          await fs.updateDoc(ref, {
+            ...jobStatusPatch('Atandı'),
+            assignedTechnician: jobData.assignedTechnician,
+            vehicle: jobData.vehicle || null,
+            techDistance: jobData.techDistance || null,
+            etaMinutes: Number.isInteger(jobData.etaMinutes) ? jobData.etaMinutes : null,
+            updatedAt: fs.serverTimestamp(),
+          });
+        }
+        showToast(`Yeni Arıza Çağrısı Alındı: ${code}`);
+        return {
+          ...payload,
+          createdAt: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
+        };
+      });
+    }
+
     const newCode = jobData.code || createTrackingCode('MS');
     const isAssigned = Boolean(jobData.assignedTechnician);
     const newJob = {
@@ -545,9 +694,29 @@ export const OperationalProvider = ({ children }) => {
   };
 
   // State Machine transition for Work Order (with completion gate enforcement)
-  const transitionWorkOrderStatus = (idOrCode, newStatus, meta = {}) => {
+  const transitionWorkOrderStatus = async (idOrCode, newStatus, meta = {}) => {
     const actor = meta.actor || 'Teknisyen';
     const note = meta.note || `Durum: ${newStatus}`;
+
+    if (cloudConfigured) {
+      assertOperationRole(staffAccess, isSuperAdmin, false);
+      const current = jobsWithExtras.find(j => j.id === idOrCode || j.code === idOrCode);
+      if (!current) throw friendlyOperationError({ code: 'not-found' });
+      if (newStatus === 'Tamamlandı' && current.status !== 'Tamamlandı' && !current.supervisorSignature) {
+        showToast('İş emri kapatılamadı — eksik: müşteri dijital imzası', 'error');
+        return { success: false, reason: 'incomplete', missing: ['müşteri dijital imzası'] };
+      }
+      if (meta.meterHours) patchLocalJob(current.code, () => ({ meterHours: Number(meta.meterHours) }));
+      if (current.status !== newStatus) {
+        const patch = jobStatusPatch(newStatus, meta.stepIndex);
+        await withCloud(({ db, fs }) => fs.updateDoc(fs.doc(db, 'mesaJobs', current.code), {
+          ...patch,
+          updatedAt: fs.serverTimestamp(),
+        }));
+        showToast(`${current.code} durumu güncellendi: ${newStatus}`);
+      }
+      return { success: true };
+    }
 
     const job = liveJobs.find(j => j.id === idOrCode || j.code === idOrCode);
 
@@ -612,12 +781,28 @@ export const OperationalProvider = ({ children }) => {
     return { success: true };
   };
 
-  const updateOrderStatus = (idOrCode, newStatus, stepIndex) => {
-    transitionWorkOrderStatus(idOrCode, newStatus, { stepIndex });
-  };
+  const updateOrderStatus = (idOrCode, newStatus, stepIndex) => (
+    transitionWorkOrderStatus(idOrCode, newStatus, { stepIndex })
+  );
 
   // Record Signature
-  const recordSignature = (idOrCode, sigData, actorName = 'Teknisyen') => {
+  const recordSignature = async (idOrCode, sigData, actorName = 'Teknisyen') => {
+    if (cloudConfigured) {
+      assertOperationRole(staffAccess, isSuperAdmin, false);
+      const current = jobsWithExtras.find(j => j.id === idOrCode || j.code === idOrCode);
+      if (!current) throw friendlyOperationError({ code: 'not-found' });
+      const patch = signaturePatch({
+        ...sigData,
+        partsUsed: [...current.partsRaw, ...(jobExtras[current.code]?.extraParts || [])],
+      });
+      await withCloud(({ db, fs }) => fs.updateDoc(fs.doc(db, 'mesaJobs', current.code), {
+        ...patch,
+        updatedAt: fs.serverTimestamp(),
+      }));
+      showToast(`${current.code} nolu iş emri dijital olarak imzalandı ve kapatıldı!`);
+      return;
+    }
+
     setLiveJobs(prev => prev.map(job => {
       if (job.id === idOrCode || job.code === idOrCode) {
         return {
@@ -646,7 +831,13 @@ export const OperationalProvider = ({ children }) => {
   };
 
   // Delete Job
-  const deleteJob = (idOrCode) => {
+  const deleteJob = async (idOrCode) => {
+    if (cloudConfigured) {
+      assertOperationRole(staffAccess, isSuperAdmin, true);
+      await withCloud(({ db, fs }) => fs.deleteDoc(fs.doc(db, 'mesaJobs', idOrCode)));
+      showToast(`${idOrCode} nolu iş emri sistemden silindi.`);
+      return;
+    }
     setLiveJobs(prev => prev.filter(job => job.id !== idOrCode && job.code !== idOrCode));
     addAuditLog({
       actorName: 'Süper Admin',
@@ -693,16 +884,22 @@ export const OperationalProvider = ({ children }) => {
 
     // If consumed in a job, append to job's partsUsed
     if (workOrderCode && workOrderCode !== '-') {
-      setLiveJobs(prev => prev.map(job => {
-        if (job.code === workOrderCode || job.id === workOrderCode) {
-          const existing = job.partsUsed || [];
-          return {
-            ...job,
-            partsUsed: [...existing, `${partName} (${numericQty} Adet)`]
-          };
-        }
-        return job;
-      }));
+      if (cloudConfigured) {
+        patchLocalJob(workOrderCode, base => ({
+          extraParts: [...(base.extraParts || []), { name: String(partName).slice(0, 240), qty: Math.min(999, numericQty) }]
+        }));
+      } else {
+        setLiveJobs(prev => prev.map(job => {
+          if (job.code === workOrderCode || job.id === workOrderCode) {
+            const existing = job.partsUsed || [];
+            return {
+              ...job,
+              partsUsed: [...existing, `${partName} (${numericQty} Adet)`]
+            };
+          }
+          return job;
+        }));
+      }
     }
 
     addAuditLog({
@@ -749,18 +946,31 @@ export const OperationalProvider = ({ children }) => {
     return cart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || item.qty || 0), 0);
   }, [cart]);
 
-  const createPartsOrder = (orderData) => {
+  const createPartsOrder = async (orderData) => {
+    if (cloudConfigured) {
+      return withCloud(async ({ db, fs, ensureSession }) => {
+        const session = await ensureSession();
+        const orderCode = recordCodeOr('SP', orderData.orderCode);
+        const submitted = cart.map(({ id, quantity }) => ({ id, quantity }));
+        const payload = buildPartsOrder(orderData, submitted, session.uid, orderCode, fs.serverTimestamp());
+        await fs.setDoc(fs.doc(db, 'mesaPartsOrders', orderCode), payload);
+        // Only the submitted quantities are removed; items added while the write was pending stay.
+        setCart(prev => prev
+          .map(item => {
+            const sent = submitted.find(entry => entry.id === item.id);
+            return sent ? { ...item, quantity: item.quantity - sent.quantity } : item;
+          })
+          .filter(item => item.quantity > 0));
+        showToast(`Sipariş ${orderCode} başarıyla oluşturuldu!`);
+        return payload;
+      });
+    }
+
     const orderCode = orderData.orderCode || createTrackingCode('SP');
-    // Fiyat/isim her zaman katalogdan alınır (localStorage'daki sepet değiştirilebilir).
+    // Fiyat/isim her zaman katalogdan alınır.
     const items = cart.map(item => {
-      const part = PARTS_CATALOG.get(item.id) || item;
-      return {
-        id: item.id,
-        name: part.name,
-        oem: part.oem || '',
-        quantity: Math.max(1, Math.min(999, Math.floor(Number(item.quantity || item.qty) || 1))),
-        price: Number(part.price) || 0
-      };
+      const part = canonicalCartItem(item.id, item.quantity || item.qty);
+      return { id: part.id, name: part.name, oem: part.oem || '', quantity: part.quantity, price: part.price };
     });
     const newOrder = {
       orderCode,
@@ -782,12 +992,27 @@ export const OperationalProvider = ({ children }) => {
     return newOrder;
   };
 
-  const deletePartsOrder = (orderCode) => {
+  const deletePartsOrder = async (orderCode) => {
+    if (cloudConfigured) {
+      assertOperationRole(staffAccess, isSuperAdmin, true);
+      await withCloud(({ db, fs }) => fs.deleteDoc(fs.doc(db, 'mesaPartsOrders', orderCode)));
+      showToast(`${orderCode} nolu sipariş silindi.`);
+      return;
+    }
     setPartsOrders(prev => prev.filter(o => o.orderCode !== orderCode));
     showToast(`${orderCode} nolu sipariş silindi.`);
   };
 
-  const updatePartsOrderStatus = (orderCode, newStatus) => {
+  const updatePartsOrderStatus = async (orderCode, newStatus) => {
+    if (cloudConfigured) {
+      assertOperationRole(staffAccess, isSuperAdmin, true);
+      await withCloud(({ db, fs }) => fs.updateDoc(fs.doc(db, 'mesaPartsOrders', orderCode), {
+        status: newStatus,
+        updatedAt: fs.serverTimestamp(),
+      }));
+      showToast(`${orderCode} nolu sipariş durumu güncellendi: ${newStatus}`);
+      return;
+    }
     setPartsOrders(prev => prev.map(o => o.orderCode === orderCode ? { ...o, status: newStatus } : o));
     showToast(`${orderCode} nolu sipariş durumu güncellendi: ${newStatus}`);
   };
@@ -807,8 +1032,8 @@ export const OperationalProvider = ({ children }) => {
         revokedTokens,
 
         // Work Orders & Jobs
-        liveJobs,
-        activeOrders: liveJobs,
+        liveJobs: jobsWithExtras,
+        activeOrders: jobsWithExtras,
         createEmergencyJob,
         addEmergencyOrder: createEmergencyJob,
         updateJobStatus: transitionWorkOrderStatus,
@@ -818,6 +1043,8 @@ export const OperationalProvider = ({ children }) => {
         recordSignature,
         deleteJob,
         unreadAlertsCount,
+        dataError,
+        ensureCloud,
 
         // Inventory & Double-Entry Ledger
         inventoryItems,

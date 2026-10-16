@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import {
-  initializeAuth, browserLocalPersistence, connectAuthEmulator, signInAnonymously,
+  initializeAuth, indexedDBLocalPersistence, browserSessionPersistence, connectAuthEmulator, signInAnonymously,
   signInWithEmailAndPassword, signOut, onIdTokenChanged
 } from 'firebase/auth';
 
@@ -34,7 +34,8 @@ let auth = null;
 // SDK is only initialised when a complete configuration is present.
 if (isFirebaseConfigured) {
   app = initializeApp(config, 'mesa-operations');
-  auth = initializeAuth(app, { persistence: browserLocalPersistence });
+  // IndexedDB keeps the session across restarts without touching localStorage.
+  auth = initializeAuth(app, { persistence: [indexedDBLocalPersistence, browserSessionPersistence] });
   if (emulated) connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
 }
 

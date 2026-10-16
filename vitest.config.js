@@ -7,9 +7,7 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['tests/**/*.test.{js,jsx}'],
     // firestore.test.js: emülatör gerektirir → `npm run test:rules`
-    // operational-context.test.jsx: Firestore tabanlı (henüz uygulanmamış) bir
-    // OperationalContext API'sini hedefler; context Firestore'a taşındığında yeniden etkinleştirin.
-    exclude: ['tests/firestore.test.js', 'tests/operational-context.test.jsx'],
+    exclude: ['tests/firestore.test.js'],
     restoreMocks: true,
     clearMocks: true,
   },

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+﻿import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { checkRateLimit, resetRateLimit, appendSecurityAudit, startActivityWatch, isSessionExpired, clearActivity, touchActivity, SESSION_TIMEOUT_MS } from '../lib/security';
 
 /**
@@ -204,7 +204,7 @@ export const AuthProvider = ({ children }) => {
               }
             }
             setUser(next);
-            if (!next) writeStorage('localStorage', STAFF_HINT_KEY, null);
+            if (!next) writeStorage('sessionStorage', STAFF_HINT_KEY, null);
             if (first) { first = false; setAuthStatus('ready'); resolve(); }
           });
         });
@@ -219,7 +219,7 @@ export const AuthProvider = ({ children }) => {
 
   // Daha önce personel girişi yapılmış tarayıcılarda oturumu otomatik geri yükle.
   useEffect(() => {
-    const hasHint = readStorage('localStorage', STAFF_HINT_KEY) || readStorage('sessionStorage', AUTH_TOKEN_KEY);
+    const hasHint = readStorage('sessionStorage', STAFF_HINT_KEY) || readStorage('sessionStorage', AUTH_TOKEN_KEY);
     if (hasHint) ensureAuth();
     return () => { if (unsubscribeRef.current) unsubscribeRef.current(); };
   }, [ensureAuth]);
@@ -311,7 +311,7 @@ export const AuthProvider = ({ children }) => {
         return fail('Bu hesaba MESA personel rolü atanmamış. Yöneticinizle iletişime geçin.', cleanEmail, 'missing_role_claim');
       }
       resetRateLimit(rateKey);
-      writeStorage('localStorage', STAFF_HINT_KEY, '1');
+      writeStorage('sessionStorage', STAFF_HINT_KEY, '1');
       touchActivity();
       startActivityWatch();
       setUser(authUser);
@@ -354,7 +354,7 @@ export const AuthProvider = ({ children }) => {
       await firebaseRef.current.signOut(firebaseRef.current.auth).catch(() => { });
     }
     writeStorage('sessionStorage', AUTH_TOKEN_KEY, null);
-    writeStorage('localStorage', STAFF_HINT_KEY, null);
+    writeStorage('sessionStorage', STAFF_HINT_KEY, null);
     clearActivity();
     setApiToken(null);
     setUser(null);

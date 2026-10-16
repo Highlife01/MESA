@@ -16,7 +16,7 @@ export function TechnicianPage() {
   const {
     activeOrders, transitionWorkOrderStatus, recordSignature,
     addWorkOrderEvidence, recordMeterReading, inventoryItems,
-    recordInventoryMovement, machines
+    recordInventoryMovement, machines, showToast
   } = useOperational();
 
   const [selectedOrderId, setSelectedOrderId] = useState(activeOrders[0]?.id || 'MS-5102');
@@ -75,15 +75,14 @@ export function TechnicianPage() {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const reportFailure = (promise) => Promise.resolve(promise).then(
+    (result) => result,
+    (error) => { showToast(error?.message || 'İşlem tamamlanamadı.', 'error'); return null; }
+  );
+
   // Save Signature
-  const handleSaveSignature = (sigData) => {
-    recordSignature(activeOrder.code, sigData, user?.name || 'Teknisyen');
-    transitionWorkOrderStatus(activeOrder.code, 'Tamamlandı', {
-      note: 'Müşteri dijital imzası alındı ve iş emri tamamlandı.',
-      actor: user?.name || 'Teknisyen',
-      actorRole: 'technician',
-      stepIndex: 5
-    });
+  const handleSaveSignature = async (sigData) => {
+    await reportFailure(recordSignature(activeOrder.code, sigData, user?.name || 'Teknisyen'));
     setIsTimerRunning(false);
   };
 
@@ -92,10 +91,10 @@ export function TechnicianPage() {
     e.preventDefault();
     if (!meterInput || isNaN(Number(meterInput))) return;
     recordMeterReading(activeOrder.machineId, Number(meterInput), user?.name || 'Teknisyen');
-    transitionWorkOrderStatus(activeOrder.code, activeOrder.status, {
+    reportFailure(transitionWorkOrderStatus(activeOrder.code, activeOrder.status, {
       meterHours: Number(meterInput),
       actor: user?.name || 'Teknisyen'
-    });
+    }));
   };
 
   // Handle Evidence Photo Upload (MIME + uzantı + boyut doğrulamalı)
@@ -148,12 +147,12 @@ export function TechnicianPage() {
 
   // Status transitions
   const handleStatusChange = (newStatus, stepIdx) => {
-    transitionWorkOrderStatus(activeOrder.code, newStatus, {
+    reportFailure(transitionWorkOrderStatus(activeOrder.code, newStatus, {
       stepIndex: stepIdx,
       actor: user?.name || 'Teknisyen',
       actorRole: 'technician',
       note: `Teknisyen terminali üzerinden durum "${newStatus}" yapıldı.`
-    });
+    }));
   };
 
   // If user has NO technician permission (addresses "Bu hesabın personel paneline erişim yetkisi bulunmuyor")

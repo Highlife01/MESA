@@ -10,7 +10,10 @@ import {
 
 export function ServiceTrackingPage() {
   const { search } = useLocation();
-  const { activeOrders, partsOrders } = useOperational();
+  const { activeOrders, partsOrders, ensureCloud } = useOperational();
+
+  // Müşterinin kendi kayıtlarını izleyebilmesi için bulut bağlantısı bu sayfada başlatılır.
+  useEffect(() => { ensureCloud().catch(() => {}); }, [ensureCloud]);
   
   const [trackingInput, setTrackingInput] = useState('');
   const [currentRecord, setCurrentRecord] = useState(null);

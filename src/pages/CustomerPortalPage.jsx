@@ -64,13 +64,17 @@ export function CustomerPortalPage() {
   };
 
   // One-click approve pending service quotation
-  const handleApproveQuote = (jobCode) => {
-    transitionWorkOrderStatus(jobCode, 'Müşteri Onayladı - Parça Montajı', {
-      note: 'Müşteri kurumsal portal üzerinden teklif ve parça montajını onayladı.',
-      actor: user?.name || 'Müşteri Yetkilisi',
-      actorRole: 'customer_admin'
-    });
-    showToast(`${jobCode} nolu servis teklifi başarıyla onaylandı.`);
+  const handleApproveQuote = async (jobCode) => {
+    try {
+      await transitionWorkOrderStatus(jobCode, 'Müşteri Onayladı - Parça Montajı', {
+        note: 'Müşteri kurumsal portal üzerinden teklif ve parça montajını onayladı.',
+        actor: user?.name || 'Müşteri Yetkilisi',
+        actorRole: 'customer_admin'
+      });
+      showToast(`${jobCode} nolu servis teklifi başarıyla onaylandı.`);
+    } catch (error) {
+      showToast(error?.message || 'Teklif onaylanamadı.', 'error');
+    }
   };
 
   // Download Fleet Report

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate, useLocation } from '../router/Router';
 import { SEO } from '../components/SEO';
 import { useOperational, createTrackingCode } from '../context/OperationalContext';
+import { createRecordCode } from '../lib/operations';
 import { LocationShareButton } from '../components/LocationShareButton';
 import { activeCitiesData } from '../data/citiesData';
 import { SITE_CONFIG } from '../config/siteConfig';
@@ -21,6 +22,7 @@ export function EmergencyWizardPage() {
   const [successOrder, setSuccessOrder] = useState(null);
   const [whatsappOpened, setWhatsappOpened] = useState(false);
   const [validationError, setValidationError] = useState('');
+  const [saveWarning, setSaveWarning] = useState('');
 
   const [formData, setFormData] = useState({
     brand: 'Caterpillar (CAT)',
@@ -70,7 +72,7 @@ export function EmergencyWizardPage() {
     'Acil seyyar servis aracının yönlendirilmesini talep ediyorum.'
   ].join('\n');
 
-  const handleFinish = (e) => {
+  const handleFinish = async (e) => {
     e.preventDefault();
     setValidationError('');
     if (!formData.customerName || !formData.phone) {
@@ -90,15 +92,27 @@ export function EmergencyWizardPage() {
       issue: fullIssue
     };
 
-    // Talep MESA'ya YALNIZCA WhatsApp üzerinden ulaşır; bu yüzden gönderim anında
-    // (kullanıcı etkileşimi sırasında, pop-up engeline takılmadan) WhatsApp açılır.
+    // Takip numarası ve kayıt kodu bulut kaydıyla aynı olmalı.
+    try {
+      order.code = createRecordCode('MS');
+    } catch {
+      order.code = createTrackingCode('MS');
+    }
+
+    // Talep MESA'ya WhatsApp üzerinden de ulaşır; gönderim anında (kullanıcı
+    // etkileşimi sırasında, pop-up engeline takılmadan) WhatsApp açılır.
     const opened = openWhatsApp(buildDispatchMessage(order), 'emergency_whatsapp_open');
     setWhatsappOpened(opened);
     trackEvent('generate_lead', { form: 'emergency_wizard', priority: formData.priority, city: formData.city });
 
-    // Yerel kopya: müşteri /servis-takip ekranında kendi talebini görebilsin.
-    const newOrder = addEmergencyOrder({ ...order, actorName: formData.customerName, actorRole: 'customer' });
-    setSuccessOrder(newOrder);
+    // Bulut kaydı: personel panelinde canlı görünür, müşteri /servis-takip'te izler.
+    try {
+      const saved = await addEmergencyOrder({ ...order, actorName: formData.customerName, actorRole: 'customer' });
+      setSuccessOrder(saved);
+    } catch (error) {
+      setSaveWarning(error?.message || 'Talep çevrimiçi kayda alınamadı.');
+      setSuccessOrder(order);
+    }
   };
 
   const getWhatsAppDispatchLink = (order) => {
@@ -518,6 +532,11 @@ export function EmergencyWizardPage() {
                   ? <>WhatsApp penceresi açıldı. <strong>Hazırlanan mesajı gönderdiğinizde</strong> talebiniz nöbetçi ekibimize ulaşır ve sizi en kısa sürede ararak varış süresini bildiririz.</>
                   : <>Talebinizi ekibimize iletmek için aşağıdaki <strong>WhatsApp</strong> butonuna basıp mesajı gönderin ya da acil hattımızı arayın.</>}
               </p>
+              {saveWarning && (
+                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-3 mt-3 max-w-md mx-auto">
+                  Çevrimiçi kayıt oluşturulamadı ({saveWarning}) Talebinizi WhatsApp mesajıyla veya telefonla iletmeniz yeterlidir.
+                </p>
+              )}
             </div>
 
             <div className="max-w-sm mx-auto space-y-3 pt-2">

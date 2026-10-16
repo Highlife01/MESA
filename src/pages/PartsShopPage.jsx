@@ -3,6 +3,7 @@ import { Link } from '../router/Router';
 import { SEO } from '../components/SEO';
 import { partsCatalogData } from '../data/partsCatalogData';
 import { useOperational, createTrackingCode } from '../context/OperationalContext';
+import { buildPartsOrder, createRecordCode } from '../lib/operations';
 import { openWhatsApp, whatsappUrl } from '../lib/whatsapp';
 import { trackEvent } from '../lib/analytics';
 import { 
@@ -84,28 +85,44 @@ export function PartsShopPage() {
     ].filter(line => line !== null).join('\n');
   };
 
-  const handleCheckoutSubmit = (e) => {
+  const [checkoutError, setCheckoutError] = useState('');
+
+  const handleCheckoutSubmit = async (e) => {
     e.preventDefault();
     if (!customerName || !phone || !address) {
       alert('Lütfen Ad Soyad, Telefon ve Teslimat Şantiyesi alanlarını doldurunuz.');
       return;
     }
 
-    const newOrder = createPartsOrder({
-      orderCode: createTrackingCode('SP'),
-      customerName,
-      companyName,
-      phone,
-      taxNo,
-      address,
-      notes
-    });
+    setCheckoutError('');
+    let orderCode;
+    try {
+      orderCode = createRecordCode('SP');
+    } catch {
+      orderCode = createTrackingCode('SP');
+    }
+    const details = { orderCode, customerName, companyName, phone, taxNo, address, notes };
+    let newOrder;
+    let saveWarning = '';
+    try {
+      newOrder = await createPartsOrder(details);
+    } catch (error) {
+      // Bulut kaydı başarısız olsa da sipariş WhatsApp ile iletilebilsin.
+      try {
+        newOrder = buildPartsOrder(details, cart.map(({ id, quantity }) => ({ id, quantity })), 'offline', orderCode, new Date().toISOString());
+        saveWarning = error?.message || 'Sipariş çevrimiçi kayda alınamadı.';
+        clearCart();
+      } catch (validation) {
+        setCheckoutError(validation?.message || error?.message || 'Sipariş kaydedilemedi. Lütfen yeniden deneyin.');
+        return;
+      }
+    }
 
-    // Sipariş MESA'ya WhatsApp üzerinden ulaşır; gönderim anında açılır.
+    // Sipariş MESA'ya WhatsApp üzerinden de ulaşır.
     const opened = openWhatsApp(buildOrderMessage(newOrder), 'parts_order_whatsapp_open');
     trackEvent('generate_lead', { form: 'parts_order', value: newOrder.total, currency: 'TRY' });
 
-    setOrderCompletedData({ ...newOrder, whatsappOpened: opened });
+    setOrderCompletedData({ ...newOrder, whatsappOpened: opened, saveWarning });
     setIsCheckoutOpen(false);
     setIsCartOpen(false);
   };
@@ -430,6 +447,12 @@ export function PartsShopPage() {
                 <span>Adana ve Çukurova geneline seyyar servis araçlarımızla veya aynı gün ambar/kargo ile teslim edilir.</span>
               </div>
 
+              {checkoutError && (
+                <div role="alert" className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-[11px]">
+                  {checkoutError}
+                </div>
+              )}
+
               <button
                 type="submit"
                 className="w-full py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-sm rounded-xl transition-all shadow-lg shadow-red-600/20"
@@ -457,6 +480,11 @@ export function PartsShopPage() {
                   ? 'WhatsApp penceresi açıldı. Hazırlanan mesajı gönderdiğinizde siparişiniz depo ekibimize ulaşır; stok ve fiyat teyidiyle size dönüş yapılır.'
                   : 'Siparişinizi depo ekibimize iletmek için aşağıdaki WhatsApp butonuna basıp hazırlanan mesajı gönderin.'}
               </p>
+              {orderCompletedData.saveWarning && (
+                <p className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2 mt-2">
+                  Çevrimiçi kayıt oluşturulamadı ({orderCompletedData.saveWarning}) Siparişi WhatsApp ile iletmeniz yeterlidir.
+                </p>
+              )}
             </div>
 
             <div className="space-y-2 pt-2">
