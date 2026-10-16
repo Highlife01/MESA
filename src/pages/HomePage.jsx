@@ -222,32 +222,30 @@ export function HomePage() {
                     fetchPriority="high"
                     className="w-full h-full object-cover object-right contrast-[1.15] saturate-[1.18] brightness-[1.03] group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
-                  
-                  {/* Top Floating Badges on Image */}
-                  <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between gap-2">
-                    <span className="px-3 py-1 rounded-full bg-slate-950/85 border border-amber-400/50 text-amber-300 text-[11px] font-black tracking-wide uppercase backdrop-blur-md shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/15 to-transparent" />
+
+                  {/* Bottom Badge on Image (Moved from top to bottom for unobstructed excavator view) */}
+                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between gap-2">
+                    <span className="px-3.5 py-1.5 rounded-full bg-slate-950/90 border border-amber-400/50 text-amber-300 text-[11px] font-black tracking-wide uppercase backdrop-blur-md shadow-lg">
                       ⚡ 450 Bar Hidrolik Test & Revizyon
                     </span>
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-500/90 text-slate-950 text-[11px] font-black flex items-center gap-1.5 shadow-lg">
-                      <span className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />
-                      5/5 Filo Aktif
-                    </span>
-                  </div>
-
-                  {/* Bottom Image Caption */}
-                  <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
-                    <div>
-                      <span className="text-[10px] font-extrabold text-amber-400 uppercase tracking-widest block">CANLI SAHA TELEMETRİ</span>
-                      <h2 className="text-base sm:text-lg font-black text-white drop-shadow-md">
-                        Nöbetçi Mobil Servis Ekiplerimiz
-                      </h2>
-                    </div>
                   </div>
                 </div>
 
                 {/* Compact Telemetry List */}
                 <div className="p-5 space-y-2.5 text-xs bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+                  <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-slate-800/80">
+                    <div>
+                      <span className="text-[10px] font-extrabold text-amber-400 uppercase tracking-widest block">CANLI SAHA TELEMETRİ</span>
+                      <h2 className="text-sm sm:text-base font-black text-white">
+                        Nöbetçi Mobil Servis Ekiplerimiz
+                      </h2>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-500/90 text-slate-950 text-[11px] font-black flex items-center gap-1.5 shadow-lg shrink-0">
+                      <span className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />
+                      5/5 Filo Aktif
+                    </span>
+                  </div>
                   <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 flex items-center justify-between transition">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 rounded-lg bg-red-600/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-black shadow-xs shrink-0">
